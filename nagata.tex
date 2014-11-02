@@ -18,41 +18,40 @@
 \begin{document}
 
 \title{Anneau noethérien de dimension infinie}
-%\date \today
 %\author{Duhamel Nicolas}
 \maketitle
 
 L'exemple suivant est dû à Nagata.
 \begin{proposition}
-Soit k un corps et $$A = k[T_0, T_1, ...]$$ l'anneau des polynômes à une infinité de variables sur k. Soit $$m_n$$ une suite strictement croissante d'entiers naturels tel que $$m_{n+1} - m_n \lim \infty$$, on note $$P_n$$ l'idéal premier $$(T_{m_n}, ..., T_{m_{n+1}-1})$$ et S la partie multiplicative $$A-\cup_{n \geq 0}P_n$$. Alors $$S^{-1}A$$ est un anneau noethérien de dimension infinie.
+Soit $k$ un corps et $A = k[T_0, T_1, ...]$ l'anneau des polynômes à une infinité de variables sur $k$. Soit $(m_n)_{n \geq 0}$ une suite strictement croissante d'entiers naturels tel que $m_{n+1} - m_n$ diverge, on note $P_n$ l'idéal premier engendré par les variables $(T_j)_{m_n \leq j < m_{n+1}}$ et $S$ la partie multiplicative $A-\cup_{n \geq 0}P_n$. Alors $S^{-1}A$ est un anneau noethérien de dimension infinie.
 \end{proposition}
 
-La première étape est de comprendre les idéaux maximaux de $$S^{-1}A$$.
-Les idéaux propres de $$S^{-1}A$$ sont en bijection avec les idéaux de A contenu dans $$\cup_{n \geq 0}P_n$$.
+La première étape est de comprendre les idéaux maximaux de $S^{-1}A$.
+On sait que les idéaux propres de $S^{-1}A$ sont de la forme $S^{-1}I$ où $I$ est un idéal de $A$ contenu dans $\cup_{n \geq 0}P_n$.
 
 \begin{lemme}
-Soit I un idéal de A contenu dans la réunion des $$P_n$$. Alors il existe un entier $$n \geq 0$$ tel que I soit contenu dans $$P_n$$.
+Soit $I$ un idéal de $A$ contenu dans la réunion des $P_n$. Alors il existe un entier $n \geq 0$ tel que $I$ soit contenu dans $P_n$.
 \end{lemme}
 
-En effet, ops que $$I \neq (0)$$ ( le résultat est alors trivial ); soit alors $$f \in I$$ non nul. On note $$P^1, ..., P^k$$ les idéaux premiers parmi la famille $$(P_n)$$ qui contiennent des variables qui apparaissent dans f; ce sont exactement les idéaux qui contiennent f. D'autre part, soit $$g \in I$$ non nul; on a alors $$f+g \in I \subset \cup_{n \geq 0}P_n$$. Si on suppose que $$g \not\in \cup_{1 \geq n \leq k}P^n$$ alors il existe un terme de g qui n'est dans aucun des $$P^n$$; donc il y a dans $$f+g$$ deux termes avec des monômes dans des $$P_n$$ différents. On en déduit que $$f+g \not\in \cup_{n \geq 0}P_n$$, ce qui est une contradiction. Ce qui montre que $$g \in \cup_{1 \geq n \leq k}P^n$$; donc $$I \subset \cup_{1 \leq n \leq k}P^n$$. Le lemme d'évitement montre alors que I est contenu dans l'un des $$P^n$$.
+En effet, supposons que $I \neq (0)$ et soit $f \in I$ non nul. On note $P^{(1)}, ..., P^{(k)}$ les idéaux premiers de la forme $P_n$ qui sont engendrés par des variables qui apparaissent dans l'expression de $f$; ce sont exactement les idéaux $P_n$ tel que $f$ appartient à $P_n$. D'autre part, soit $g \in I$ non nul; on a $f+g \in I \subset \cup_{n \geq 0}P_n$. Si on suppose que $g \not\in \cup_{1 \leq i \leq k}P^{(i)}$ alors il existe un terme de $g$ qui n'est dans aucun des idéaux $P^i$; on a deux monômes de $f+g$ contenant des variables indépendantes qui sont contenu dans des idéaux $P_n$ distincts. On en déduit que $f+g \not\in \cup_{n \geq 0}P_n$; ce qui est une contradiction. Ce qui montre que $g \in \cup_{1 \leq i \leq k}P^{(i)}$; donc $I \subset \cup_{1 \leq i \leq k}P^{(i)}$. Le lemme d'évitement montre alors que $I$ est contenu dans l'un des idéaux $P^{(i)}$ qui est de la forme $P_n$.
 
-On remarque alors que les idéaux maximaux de $$S{-1}A$$ sont exactement les $$S^{-1}P_n$$.
+D'après le lemme, on en déduit que les idéaux maximaux de $S^{-1}A$ sont exactement les idéaux de la forme $S^{-1}P_n$.
 \begin{lemme}
-Les anneaux $$(S{-1}A)_{P_n}$$ sont noethériens.
+Pour $n \geq 0$, l'anneau local $(S^{-1}A)_{P_n}$ est noethérien.
 \end{lemme}
 
-Les variables indépendantes de $$T_{m_n}, ..., T_{m_{n+1}-1}$$ n'appartiennent pas à $$P_n$$ qui correspond à l'idéal maximal de l'anneau local $$(S{-1}A)_{P_n}$$ et donc sont inversibles dans ce localisé. L'anneau $$(S{-1}A)_{P_n}$$ est isomorphe à $$A_{P_n}$$ qui est un anneau de polynômes en $$T_{m_n}, ..., T_{m_{n+1}-1}$$ à coefficients dans le corps $$k(T_j)$$ où $$j$$ décrit les entiers positifs privé de $$m_n, ..., m_{n+1}-1$$. D'après le théorème de la base de Hilbert, l'anneau $$(S{-1}A)_{P_n}$$ est noethérien.
+Les variables $T_j$ indépendantes de $T_{m_n}, ..., T_{m_{n+1}-1}$ n'appartiennent pas à $P_n$ qui correspond à l'idéal maximal de l'anneau local $(S^{-1}A)_{P_n}$; donc sont inversibles dans ce localisé. D'autre part, l'anneau $(S^{-1}A)_{P_n}$ est isomorphe à $A_{P_n}$ qui est un anneau de polynômes en $T_{m_n}, ..., T_{m_{n+1}-1}$ à coefficients dans le corps $k(T_j)$ où $j$ décrit les entiers positifs privé de $m_n, ..., m_{n+1}-1$. D'après le théorème de la base de Hilbert, l'anneau $(S^{-1}A)_{P_n}$ est noethérien.
 
-On commence maintenant la preuve de nothérianité de l'anneau $$S^{-1}A$$. Soit $$(S^{-1}I_j)$$ une suite d'idéaux propres de $$S^{-1}A$$. On suppose sans perte de généralité que $$S^{-1}I_0 \neq (0)$$, soit $$f \in S^{-1}I_0$$ non nul alors on a déjà vu que f n'appartient qu'à un nombre fini d'idéaux $$S^{-1}P^1, ..., S^{-1}P^k$$ de la forme $$S^{-1}P_n$$. Pour tout $$j \geq 1$$, l'idéal $$S^{-1}I_j$$ est contenu dans un idéal maximal de la forme $$S^{-1}P_n$$. On a $$S^{-1}I_0 \subset S^{-1}I_j \subset S^{-1}P_n$$; on en déduit que f appartient à $$S^{-1}P_n$$, ce dernier est donc un des $$S^{-1}P^i$$.
+On peut maintenant passer à la preuve du fait que l'anneau $S^{-1}A$ est noethérien. Soit $(S^{-1}I_j)_{j \geq 0}$ une suite d'idéaux propres de $S^{-1}A$. On suppose sans perte de généralité que $S^{-1}I_0 \neq (0)$, soit $f \in S^{-1}I_0$ non nul. On a déjà vu que $f$ n'appartient qu'à un nombre fini d'idéaux $S^{-1}P^{(1)}, ..., S^{-1}P^{(k)}$ de la forme $S^{-1}P_n$. Pour tout $j \geq 1$, l'idéal $S^{-1}I_j$ est contenu dans un idéal maximal de la forme $S^{-1}P_n$. On a $f \in S^{-1}I_0 \subset S^{-1}I_j \subset S^{-1}P_n$; on en déduit que $f$ appartient à $S^{-1}P_n$, ce dernier est donc l'un des idéaux $S^{-1}P^{(i)}$.
 On a alors
 \begin{equation*}
 f \in S^{-1}I_0 \subset ... \subset S^{-1}I_j \subset ... \subset \cup_{1 \leq i \leq k}S^{-1}P^i
-\end{equation}
-On localise cette chaine par rapport à la partie multiplicative $$A-\cup_{1 \leq i \leq k}P^i$$; comme précédemment les variables indépendantes des $$P^i$$ sont inversibles car ne sont pas contenu dans $$\cup_{1 \leq i \leq k}P^i$$ donc engendrent le localisé. On en déduit que ce localisé est un anneau de polynômes à un nombre fini de variables sur un corps; donc la chaine dans le localisé est de longueur finie. On en déduit que la suite d'idéaux $$(S^{-1}I_j)$$ est stationnaire; donc $$S^{-1}A$$ est noethérien.
+\end{equation*}
+On localise maintenant cette chaine d'idéaux par rapport à la partie multiplicative $S^{-1}A-\cup_{1 \leq i \leq k}S^{-1}P^{(i)}$; comme précédemment les variables $T_j$ qui n'appartiennent pas à des idéaux $P^{(i)}$ sont inversibles car ne sont pas contenu dans $\cup_{1 \leq i \leq k}P^{(i)}$ et donc engendrent le localisé. On en déduit que ce localisé est un anneau de polynômes à un nombre fini de variables sur un corps; donc la chaine dans le localisé est de longueur finie. On en déduit que la suite d'idéaux $(S^{-1}I_j)$ est stationnaire; donc $S^{-1}A$ est noethérien.
 
-Pour finir, il ne reste plus qu'à prouver que $$S^{-1}A$$ est de dimension infinie. Or la chaine
+Pour finir, il ne reste plus qu'à prouver que $S^{-1}A$ est de dimension infinie. Or la chaine
 \begin{equation*}
 S^{-1}(T_{m_n}) \subset S^{-1}(T_{m_n}, T_{m_n+1}) \subset ... \subset S^{-1}(T_{m_n}, ..., T_{m_{n+1}-1})
-\end{equation}
-est de longueur $$m_{n+1} - m_n$$ qui tend vers l'infini. Comme la dimension est le supremum des longueurs des chaines d'idéaux premiers; on en déduit le résultat.
+\end{equation*}
+est de longueur $m_{n+1} - m_n$ qui tend vers l'infini. Comme la dimension est le supremum des longueurs des chaines d'idéaux premiers; on en déduit le résultat.
 \end{document}
