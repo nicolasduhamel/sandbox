@@ -1,0 +1,142 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{enumerate}
+
+% Theorem Styles
+\newtheorem{theoreme}{Theorème}[section]
+\newtheorem{lemme}[theoreme]{Lemme}
+\newtheorem{proposition}[theoreme]{Proposition}
+\newtheorem{corollaire}[theoreme]{Corollaire}
+% Definition Styles
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{E'xample}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+%\newtheoremstyle{dotless}{}{}{itshape}{}{bfseries}{}{ }{}
+%\theoremstyle{dotless}
+
+
+\begin{document}
+
+\title{Lemme fondamental d'Oka}
+\date \today
+\author{Duhamel Nicolas}
+\maketitle
+
+L'objectif est de démontrer un lemme d'annulation pour les faisceaux cohérents sur un domaine cylindrique convexe. On admettra le lemme de Cartan sur la décomposition des applications holomorphe à valeurs matricielles, que l'on utilisera pour démontrer le lemme de fusion. Cela nous permettra d'en déduire l'existence de syzygies d'Oka et finalement le lemme fondamental d'Oka.
+
+\section{Lemme de fusion}
+Soit $\mathcal{F}$ un faisceau cohérent sur un domaine $\Omega \subset \mathbb{C}^n$. A partir de systèmes générateurs finis de $\mathcal{F}$ sur $E'$ et $E''$, on veut construire un système générateur fini de $\mathcal{F}$ sur $E' \cup E''$.
+
+On va supposer que $E'$ et $E''$ sont des produits de segments réels et on dira que ce sont des cubes. On supposera de plus que $E'$ et $E''$ sont des cubes adjacents, c'est à dire qu'ils peuvent s'écrire sous la forme $E'=F \times E'_n$ et $E''=F \times E''_n$ où $F$ est un cube dans $\mathbb{C}^{n-1}$, $E'_n$ et $E''_n$ sont des cubes de $\mathbb{C}$ et $e=E'_n \cap E''_n$ est un segment non vide.
+
+\begin{lemme}[Décomposition matricielle de Cartan]
+Il existe un voisinage $V_0 \subset GL_p(\mathbb{C})$ de l'identité $I_p$ tel que pour toute application holomorphe $\hat{A} : U \to V_0$ sur un voisinage $U$ de $F \times e$, il existe des applications holomorphes $A' : U' \to GL_p(\mathbb{C})$ et $A'' : U'' \to GL_p(\mathbb{C})$ où $U'$ et $U''$ sont des voisinages de $E'$ et $E''$ tel que $\hat{A} = (A')^{-1}A''$ sur $U' \cap U''$.
+\end{lemme}
+
+\begin{lemme}[Lemme de fusion]
+On suppose qu'il existe un nombre fini de sections $\sigma'_j \in \mathcal{F}(U')$ pour $1\leq j \leq p'$ et $\sigma''_j \in \mathcal{F}(U'')$ pour $1\leq j \leq p''$ qui engendre $\mathcal{F}$ sur $U'$ et $U''$. De plus, on suppose qu'il existe des fonctions holomorphes $a_{jk}, b_{jk}$ sur $U' \cap U''$ tel que
+\begin{equation*}
+\sigma'_j = \sum_{k=1}^{p''} a_{jk}\sigma''_k \qquad
+\sigma''_j = \sum_{k=1}^{p'} b_{jk}\sigma'_k
+\end{equation*}
+Alors il existe un voisinage $W \subset U' \cup U''$ de $E' \cup E''$ et des sections $\sigma_j \in \mathcal{F}(W)$ pour $1\leq j \leq p=p'+p''$ qui engendre $\mathcal{F}$ sur $W$.
+\end{lemme}
+
+\begin{proof}
+On pose $\sigma' = (\sigma'_j)$ , $\sigma'' = (\sigma''_j)$ et $A=(a_{jk})$, $B=(b_{jk})$. On a alors
+\begin{equation*}
+\sigma' = A\sigma'' \qquad
+\sigma'' = B\sigma'
+\end{equation*}
+On va maintenant fusionner ces deux équations en une seule. Pour cela, on pose
+\begin{equation*}
+\tilde{\sigma}' = \begin{pmatrix}
+   \sigma' \\
+   \mathbf{0}_{p'}
+\end{pmatrix} \qquad
+\tilde{\sigma}'' = \begin{pmatrix}
+   \mathbf{0}_{p''} \\
+   \sigma''
+\end{pmatrix}
+\end{equation*}
+$$ \tilde{A} = \begin{pmatrix}
+   I_{p'} & A \\
+   -B & I_{p''} - BA 
+\end{pmatrix}$$
+De l'équation $\sigma'' = BA\sigma''$, on en déduit que
+\begin{equation*}
+\tilde{A}\sigma'' = \begin{pmatrix}
+   I_{p'} & A \\
+   -B & I_{p''} - BA 
+\end{pmatrix} \begin{pmatrix}
+   \mathbf{0}_{p''} \\
+   \sigma''
+\end{pmatrix} = \begin{pmatrix}
+   A\sigma'' \\
+   \sigma'' - BA\sigma''
+\end{pmatrix} = \begin{pmatrix}
+   \sigma' \\
+   \mathbf{0}_{p'}
+\end{pmatrix}
+\end{equation*}
+Autrement dit, $\tilde{A}\tilde{\sigma}'' = \tilde{\sigma}'$.
+
+On va aussi poser $P = \begin{pmatrix}
+   I_{p'} & A \\
+   \mathbf{0} & I_{p''} 
+\end{pmatrix}$
+et $Q = \begin{pmatrix}
+   I_{p'} & \mathbf{0} \\
+   B & I_{p''} 
+\end{pmatrix}$. Calculons $Q\tilde{A}P^{-1}$, on a
+\begin{equation*}
+Q\tilde{A}P^{-1} = \begin{pmatrix}
+   I_{p'} & \mathbf{0} \\
+   B & I_{p''} 
+\end{pmatrix}
+\begin{pmatrix}
+   I_{p'} & A \\
+   -B & I_{p''} - BA 
+\end{pmatrix}
+\begin{pmatrix}
+   I_{p'} & -A \\
+   \mathbf{0} & I_{p''} 
+\end{pmatrix} = \begin{pmatrix}
+   I_{p'} & \mathbf{0} \\
+   B & I_{p''} 
+\end{pmatrix}\begin{pmatrix}
+   I_{p'} & \mathbf{0} \\
+   -B & I_{p''} 
+\end{pmatrix} = I_p
+\end{equation*}
+On cherche à étendre les applications holomorphe $P$ et $Q$ à un voisinage de $E' \cup E''$ tout en ne perturbant pas trop l'égalité précédente; pour l'instant $P$ et $Q$ ne sont définit que sur $U' \cap U''$.
+
+On approche les fonctions holomorphes $a_{jk}$, $b_{jk}$ sur un voisinage $W_0 \subset \subset U \cap U'$ de $E'\cap E''$ par des polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$ tel que $$\hat{A}(z) = \tilde{Q}(z)\tilde{A}(z)\tilde{P}^{-1}(z) \in V_0$$ pour tout $z \in W_0$ où $V_0$ est le voisinage qui apparait dans la décomposition de Cartan et l'on note $\tilde{P}$, $\tilde{Q}$ les matrices obtenu en remplaçant les coefficients $a_{jk}$, $b_{jk}$ par les polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$.
+
+D'après la décomposition de Cartan, il existe des applications holomorphes $A' : W' \to GL_p(\mathbb{C})$ et $A'' : W'' \to GL_p(\mathbb{C})$ où $W' \subset U'$ et $W'' \subset U''$ sont des voisinages de $E'$ et $E''$ telles que $$\hat{A} = (A')^{-1}A''$$ sur $W' \cap W''$.
+
+On a $\tilde{Q}\tilde{A}\tilde{P}^{-1} = (A')^{-1}A''$, donc $\tilde{A} = \tilde{Q}^{-1}(A')^{-1}A''\tilde{P}$. Comme $\tilde{A}\sigma'' = \sigma'$, on en déduit que $$A''\tilde{P}\tilde{\sigma}''=A'\tilde{Q}\tilde{\sigma}'$$ sur $W' \cap W''$. Le premier terme de l'égalité étant définit sur $W''$ et le deuxième sur $W'$, on peut définir $\sigma_j \in \mathcal{F}(W'\cup W'')$ par les formules suivantes
+\begin{equation*}
+\begin{pmatrix}
+   \sigma_1 \\ \vdots \\ \sigma_p
+\end{pmatrix} = \left\{
+\begin{array}{l}
+  A'\tilde{Q}\tilde{\sigma}' \quad\text{ sur } W'\\
+  A''\tilde{P}\tilde{\sigma}'' \quad\text{ sur } W''
+\end{array}
+\right.
+\end{equation*}
+De plus, $\sigma'$ engendre $\mathcal{F}$ sur $W' \subset U'$ et $A'\tilde{Q}$ est inversible donc $\sigma$ engendre $\mathcal{F}$ sur $W'$. De même, $\sigma$ engendre $\mathcal{F}$ sur $W''$; on en déduit que $\sigma$ engendre $\mathcal{F}$ sur $W'\cup W''$.
+\end{proof}
+
+\end{document}
