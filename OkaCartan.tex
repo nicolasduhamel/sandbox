@@ -99,8 +99,8 @@ et $Q = \begin{pmatrix}
    I_{p'} & \mathbf{0} \\
    B & I_{p''} 
 \end{pmatrix}$. Calculons $Q\tilde{A}P^{-1}$, on a
-\begin{equation*}
-Q\tilde{A}P^{-1} = \begin{pmatrix}
+\begin{eqnarray}
+\nonumber Q\tilde{A}P^{-1} &=& \begin{pmatrix}
    I_{p'} & \mathbf{0} \\
    B & I_{p''} 
 \end{pmatrix}
@@ -111,14 +111,15 @@ Q\tilde{A}P^{-1} = \begin{pmatrix}
 \begin{pmatrix}
    I_{p'} & -A \\
    \mathbf{0} & I_{p''} 
-\end{pmatrix} = \begin{pmatrix}
+\end{pmatrix} \\
+\nonumber &=& \begin{pmatrix}
    I_{p'} & \mathbf{0} \\
    B & I_{p''} 
 \end{pmatrix}\begin{pmatrix}
    I_{p'} & \mathbf{0} \\
    -B & I_{p''} 
 \end{pmatrix} = I_p
-\end{equation*}
+\end{eqnarray}
 On cherche à étendre les applications holomorphe $P$ et $Q$ à un voisinage de $E' \cup E''$ tout en ne perturbant pas trop l'égalité précédente; pour l'instant $P$ et $Q$ ne sont définit que sur $U' \cap U''$.
 
 On approche les fonctions holomorphes $a_{jk}$, $b_{jk}$ sur un voisinage $W_0 \subset \subset U \cap U'$ de $E'\cap E''$ par des polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$ tel que $$\hat{A}(z) = \tilde{Q}(z)\tilde{A}(z)\tilde{P}^{-1}(z) \in V_0$$ pour tout $z \in W_0$ où $V_0$ est le voisinage qui apparait dans la décomposition de Cartan et l'on note $\tilde{P}$, $\tilde{Q}$ les matrices obtenu en remplaçant les coefficients $a_{jk}$, $b_{jk}$ par les polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$.
@@ -139,4 +140,54 @@ On a $\tilde{Q}\tilde{A}\tilde{P}^{-1} = (A')^{-1}A''$, donc $\tilde{A} = \tilde
 De plus, $\sigma'$ engendre $\mathcal{F}$ sur $W' \subset U'$ et $A'\tilde{Q}$ est inversible donc $\sigma$ engendre $\mathcal{F}$ sur $W'$. De même, $\sigma$ engendre $\mathcal{F}$ sur $W''$; on en déduit que $\sigma$ engendre $\mathcal{F}$ sur $W'\cup W''$.
 \end{proof}
 
+\begin{lemme}[Sysygy d'Oka]
+Soit $E \subset\subset \mathbb{C}^n$ un cube fermé.
+\begin{enumerate}
+\item Soit $\mathcal{F}$ un faisceau cohérent sur un voisinage $V$ de E, il existe un voisinage ouvert $E \subset U \subset V$ tel que $\mathcal{F}$ soit engendré par un nombre fini de section sur $U$. On en déduit alors l'existence de $N \in \mathbb{N}$ et d'une suite exacte $$\mathcal{O}^N_U \to \mathcal{F}_{|U} \to 0$$
+\item Soit $\sigma_j \in \mathcal{F}(U)$ un système générateur fini de $\mathcal{F}$ sur $U$ et  soit $\sigma \in \mathcal{F}(U)$. Alors il existe un voisinage ouvert $E \subset U' \subset U$ et des fonctions holomorphes $a_j \in \mathcal{O}(U')$ tel que $$\sigma = \sum_{j=1}^N a_j\sigma_j$$
+\end{enumerate}
+\end{lemme}
+
+\begin{proof}
+Si dim $E = 0$, $E$ est réduit à un point $x$.
+
+D'après la cohérence de $\mathcal{F}$, il existe $N \in \mathbb{N}$ et $\sigma_{j,x} \in \mathcal{F}_x$ tel que le morphisme $\mathcal{O}^N_x \to \mathcal{F}_x$ soit surjectif, donc il existe un voisinage $U$ de $x$ tel que $\mathcal{O}^N_U \to \mathcal{F}_{|U}$ soit surjectif.
+Par surjectivité de $\mathcal{O}^N_x \to \mathcal{F}_x$, il existe $a_{j,x} \in \mathcal{O}_x$ tel que $\sigma_x = \sum_{j=1}^N a_{j,x}\sigma_{j,x}$. Quitte à réduire $U$, on a alors $\sigma = \sum_{j=1}^N a_j\sigma_j$ sur $U$.
+
+Supposons maintenant que $\nu = $ dim $E \geq 1$, et supposons le lemme soit vrai pour tout les cubes fermés de dimension $\leq \nu - 1$.
+
+On écrit $E$ sous la forme $E = F \times [0, T]$ où $T > 0$ et $F$ est un cube de dimension $\leq \nu - 1$. D'après l'hypothèse de récurrence, on sait que pour tout $t \in [0, T]$, il existe un voisinage ouvert $U_t$ de $E_t = F \times {t}$ tel que $\mathcal{F}$ soit engendré par un nombre fini de sections sur $U_t$.
+
+Par compacité de $[0, T]$, il existe un nombre fini d'ouvert $U_t$ qui recouvre E, donc il existe $$0 = t_0 < t_1 < ... < t_L = T$$ tel que ${U_{t_j}}$ recouvre $E$. De plus, pour tout $0 \leq j \leq L$ il existe un système générateur fini $(\sigma_{\alpha j})_\alpha$ de $\mathcal{F}$ sur un voisinage de $E_\alpha = F \times [t_{\alpha - 1}, t_\alpha]$.
+
+On a $E_\alpha \cap E_{\alpha+1} = E_{t_\alpha}$ de dimension $\leq \nu - 1$. D'après l'hypothèse de récurrence, il existe des fonctions holomorphes $a_{jk}, b_{jk} \in \mathcal{O}(U_\alpha \cap U_{\alpha +1})$ tel que, sur $U_\alpha \cap U_{\alpha +1}$, on a
+\begin{equation*}
+\sigma_{\alpha,j} = \sum a_{jk}\sigma_{\alpha+1,j} \qquad
+\sigma_{\alpha+1,j} = \sum b_{jk}\sigma_{\alpha,j}
+\end{equation*}
+On va utiliser le lemme de fusion pour fusionner les systèmes générateurs de $E_1, ..., E_L$. On commence par l'appliquer à $E_1$ et $E_2$; on trouve alors un système générateur fini de $\mathcal{F}$ sur un voisinage de $E_1 \cup E_2$. On l'applique ensuite à $E_1 \cup E_2$ et $E_3$, on trouve ainsi un système générateur fini de $\mathcal{F}$ sur un voisinage de $E_1 \cup E_2 \cup E_3$. Par récurrence, on obtient alors un système générateur fini sur un voisinage de $E=E_1 \cup ... \cup E_L$.
+
+Il nous faut construire des fonctions holomorphes $a_j$ tel que 
+$$\sigma = \sum_{j=1}^N a_j\sigma_j$$ sur un voisinage de $E$. D'après l'hypothèse de récurrence, pour tout $t \in [0, T]$, il existe des fonctions holomorphe $a_{t,j}$ sur un voisinage $E_t \subset U'_t \subset U_t$ tel que
+$$\sigma = \sum_{j=1}^N a_j\sigma_j$$
+sur $U'_t$. Par le même argument de compacité que précédemment, il existe $$0 = t_0 < t_1 < ... < t_L = T$$ tel que ${U_{t_j}}$ recouvre $E$. De plus, il existe des fonctions holomorphes $a_{\alpha,j} \in \mathcal{U_\alpha}$ tel que $$\sigma = \sum_{j=1}^N a_{j, \alpha}\sigma_j$$ sur un voisinage $U_\alpha$ de $E_\alpha$.
+
+On va modifier les fonctions holomorphes $(a_{j, \alpha})_\alpha$ pour pouvoir les recoller sur un voisinage de $E$, on veut de plus qu'après les avoir modifier on garde toujours la même égalité.
+
+Soit $\mathcal{R} = \mathcal{R}(\sigma_j)$ le faisceau des relations, c'est un sous-faisceau localement fini de $\mathcal{O}^N$; donc $\mathcal{R}$ est cohérent sur un voisinage de $E$. D'après la première partie, $\mathcal{R}$ est engendré par un nombre fini de sections $(\tau_h)$ sur un voisinage de $E$. De plus, sur $U_\alpha \cap U_\beta$, on a $$\sum_j a_{\alpha,j}\sigma_j =\sum_j a_{\beta,j}\sigma_j = \sigma$$
+On en déduit alors que
+$$\sum_j (a_{\alpha,j} - a_{\beta,j})\sigma_j = 0$$ sur $U_\alpha \cap U_\beta$. On pose alors $b_{\alpha, \beta, j} = a_{\alpha,j} - a_{\beta,j}$, on a $(b_{\alpha, \beta, j})_j \in \mathcal{R}(U_\alpha \cap U_\beta)$.
+
+On applique l'hypothèse de récurrence sur $E_\alpha \cap E_\beta$, il existe des fonctions holomorphes $c_{\alpha,\beta,h} \in \mathcal{O}(U_\alpha \cap U_\beta)$ tel que
+$$(b_{\alpha,\beta,j})_j = \sum_h c_{\alpha,\beta,h}\tau_h$$
+On choisit un cylindre convexe $\Omega$ voisinage de $E$ tel que ${U_\alpha}$ recouvre $\Omega$. Par définition, $\Omega$ est un produit d'ouvert convexe de $\mathbb{C}$. D'après le théorème de représentation de Riemann, chacun de ces ouverts est biholomorphe à un disque; donc $\Omega$ est biholomorphe à un polydisque. D'après le théorème de Dolbeault, on a $H^1(\Omega, \mathcal{O}_\Omega)=0$; on en déduit que $H^1(\{U_\alpha\}, \mathcal{O}_\Omega)=0$.
+
+On pose $c_{\beta, \alpha, h} = - c_{\alpha, \beta, h}$, alors on a $(c_{\alpha,\beta,h})_{\alpha,\beta} \in Z^1(\{U_\alpha\}, \mathcal{O}_\Omega)$. Par l'annulation de la cohomologie, il existe $d_{\alpha, h} \in Z^0(\{U_\alpha\}, \mathcal{O}_\Omega)$ tel que $$c_{\alpha, \beta, h} = d_{\beta, h} - d_{\alpha, h}$$
+On en déduit que $$(a_{\alpha,j} - a_{\beta,j})_j = (b_{\alpha,\beta,j})_j = \sum_h c_{\alpha,\beta,h}\tau_h = \sum_h (d_{\beta, h} - d_{\alpha,h})\tau_h$$
+En posant $\tau_h = (\tau_{hj})_j$, on en déduit que
+$$a_{\alpha,j} + \sum_h d_{\alpha,h}\tau_{h, j} = a_{\beta,j} + \sum_h d_{\beta,h}\tau_{h, j}$$
+Cette relation nous permet de recoller ces fonctions holomorphes en $a_j \in \mathcal{O}(\Omega)$. De plus, sur $U_\alpha$, on a
+$$\sum_j a_j\sigma_j = \sum_j a_{\alpha,j}\sigma_j + \sum_h d_{\alpha,h}\sum_j \tau_{hj}\sigma_j = \sigma$$
+En effet, on a $\tau_h \in \mathcal{R}$ donc $\sum_j \tau_{hj}\sigma_j = 0$. Ce qui termine la preuve du lemme.
+\end{proof}
 \end{document}
