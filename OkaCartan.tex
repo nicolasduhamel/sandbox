@@ -17,9 +17,9 @@
 % Definition Styles
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
-\newtheorem{example}{E'xample}[section]
-\theoremstyle{remark}
-\newtheorem{remark}{Remark}
+\newtheorem{exemple}{Exemple}[section]
+\theoremstyle{remarque}
+\newtheorem{remarque}{Remarque}
 
 %\newtheoremstyle{dotless}{}{}{itshape}{}{bfseries}{}{ }{}
 %\theoremstyle{dotless}
@@ -49,6 +49,7 @@ On suppose qu'il existe un nombre fini de sections $\sigma'_j \in \mathcal{F}(U'
 \sigma'_j = \sum_{k=1}^{p''} a_{jk}\sigma''_k \qquad
 \sigma''_j = \sum_{k=1}^{p'} b_{jk}\sigma'_k
 \end{equation*}
+
 Alors il existe un voisinage $W \subset U' \cup U''$ de $E' \cup E''$ et des sections $\sigma_j \in \mathcal{F}(W)$ pour $1\leq j \leq p=p'+p''$ qui engendre $\mathcal{F}$ sur $W$.
 \end{lemme}
 
@@ -58,6 +59,7 @@ On pose $\sigma' = (\sigma'_j)$ , $\sigma'' = (\sigma''_j)$ et $A=(a_{jk})$, $B=
 \sigma' = A\sigma'' \qquad
 \sigma'' = B\sigma'
 \end{equation*}
+
 On va maintenant fusionner ces deux équations en une seule. Pour cela, on pose
 \begin{equation*}
 \tilde{\sigma}' = \begin{pmatrix}
@@ -73,6 +75,7 @@ $$ \tilde{A} = \begin{pmatrix}
    I_{p'} & A \\
    -B & I_{p''} - BA 
 \end{pmatrix}$$
+
 De l'équation $\sigma'' = BA\sigma''$, on en déduit que
 \begin{equation*}
 \tilde{A}\sigma'' = \begin{pmatrix}
@@ -89,6 +92,7 @@ De l'équation $\sigma'' = BA\sigma''$, on en déduit que
    \mathbf{0}_{p'}
 \end{pmatrix}
 \end{equation*}
+
 Autrement dit, $\tilde{A}\tilde{\sigma}'' = \tilde{\sigma}'$.
 
 On va aussi poser $P = \begin{pmatrix}
@@ -120,9 +124,10 @@ et $Q = \begin{pmatrix}
    -B & I_{p''} 
 \end{pmatrix} = I_p
 \end{eqnarray}
+
 On cherche à étendre les applications holomorphe $P$ et $Q$ à un voisinage de $E' \cup E''$ tout en ne perturbant pas trop l'égalité précédente; pour l'instant $P$ et $Q$ ne sont définit que sur $U' \cap U''$.
 
-On approche les fonctions holomorphes $a_{jk}$, $b_{jk}$ sur un voisinage $W_0 \subset \subset U \cap U'$ de $E'\cap E''$ par des polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$ tel que $$\hat{A}(z) = \tilde{Q}(z)\tilde{A}(z)\tilde{P}^{-1}(z) \in V_0$$ pour tout $z \in W_0$ où $V_0$ est le voisinage qui apparait dans la décomposition de Cartan et l'on note $\tilde{P}$, $\tilde{Q}$ les matrices obtenu en remplaçant les coefficients $a_{jk}$, $b_{jk}$ par les polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$.
+On approche les fonctions holomorphes $a_{jk}$, $b_{jk}$ sur un voisinage $W_0 \Subset U \cap U'$ de $E'\cap E''$ par des polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$ tel que $$\hat{A}(z) = \tilde{Q}(z)\tilde{A}(z)\tilde{P}^{-1}(z) \in V_0$$ pour tout $z \in W_0$ où $V_0$ est le voisinage qui apparait dans la décomposition de Cartan et l'on note $\tilde{P}$, $\tilde{Q}$ les matrices obtenu en remplaçant les coefficients $a_{jk}$, $b_{jk}$ par les polynômes $\tilde{a}_{jk}$, $\tilde{b}_{jk}$.
 
 D'après la décomposition de Cartan, il existe des applications holomorphes $A' : W' \to GL_p(\mathbb{C})$ et $A'' : W'' \to GL_p(\mathbb{C})$ où $W' \subset U'$ et $W'' \subset U''$ sont des voisinages de $E'$ et $E''$ telles que $$\hat{A} = (A')^{-1}A''$$ sur $W' \cap W''$.
 
@@ -137,11 +142,12 @@ On a $\tilde{Q}\tilde{A}\tilde{P}^{-1} = (A')^{-1}A''$, donc $\tilde{A} = \tilde
 \end{array}
 \right.
 \end{equation*}
+
 De plus, $\sigma'$ engendre $\mathcal{F}$ sur $W' \subset U'$ et $A'\tilde{Q}$ est inversible donc $\sigma$ engendre $\mathcal{F}$ sur $W'$. De même, $\sigma$ engendre $\mathcal{F}$ sur $W''$; on en déduit que $\sigma$ engendre $\mathcal{F}$ sur $W'\cup W''$.
 \end{proof}
 
 \begin{lemme}[Sysygy d'Oka]
-Soit $E \subset\subset \mathbb{C}^n$ un cube fermé.
+Soit $E \Subset \mathbb{C}^n$ un cube fermé.
 \begin{enumerate}
 \item Soit $\mathcal{F}$ un faisceau cohérent sur un voisinage $V$ de E, il existe un voisinage ouvert $E \subset U \subset V$ tel que $\mathcal{F}$ soit engendré par un nombre fini de section sur $U$. On en déduit alors l'existence de $N \in \mathbb{N}$ et d'une suite exacte $$\mathcal{O}^N_U \to \mathcal{F}_{|U} \to 0$$
 \item Soit $\sigma_j \in \mathcal{F}(U)$ un système générateur fini de $\mathcal{F}$ sur $U$ et  soit $\sigma \in \mathcal{F}(U)$. Alors il existe un voisinage ouvert $E \subset U' \subset U$ et des fonctions holomorphes $a_j \in \mathcal{O}(U')$ tel que $$\sigma = \sum_{j=1}^N a_j\sigma_j$$
@@ -165,6 +171,7 @@ On a $E_\alpha \cap E_{\alpha+1} = E_{t_\alpha}$ de dimension $\leq \nu - 1$. D'
 \sigma_{\alpha,j} = \sum a_{jk}\sigma_{\alpha+1,j} \qquad
 \sigma_{\alpha+1,j} = \sum b_{jk}\sigma_{\alpha,j}
 \end{equation*}
+
 On va utiliser le lemme de fusion pour fusionner les systèmes générateurs de $E_1, ..., E_L$. On commence par l'appliquer à $E_1$ et $E_2$; on trouve alors un système générateur fini de $\mathcal{F}$ sur un voisinage de $E_1 \cup E_2$. On l'applique ensuite à $E_1 \cup E_2$ et $E_3$, on trouve ainsi un système générateur fini de $\mathcal{F}$ sur un voisinage de $E_1 \cup E_2 \cup E_3$. Par récurrence, on obtient alors un système générateur fini sur un voisinage de $E=E_1 \cup ... \cup E_L$.
 
 Il nous faut construire des fonctions holomorphes $a_j$ tel que 
@@ -175,19 +182,172 @@ sur $U'_t$. Par le même argument de compacité que précédemment, il existe $$
 On va modifier les fonctions holomorphes $(a_{j, \alpha})_\alpha$ pour pouvoir les recoller sur un voisinage de $E$, on veut de plus qu'après les avoir modifier on garde toujours la même égalité.
 
 Soit $\mathcal{R} = \mathcal{R}(\sigma_j)$ le faisceau des relations, c'est un sous-faisceau localement fini de $\mathcal{O}^N$; donc $\mathcal{R}$ est cohérent sur un voisinage de $E$. D'après la première partie, $\mathcal{R}$ est engendré par un nombre fini de sections $(\tau_h)$ sur un voisinage de $E$. De plus, sur $U_\alpha \cap U_\beta$, on a $$\sum_j a_{\alpha,j}\sigma_j =\sum_j a_{\beta,j}\sigma_j = \sigma$$
+
 On en déduit alors que
 $$\sum_j (a_{\alpha,j} - a_{\beta,j})\sigma_j = 0$$ sur $U_\alpha \cap U_\beta$. On pose alors $b_{\alpha, \beta, j} = a_{\alpha,j} - a_{\beta,j}$, on a $(b_{\alpha, \beta, j})_j \in \mathcal{R}(U_\alpha \cap U_\beta)$.
 
 On applique l'hypothèse de récurrence sur $E_\alpha \cap E_\beta$, il existe des fonctions holomorphes $c_{\alpha,\beta,h} \in \mathcal{O}(U_\alpha \cap U_\beta)$ tel que
 $$(b_{\alpha,\beta,j})_j = \sum_h c_{\alpha,\beta,h}\tau_h$$
+
 On choisit un cylindre convexe $\Omega$ voisinage de $E$ tel que ${U_\alpha}$ recouvre $\Omega$. Par définition, $\Omega$ est un produit d'ouvert convexe de $\mathbb{C}$. D'après le théorème de représentation de Riemann, chacun de ces ouverts est biholomorphe à un disque; donc $\Omega$ est biholomorphe à un polydisque. D'après le théorème de Dolbeault, on a $H^1(\Omega, \mathcal{O}_\Omega)=0$; on en déduit que $H^1(\{U_\alpha\}, \mathcal{O}_\Omega)=0$.
 
 On pose $c_{\beta, \alpha, h} = - c_{\alpha, \beta, h}$, alors on a $(c_{\alpha,\beta,h})_{\alpha,\beta} \in Z^1(\{U_\alpha\}, \mathcal{O}_\Omega)$. Par l'annulation de la cohomologie, il existe $d_{\alpha, h} \in Z^0(\{U_\alpha\}, \mathcal{O}_\Omega)$ tel que $$c_{\alpha, \beta, h} = d_{\beta, h} - d_{\alpha, h}$$
+
 On en déduit que $$(a_{\alpha,j} - a_{\beta,j})_j = (b_{\alpha,\beta,j})_j = \sum_h c_{\alpha,\beta,h}\tau_h = \sum_h (d_{\beta, h} - d_{\alpha,h})\tau_h$$
+
 En posant $\tau_h = (\tau_{hj})_j$, on en déduit que
 $$a_{\alpha,j} + \sum_h d_{\alpha,h}\tau_{h, j} = a_{\beta,j} + \sum_h d_{\beta,h}\tau_{h, j}$$
+
 Cette relation nous permet de recoller ces fonctions holomorphes en $a_j \in \mathcal{O}(\Omega)$. De plus, sur $U_\alpha$, on a
 $$\sum_j a_j\sigma_j = \sum_j a_{\alpha,j}\sigma_j + \sum_h d_{\alpha,h}\sum_j \tau_{hj}\sigma_j = \sigma$$
+
 En effet, on a $\tau_h \in \mathcal{R}$ donc $\sum_j \tau_{hj}\sigma_j = 0$. Ce qui termine la preuve du lemme.
+\end{proof}
+
+\begin{lemme}[Syzygies d'Oka]
+Soit $\mathcal{F}$ un faisceau cohérent sur un voisinage d'un cube fermé $E \Subset \mathbb{C}^n$. Alors pour tout $p \geq 1$, il existe un voisinage ouvert $U$ de $E$, des entiers $N_1,...,N_p \geq 0$ et une suite exacte
+$$0 \to \ker \phi_p \to \mathcal{O}^{N_p}_{|U} \to ... \to \mathcal{O}^{N_1}_{|U} \to \mathcal{F}_{|U} \to 0$$
+
+Ces suites exactes sont appelées syzygies d'Oka.
+\end{lemme}
+
+\begin{proof}
+D'après le lemme précédent, il existe un voisinage ouvert $U_1$ de $E$ , un entier $N_1 \geq 0$ et une suite exacte
+$$\mathcal{O}^{N_1}_{|U_1} \overset{\phi_1}{\to} \mathcal{F}_{|U_1} \to 0$$
+
+On peut la compléter pour donner la suite exacte
+$$0 \to \ker \phi_1 \to \mathcal{O}^{N_1}_{|U_1} \overset{\phi_1}{\to} \mathcal{F}_{|U_1} \to 0$$
+
+Le faisceau $\mathcal{F}$ étant cohérent, on en déduit que $ker \phi_1$ est un faisceau cohérent. En appliquant le lemme précédent, il existe un voisinage ouvert $U_2$ de $E$, un entier $N_2 \geq 0$ et une suite exacte
+$$\mathcal{O}^{N_2}_{|U_2} \overset{\phi_2}{\to} \ker \phi_1 \to 0$$
+
+Quitte à diminuer $U_1$ et $U_2$, on peut supposer que $U_1 = U_2 = U$ voisinage ouvert de $E$. D'autre part, on a Im $\phi_2 = \ker \phi_1$; on en déduit alors une suite exacte
+$$\mathcal{O}^{N_2}_{|U} \overset{\phi_2}{\to} \mathcal{O}^{N_1}_{|U} \overset{\phi_1}{\to} \mathcal{F}_{|U} \to 0$$
+
+Que l'on complète pour donner la suite exacte
+$$0 \to \ker \phi_2 \to \mathcal{O}^{N_2}_{|U} \overset{\phi_2}{\to} \mathcal{O}^{N_1}_{|U} \overset{\phi_1}{\to} \mathcal{F}_{|U} \to 0$$
+
+Par une récurrence immédiate, on en déduit le lemme.
+\end{proof}
+
+Dans la suite on aura besoin d'un théorème d'annulation de la cohomologie pour des degrés suffisamment grand.
+\begin{theoreme}
+Soit $X \subset \mathbb{R}^n$ un ouvert et $\mathcal{F}$ un faisceau sur $X$. Alors pour tout $q \geq 2^n$, on a $$H^q(X, \mathcal{F})=0$$
+\end{theoreme}
+
+\begin{proof}
+On considère un pavage non régulier de $X$ par des cubes fermés, c'est à dire, on recouvre $X$ par des cubes fermés $E_\alpha$ qui n'ont pas de point commun en dehors des points du bord. On considère alors un recouvrement $\{U_\alpha\}$ par des cubes ouverts $X$ tel que $E_\alpha \Subset U_\alpha \Subset X$ et on choisit les $U_\alpha$ suffisamment petit tel que si on prend au moins $2^n+1$ ouvert parmi les $U_\alpha$ alors leur intersection est vide.
+
+Si $q \geq 2^n$, alors on a $C^q(\{U_\alpha\}, \mathcal{F})=0$; d'où $H^q(\{U_\alpha\}, \mathcal{F})=0$. De plus, d'après le théorème de Dolbeault, on a $H^q(U_\alpha, \mathcal{F})=0$ pour tout $\alpha$. On en déduit alors d'après le théorème de Leray que
+$$H^q(X, \mathcal{F})=H^q(\{U_\alpha\}, \mathcal{F})=0$$
+\end{proof}
+
+On commence par démontrer le lemme fondamental d'Oka pour un faisceau cohérent définit sur un voisinage d'un cube fermé.
+\begin{lemme}
+Soit $\mathcal{F}$ un faisceau cohérent sur un voisinage d'un cube fermé $E \subset \mathbb{C}^n$. Alors, pour $q \geq 1$, on a
+$$H^q(int(E), \mathcal{F})=0$$
+où $int(E)$ désigne l'intérieur de $E$.
+\end{lemme}
+
+\begin{proof}
+On a une suite exacte
+$$0 \to \ker \phi_1 \to \mathcal{O}^{N_1}_{|U_1} \to \mathcal{F}_{|U_1} \to 0$$
+provenant des syzygies d'Oka. On la restreint sur $U=int(E)$ et on considère la suite exacte longue de cohomologie correspondante
+$$H^q(U, \mathcal{O}^{N_1}) \to H^q(U, \mathcal{F}) \to  H^{q+1}(U, \ker \phi_1) \to H^{q+1}(U, \mathcal{O}^{N_1})$$
+
+D'après le théorème de Dolbeault, on a
+$$H^q(U, \mathcal{O}^{N_1}) =  H^{q+1}(U, \mathcal{O}^{N_1}) = 0$$
+
+On en déduit que $$H^q(U, \mathcal{F}) =  H^{q+1}(U, \ker \phi_1)$$
+
+On arrive ainsi par l'intermédiaire des syzygies d'Oka à augmenter le degré de la cohomologie. De plus, d'après le théorème précédent la cohomologie est nulle pour des degrés $\geq 2^{2n}$. Il ne nous reste plus qu'à utiliser des syzygies d'Oka de longueur plus grande pour conclure.
+
+D'après l'existence de syzygies d'Oka de longueur 2, on a une suite exacte
+$$0 \to \ker \phi_2 \to \mathcal{O}^{N_2}_{|U_2} \overset{\phi_2}{\to} \mathcal{O}^{N_1}_{|U_2} \overset{\phi_1}{\to} \mathcal{F}_{|U_2} \to 0$$
+
+On a donc Im $\phi_2 = \ker \phi_1$; en restreignant à $U$ on a alors une suite exacte
+$$0 \to \ker \phi_2 \to \mathcal{O}^{N_2}_{|U} \to \ker \phi_1 \to 0$$
+
+Par le même raisonnement que précédemment, on en déduit que
+$$H^{q+1}(U, \ker \phi_1) =  H^{q+2}(U, \ker \phi_2)$$
+
+En utilisant l'existence de sysygies d'Oka de longueur arbitraire et une récurrence immédiate, on en déduit que
+$$H^q(U, \mathcal{F}) =  H^{q+p}(U, \ker \phi_p)$$
+
+Pour $p = 2^{2n}-q$, on en déduit d'après le théorème précédent l'annulation de la cohomologie.
+\end{proof}
+
+\begin{lemme}[Lemme fondamental d'Oka]
+Soit $\Omega \subset \mathbb{C}^n$ un cylindre convexe et $\mathcal{F}$ un faisceau cohérent sur $\Omega$. Alors, pour $q \geq 1$, on a
+$$H^q(\Omega, \mathcal{F})=0$$
+\end{lemme}
+
+\begin{remarque}
+Dans le lemme fondamental d'Oka, on ne suppose plus que le faisceau est définit sur un voisinage de $\bar{\Omega}$. La démonstration du lemme fondamental d'Oka consiste à approcher $\Omega$ par l'intérieur par des cubes et à utiliser le lemme précédent d'annulation de la cohomologie.
+\end{remarque}
+
+\begin{proof}
+D'après le théorème de représentation de Riemann, $\Omega$ est biholomorphe à un cube ouvert. On supposera, sans perte de généralité, que $\Omega$ est un cube ouvert.
+
+Soit $(\Omega_i)_{i \geq 0}$ une suite croissante de cubes ouvert tel que
+\begin{equation*}
+\Omega_i \Subset \Omega_{i+1}, \qquad
+\Omega = \cup_{i \geq 0} \Omega_i
+\end{equation*}
+
+On sait d'après le lemme précédent que
+$$H^q(\Omega_i, \mathcal{F})=0$$
+
+On va chercher à approcher tout cocycle $f \in Z^q(\Omega, \mathcal{F})$ par des cobords $\delta g_i \in B^q(\Omega_i, \mathcal{F})$.
+
+Soit $\{U_\alpha\}_\alpha$ un recouvrement ouvert de $\Omega$ par des cubes, $\{U_\alpha \cap \Omega_i\}_\alpha$ est alors un recouvrement de $\Omega_i$. D'après le théorème de Dolbeault, on a
+\begin{eqnarray}
+\nonumber &&H^q(U_\alpha, \mathcal{F}) = 0 \\
+\nonumber &&H^q(U_\alpha \cap \Omega_i, \mathcal{F}) = 0
+\end{eqnarray}
+
+
+D'après le théorème de Leray, on en déduit que
+\begin{eqnarray}
+\nonumber H^q(\Omega, \mathcal{F}) &=& H^q(\{U_\alpha\}, \mathcal{F}), \\
+\nonumber H^q(\Omega_i, \mathcal{F}) &=& H^q(\{U_\alpha \cap \Omega_i\}, \mathcal{F})=0
+\end{eqnarray}
+
+Soit $f \in Z^q(\{U_\alpha\}, \mathcal{F})$, on a $f_{|\Omega_i} \in Z^q(\{U_\alpha\cap \Omega_i\}, \mathcal{F})$; d'après l'annulation de la cohomologie, il existe $g_i \in C^{q-1}(\{U_\alpha\cap \Omega_i\}, \mathcal{F})$ tel que
+$$f_{|\Omega_i} = \delta g_i$$
+
+On se restreint au cas où $q \geq 2$:
+
+On pose $\tilde{g}_1=g_1$; supposons construit par récurrence $\tilde{g}_i \in  C^{q-1}(\{U_\alpha\cap \Omega_i\}, \mathcal{F})$ tel que
+\begin{eqnarray}
+\nonumber f_{|\Omega_i} &=& \delta \tilde{g}_i \\
+\nonumber \tilde{g_i}_{|\Omega_{i-1}} &=& \tilde{g}_{i-1}
+\end{eqnarray}
+
+On cherche à construire $\tilde{g}_{i+1}$ qui coïncide avec $\tilde{g}_i$ sur $\Omega_i$. On a
+\begin{eqnarray}
+\nonumber \delta(\tilde{g}_i - g_{i+1}{|_{\Omega_{i}}})&=& \delta \tilde{g}_i  - \delta g_{i+1}{|_{\Omega_{i}}}\\
+\nonumber &=& 0
+\end{eqnarray}
+
+On en déduit qu'il existe $h_{i+1} \in C^{q-2}(\{U_\alpha\cap \Omega_i\}, \mathcal{F})$ tel que
+$$\tilde{g}_i - g_{i+1}{|_{\Omega_{i}}} = \delta h_{i+1}$$
+
+On étend $h_{i+1} \in C^{q-2}(\{U_\alpha\cap \Omega_i\}, \mathcal{F})$ sur $\Omega$, en posant
+$$(\tilde{h}_{i+1})_{\alpha_1, ..., \alpha_{q-1}} = 0 \quad si \quad U_{\alpha_1}\cap ... \cap U_{\alpha_{q-1}} \not \subset \Omega_i$$
+
+On a alors $\tilde{h}_{i+1} \in C^{q-2}(\{U_\alpha\}, \mathcal{F})$. De plus, on pose
+$$\tilde{g}_{i+1} = g_{i+1} + \delta \tilde{h}_{i+1}|_{\Omega_{i+1}}$$
+
+On en déduit alors que
+\begin{eqnarray}
+\nonumber \delta \tilde{g}_{i+1} &=& f_{|\Omega_{i+1}} \\
+\nonumber \tilde{g}_{i+1}|_{\Omega_i} &=& \tilde{g}_i
+\end{eqnarray}
+
+On définit alors $\tilde{g} \in C^{q-1}(\{U_\alpha\}, \mathcal{F})$ par recollement des $\tilde{g}_i$. On en déduit que
+$$\delta \tilde{g}_{|\Omega_i} = \delta \tilde{g}_i = f_{|\Omega_i}$$
+
+On en conclut que $\delta \tilde{g} = f$.
 \end{proof}
 \end{document}
