@@ -32,7 +32,7 @@
 \author{Duhamel Nicolas}
 \maketitle
 
-L'objectif est de démontrer un lemme d'annulation pour les faisceaux cohérents sur un domaine cylindrique convexe. On admettra le lemme de Cartan sur la décomposition des applications holomorphes à valeurs matricielles, que l'on utilisera pour démontrer le lemme de fusion. Cela nous permettra d'en déduire l'existence de syzygies d'Oka et finalement le lemme fondamental d'Oka.
+L'objectif est de démontrer un lemme d'annulation pour les faisceaux cohérents sur un domaine cylindrique convexe. Le lemme de Cartan sur la décomposition des applications holomorphes à valeurs matricielles nous permettra de démontrer le lemme de fusion. On pourra alors en déduire l'existence de syzygies d'Oka et finalement le lemme fondamental d'Oka.
 
 \section{Lemme de Cartan}
 Soit $\mathcal{F}$ un faisceau cohérent sur un domaine $\Omega \subset \mathbb{C}^n$. À partir de systèmes générateurs finis de $\mathcal{F}$ sur $E'$ et $E''$, on veut construire un système générateur fini de $\mathcal{F}$ sur $E' \cup E''$.
@@ -40,8 +40,63 @@ Soit $\mathcal{F}$ un faisceau cohérent sur un domaine $\Omega \subset \mathbb{
 On va supposer que $E'$ et $E''$ sont des produits de segments réels et l'on dira que ce sont des cubes. On supposera de plus que $E'$ et $E''$ sont des cubes adjacents, c'est à dire qu'ils peuvent s'écrire sous la forme $E'=F \times E'_n$ et $E''=F \times E''_n$ où $F$ est un cube dans $\mathbb{C}^{n-1}$, $E'_n$ et $E''_n$ sont des cubes de $\mathbb{C}$ et $e=E'_n \cap E''_n$ est un segment non vide.
 
 \begin{lemme}[Décomposition matricielle de Cartan]
-Il existe un voisinage $V_0 \subset GL_p(\mathbb{C})$ de l'identité $I_p$ tel que pour toute application holomorphe $\hat{A} : U \to V_0$ sur un voisinage $U$ de $F \times e$, il existe des applications holomorphes $A' : U' \to GL_p(\mathbb{C})$ et $A'' : U'' \to GL_p(\mathbb{C})$ où $U'$ et $U''$ sont des voisinages de $E'$ et $E''$ tel que $\hat{A} = (A')^{-1}A''$ sur $U' \cap U''$.
+Il existe un voisinage $V_0 \subset GL_p(\mathbb{C})$ de l'identité $I_p$ tel que pour toute application holomorphe $\hat{A} : U \to V_0$ sur un voisinage $U$ de $F \times e$, il existe des applications holomorphes $A' : U' \to GL_p(\mathbb{C})$ et $A'' : U'' \to GL_p(\mathbb{C})$ où $U'$ et $U''$ sont des voisinages de $E'$ et $E''$ tel que $\hat{A} = A'(A'')^{-1}$ sur $U' \cap U''$.
 \end{lemme}
+
+On admettra certaines parties techniques de la démonstration (notamment une convergence normale).
+
+\begin{proof}
+On définit l'exponentielle et le logarithme de matrices par les formules classiques. On choisit $V_0$ un voisinage de l'identité tel que la série définissant le logarithme soit normalement convergente sur $V_0$. On pose
+$$M(P, Q) =  \exp(-P)\exp(P+Q)\exp(-Q)$$
+
+On va agrandir un peu les cubes pour avoir une petite marge de manœuvre. On pose
+\begin{eqnarray}
+\nonumber \tilde{F} &=& F + [-\delta,\delta]^{2(n-1)} \\
+\nonumber \tilde{E}'_{n(1)} &=& E'_n + [-\delta,\delta]^2 \\
+\nonumber \tilde{E}''_{n(1)} &=& E''_n + [-\delta,\delta]^2
+\end{eqnarray}
+
+avec $\delta > 0$ assez petit pour que l'on ait
+$$F \times e \subset \tilde{F} \times (\tilde{E}'_{n(1)} \cap \tilde{E}''_{n(1)}) \Subset U$$
+
+On décompose le chemin $\gamma_1 = \partial(\tilde{E}'_{n(1)} \cap \tilde{E}''_{n(1)})$ en deux chemins $\gamma'_1$ de $\tilde{E}'_{n(1)}$ et $\gamma''_1$ de $\tilde{E}''_{n(1)}$.
+
+On suppose construit $E'_{n(k)}$ (resp. $E''_{n(k)}$) et on définit $E'_{n(k+1)}$ (resp. $E''_{n(k+1)}$) en enlevant une épaisseur $\delta/2^{k+1}$; les chemins $\gamma_k$ sont définit de la même manière que précédemment.
+
+On pose $B_1(z', z_n)=\log A(z',z_n)$ pour $(z', z_n) \in \tilde{E}'_{n(1)} \cap \tilde{E}''_{n(1)}$. On a alors
+
+\begin{eqnarray}
+\nonumber B_1(z', z_n) &=& \frac{1}{2i\pi} \int_{\gamma_{1}} \frac{B_1(z', \zeta)}{\zeta - z_n} d\zeta \\
+\nonumber &=& \frac{1}{2i\pi} \int_{\gamma'_{1}} \frac{B_1(z', \zeta)}{\zeta - z_n} d\zeta + \frac{1}{2i\pi} \int_{\gamma''_{1}} \frac{B_1(z', \zeta)}{\zeta - z_n} d\zeta \\
+\nonumber &=& B'_1(z', z_n) + B''_1(z', z_n)
+\end{eqnarray}
+
+Alors $B'_1$ (resp. $B''_1$) est holomorphe sur $\tilde{E}'_{(1)}=\tilde{F} \times \tilde{E}'_{n(1)}$ (resp. $\tilde{E}''_{(1)}=\tilde{F} \times \tilde{E}''_{n(1)}$).
+
+On suppose construit des fonctions $B'_k$ et $B''_k$ holomorphes sur $\tilde{E}'_{(k)}=\tilde{F} \times \tilde{E}'_{n(k)}$ et $\tilde{E}''_{(k)}=\tilde{F} \times \tilde{E}''_{n(k)}$ respectivement telles que $$B_k = B'_k + B''_k$$
+sur l'intersection des domaines de définitions.
+
+On pose alors $$B_{k+1}=\log M(B'_k, B''_k)$$
+
+Grâce à la décomposition de $\gamma_{k+1}$ en $\gamma'_{k+1}$ et $\gamma''_{k+1}$, on trouve des fonctions holomorphes $B'_{k+1}$ et $B''_{k+1}$ telles que $$B_{k+1} = B'_{k+1} + B''_{k+1}$$
+
+On pose alors
+\begin{eqnarray}
+\nonumber A'(z', z_n) &=& \lim \exp(B'_1(z',z_n))...\exp(B'_k(z', z_n)) \\
+\nonumber A''(z', z_n) &=& \lim \exp(-B''_1(z',z_n))...\exp(-B''_k(z', z_n))
+\end{eqnarray}
+
+On admet la convergence normale de $A'$ et $A''$; on en déduit que $A'$ est holomorphe sur $\bigcap_{k \geq 1} \tilde{E}'_{(k)}$. Or on les $\tilde{E}'_{(k)}$ sont définis en partant d'une épaisseur $\delta$ et en enlevant successivement des épaisseurs $\delta/4$, $\delta/8$; donc à la limite il reste une épaisseur $\delta/2$. On en déduit que $A'$ est holomorphe sur un voisinage de $E'$; de même, $A''$ est holomorphe sur un voisinage de $E''$.
+
+D'autre part, on a
+\begin{eqnarray}
+\nonumber \exp(B_{k+1}) &=& M(B'_k,B''_k) = \exp(-B'_k)\exp(B'_k+B''_k)\exp(-B''_k) \\
+\nonumber &=& \exp(-B'_k)\exp(B_k)\exp(-B''_k) \\
+\nonumber &=& \exp(-B'_k)...\exp(-B'_1)\exp(B_1)\exp(-B''_1)...\exp(-B''_k)
+\end{eqnarray}
+donc $$A = \exp(B_1) = \exp(B'_1)...\exp(B'_k)\exp(B_k)(\exp(-B''_1)...\exp(-B''_k))^{-1}$$
+d'où l'on en déduit à la limite que $$A = A' (A'')^{-1}$$
+\end{proof}
 
 \begin{lemme}[Lemme de fusion]
 On suppose qu'il existe un nombre fini de sections $\sigma'_j \in \mathcal{F}(U')$ pour $1\leq j \leq p'$ et $\sigma''_j \in \mathcal{F}(U'')$ pour $1\leq j \leq p''$ qui engendre $\mathcal{F}$ sur $U'$ et $U''$. De plus, on suppose qu'il existe des fonctions holomorphes $a_{jk}, b_{jk}$ sur $U' \cap U''$ tel que
@@ -154,7 +209,7 @@ On démontre l'existence de syzygies d'Oka de longueur arbitraire pour un faisce
 Soit $E \Subset \mathbb{C}^n$ un cube fermé.
 \begin{enumerate}
 \item Soit $\mathcal{F}$ un faisceau cohérent au-dessus d'un voisinage $V$ de E, il existe un voisinage ouvert $E \subset U \subset V$ tel que $\mathcal{F}$ soit engendré par un nombre fini de sections sur $U$. On en déduit alors l'existence de $N \in \mathbb{N}$ et d'une suite exacte $$\mathcal{O}^N_U \to \mathcal{F}_{|U} \to 0$$
-\item Soit $\sigma_j \in \mathcal{F}(U)$ un système générateur fini de $\mathcal{F}$ sur $U$ et  soit $\sigma \in \mathcal{F}(U)$. Alors il existe un voisinage ouvert $E \subset U' \subset U$ et des fonctions holomorphes $a_j \in \mathcal{O}(U')$ tels que $$\sigma = \sum_{j=1}^N a_j\sigma_j$$
+\item Soit $\sigma_j \in \mathcal{F}(U)$ un système générateur fini de $\mathcal{F}$ sur $U$ et  soit $\sigma \in \mathcal{F}(U)$. Alors il existe un voisinage ouvert $E \subset U' \subset U$ et des fonctions holomorphes $a_j \in \mathcal{O}(U')$ telles que $$\sigma = \sum_{j=1}^N a_j\sigma_j$$
 \end{enumerate}
 \end{lemme}
 
@@ -298,7 +353,7 @@ D'après le théorème de représentation de Riemann, $\Omega$ est biholomorphe 
 Soit $(\Omega_i)_{i \geq 0}$ une suite croissante de cubes ouverts tels que
 \begin{equation*}
 \Omega_i \Subset \Omega_{i+1}, \qquad
-\Omega = \cup_{i \geq 0} \Omega_i
+\Omega = \bigcup_{i \geq 0} \Omega_i
 \end{equation*}
 
 On sait d'après le lemme précédent que
