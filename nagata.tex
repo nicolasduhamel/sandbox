@@ -18,18 +18,18 @@
 \begin{document}
 
 \title{Anneau noethérien de dimension infinie}
-%\author{Duhamel Nicolas}
+\author{Duhamel Nicolas}
 \maketitle
 
 L'exemple suivant est dû à Nagata.
-\begin{proposition}
+\begin{proposition}[Ex. 9.6, \cite{eisenbud}]
 Soit $k$ un corps et $A = k[T_0, T_1, ...]$ l'anneau des polynômes à une infinité de variables sur le corps $k$. Soit $(m_n)_{n \geq 0}$ une suite strictement croissante d'entiers naturels tels que $( m_{n+1} - m_n )$ tend vers l'infini, on note $P_n$ l'idéal premier engendré par les variables $(T_j)_{m_n \leq j < m_{n+1}}$ et $S$ la partie multiplicative $A-\cup_{n \geq 0}P_n$. Alors $S^{-1}A$ est un anneau noethérien de dimension infinie.
 \end{proposition}
 
 La première étape est de comprendre les idéaux maximaux de $S^{-1}A$.
 On sait que les idéaux propres de $S^{-1}A$ sont de la forme $S^{-1}I$ où $I$ est un idéal de $A$ contenu dans $\cup_{n \geq 0}P_n$.
 
-\begin{lemme}
+\begin{lemme}[Ex. 3.18.b, \cite{eisenbud}]
 Soit $I$ un idéal de $A$ contenu dans la réunion des $P_n$. Alors il existe un entier $n \geq 0$ tel que $I$ soit contenu dans $P_n$.
 \end{lemme}
 
@@ -54,4 +54,7 @@ Pour finir, il ne reste plus qu'à prouver que $S^{-1}A$ est de dimension infini
 S^{-1}(T_{m_n}) \subset S^{-1}(T_{m_n}, T_{m_n+1}) \subset ... \subset S^{-1}(T_{m_n}, ..., T_{m_{n+1}-1})
 \end{equation*}
 est de longueur $m_{n+1} - m_n$ qui tend vers l'infini. Comme la dimension est le supremum des longueurs des chaines d'idéaux premiers; on en déduit le résultat.
+
+\bibliographystyle{unsrt}
+\bibliography{ref}
 \end{document}
