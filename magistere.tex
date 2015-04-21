@@ -35,7 +35,7 @@
 
 \epigraph{Assume your adversary is capable of one trillion guesses per second.}{\textit{Edward Snowden}}
 
-De nos jours, les concepts d'authentification et de confidentialité numérique sont de plus en plus utilisé dans notre société moderne. L'authentification numérique est utilisée par exemple par les cartes bancaires ou les sites web sécurisé avec le protocole HTTPS. D'autre part, notre vie privée est de plus en plus mis en danger par certaines entités qui possèdent des capacités de collectes et de traitements de données inimaginables; comme le montre les récentes révélations à propos de la NSA et de ces nombreux programmes de collectes de communication à travers le monde.
+De nos jours, les concepts d'authentification et de confidentialité numérique sont de plus en plus utilisés dans notre société moderne. L'authentification numérique est utilisée par exemple par les cartes bancaires ou les sites web sécurisés avec le protocole HTTPS. D'autre part, notre vie privée est de plus en plus mise en danger par certaines entités qui possèdent des capacités de collectes et de traitements de données inimaginables; comme le montrent les récentes révélations à propos de la NSA et de ces nombreux programmes de collectes de communication à travers le monde.
 
 \section{Motivation cryptographique}
 
@@ -44,17 +44,17 @@ On commence par une rapide introduction à quelques concepts clés de cryptograp
 \subsection{Diffie-Hellman}
 En 1976, Whitfield Diffie et Martin Hellman \cite{diffie-hellman} ont introduit le concept de cryptographie à clé publique aussi appelé cryptographie asymétrique. Contrairement à la cryptographie symétrique, où les deux parties communiquent en ayant au préalable convenu d'une clé secrète, chaque entité dispose d'une clé publique et d'une clé privée. La clé publique est diffusée sur le réseau public, l'expéditeur l'utilise pour chiffrer son message; tandis que le destinataire utilise sa clé privée pour déchiffrer le message. D'autre part, l'expéditeur a la possibilité de signer le message avec sa clé privée; le destinataire utilise alors la clé publique de l'expéditeur pour vérifier l'authenticité du message.
 
-Les implémentations de protocole à clé publique sont plus lent que leurs homologues symétrique; c'est pourquoi en pratique, la cryptographie à clé publique est souvent utilisée dans le seul but de partager une clé secrète qui pourra ensuite servir de base pour des protocoles symétrique.
+Les implémentations de protocole à clé publique sont plus lentes que leurs homologues symétriques; c'est pourquoi en pratique, la cryptographie à clé publique est souvent utilisée dans le seul but de partager une clé secrète qui pourra ensuite servir de base pour des protocoles symétrique.
 
 On se contentera de décrire le protocole d'échange de clés Diffie-Hellman; le but étant de donner une motivation au problème logarithme discret et non pas de faire un état de l'art de la cryptographie à clé publique.
 
-La méthode d'échange de clés de Diffie-Hellman permet à deux parties, qui n'ont aucune connaissance commune à priori, de partager une clé secrète à travers un canal non sécurisé. Pour être plus parlant, ont introduit les deux protagonistes Alice et Bob qui désirent partager une clé secrète sans que Eve ne puisse avoir connaissance de ladite clé.
+La méthode d'échange de clés de Diffie-Hellman permet à deux parties, qui n'ont aucune connaissance commune à priori, de partager une clé secrète à travers un canal non sécurisé. Pour être plus parlant, ont introduit les deux protagonistes Alice et Bob qui désirent partager une clé secrète sans que Ève ne puisse avoir connaissance de ladite clé.
 
-Alice et Bob commence par se mettre d'accord sur un groupe cyclique $G \cong \mathbb{Z}/N\mathbb{Z}$ et un générateur $g$, ces deux paramètres peuvent être diffusé sur le canal de manière publique sans compromettre la sécurité du protocole.
+Alice et Bob commencent par se mettre d'accord sur un groupe cyclique $G \cong \mathbb{Z}/N\mathbb{Z}$ et un générateur $g$, ces deux paramètres peuvent être diffusés sur le canal de manière publique sans compromettre la sécurité du protocole.
 
-Alice choisit secrètement un entier $a \mod N$ et envoie $g^a$ à Bob. Parallèlement, Bob choisit secrètement un entier $b \mod N$ et envoie $g^b$ à Alice. Alice et Bob disposent alors de la clé commune $g^{ab}$. En effet, Alice reçoit $g^b$ de la part de Bob et calcule $(g^b)^a = g^{ab}$; Bob quant à lui reçoit $g^a$ de la part d'Alice et calcule $(g^a)^b = g^{ab}$.
+Alice choisit secrètement un entier $a \mod N$ et envoi $g^a$ à Bob. Parallèlement, Bob choisit secrètement un entier $b \mod N$ et envoi $g^b$ à Alice. Alice et Bob disposent alors de la clé commune $g^{ab}$. En effet, Alice reçoit $g^b$ de la part de Bob et calcule $(g^b)^a = g^{ab}$; Bob quant à lui reçoit $g^a$ de la part d'Alice et calcule $(g^a)^b = g^{ab}$.
 
-Ni Alice ni Bob ne connait la clé secrète de son homologue et pourtant ils ont réussi à se mettre d'accord sur une clé secrète en combinant les deux clés secrète. Eve qui écoutait le canal de communication dispose de $g^a$ et $g^b$; si elle veut connaitre la clé secrète commune d'Alice et Bob, Eve doit calculer $g^{ab}$ à partir de $g^a$ et $g^b$.
+Ni Alice ni Bob ne connaissent la clé secrète de son homologue et pourtant ils ont réussi à se mettre d'accord sur une clé secrète en combinant les deux clés secrètes. Ève qui écoutait le canal de communication dispose de $g^a$ et $g^b$; si elle veut connaitre la clé secrète commune d'Alice et Bob, Ève doit calculer $g^{ab}$ à partir de $g^a$ et $g^b$.
 
 \begin{definition}
 On appelle \emph{problème de Diffie-Hellman} le problème consistant à trouver $g^{ab}$ à partir de $g^a$ et de $g^b$.
@@ -62,7 +62,7 @@ On appelle \emph{problème de Diffie-Hellman} le problème consistant à trouver
 Soit $h \in G$. On appelle \emph{logarithme discret de h dans la base g} un représentant de la classe $a \mod N$ tel que $h=g^a$, on note $\log_g h = a$.
 \end{definition}
 
-On remarque que si l'on sait résoudre le problème de logarithme discret alors on sait aussi résoudre le problème de Diffie-Hellman; on calcule le logarithme discret de $g^a$ et $g^b$ à savoir $a \mod N$ et $b \mod N$ puis on calcule $g^{ab}$. Le problème de Diffie-Hellman n'est donc pas plus difficile que le problème du logarithme discret. Il est généralement admis que le problème du logarithme discret et le problème de Diffie-Hellman sont de difficulté équivalentes; on sait montrer l'équivalence dans quelques cas particuliers mais pas en toute généralité.
+On remarque que si l'on sait résoudre le problème de logarithme discret alors on sait aussi résoudre le problème de Diffie-Hellman; on calcule le logarithme discret de $g^a$ et $g^b$ à savoir $a \mod N$ et $b \mod N$ puis on calcule $g^{ab}$. Le problème de Diffie-Hellman n'est donc pas plus difficile que le problème du logarithme discret. Il est généralement admis que le problème du logarithme discret et le problème de Diffie-Hellman sont de difficulté équivalente; on sait montrer l'équivalence dans quelques cas particuliers, mais pas en toute généralité.
 
 \subsection{Logarithme discret}
 La sécurité du protocole de Diffie-Hellman repose sur le fait que le problème du logarithme discret dans certains groupes est supposé difficile (du point de vue algorithmique). Cette hypothèse n'est pas vérifiée pour tous les groupes que l'on peut considérer; dans $(\mathbb{Z}/N\mathbb{Z},+)$, le problème du logarithme discret est facile. Si $g$ est un générateur de $\mathbb{Z}/N\mathbb{Z}$, on sait qu'il est premier à $N$ et en utilisant l'algorithme d'Euclide étendu on peut calculer un inverse $g^{-1}$ de $(g \mod N)$. Le logarithme discret de $x$ est alors $g^{-1}x$, la complexité du calcul du logarithme discret dans $(\mathbb{Z}/N\mathbb{Z},+)$ est $O(\log^2N)$.
@@ -72,13 +72,13 @@ $$\log_h x = (\log_g x)(\log_g h)^{-1}$$
 
 On en déduit que si l'on sait calculer efficacement le logarithme discret dans la base $g$ alors on sait aussi calculer efficacement le logarithme discret dans la base $h$.
 
-Cependant, la difficulté du logarithme discret n'est pas invariante par isomorphisme. En effet, le calcul du logarithme discret est considérablement plus difficile dans le groupe multiplicatif d'un corps fini $\mathbb{F}^*_q$ que dans le groupe additif $\mathbb{Z}/(q-1)\mathbb{Z}$ qui lui est isomorphe. La raison de cette non invariance par isomorphisme est que ces isomorphismes ne sont pas effectif. Le calcul de l'isomorphisme entre $\mathbb{Z}/(q-1)\mathbb{Z}$ et $\mathbb{F}^*_q$ est en fait équivalent au problème du logarithme discret dans $\mathbb{F}_q^*$.
+Cependant, la difficulté du logarithme discret n'est pas invariante par isomorphisme. En effet, le calcul du logarithme discret est considérablement plus difficile dans le groupe multiplicatif d'un corps fini $\mathbb{F}^*_q$ que dans le groupe additif $\mathbb{Z}/(q-1)\mathbb{Z}$ qui lui est isomorphe. La raison de cette non-invariance par isomorphisme est que ces isomorphismes ne sont pas effectifs. Le calcul de l'isomorphisme entre $\mathbb{Z}/(q-1)\mathbb{Z}$ et $\mathbb{F}^*_q$ est en fait équivalent au problème du logarithme discret dans $\mathbb{F}_q^*$.
 
-La méthode naïve pour résoudre le logarithme discret consiste à tester tous les exposants les uns après les autres; la complexité de cet algorithme est en $O(N)$, ce qui est exponentiel en la taille de $N$ i.e. exponentiel par rapport à $\log N$. Une variante de l'algorithme $\rho$ de Pollard \cite{pollard} permet de résoudre le logarithme discret en $O(\sqrt{N})$ opérations; pour calculer le logarithme discret de $h$ en base $g$ l'algorithme $\rho$ de Pollard cherche des collisions de la forme $h^{\alpha_1}g^{\beta_1} = h^{\alpha_2}g^{\beta_2}$ pour en déduire le logarithme discret.
+La méthode naïve pour résoudre le logarithme discret consiste à tester tous les exposants les uns après les autres; la complexité de cet algorithme est en $O(N)$, ce qui est exponentiel en la taille de $N$ c.-à-d. exponentiel par rapport à $\log N$. Une variante de l'algorithme $\rho$ de Pollard \cite{pollard} permet de résoudre le logarithme discret en $O(\sqrt{N})$ opérations; pour calculer le logarithme discret de $h$ en base $g$ l'algorithme $\rho$ de Pollard cherche des collisions de la forme $h^{\alpha_1}g^{\beta_1} = h^{\alpha_2}g^{\beta_2}$ pour en déduire le logarithme discret.
 
 L'algorithme de Pohlig-Hellman \cite{pohlig-hellman} permet de réduire la difficulté du logarithme discret dans le cas où l'ordre $N$ du groupe $G$ est composé. L'algorithme consiste à résoudre plusieurs logarithmes discrets dans des groupes plus petits puis à recomposer le logarithme discret dans $G$.
 
-Supposons, pour simplifier et expliquer l'idée générale de la réduction, que l'ordre $N$ de $G$ est un produit de deux nombres premiers $p$ et $q$ distincts. Si l'on note $G[p]$ (resp $G[q]$) la composante $p$-primaire (resp $q$-primaire) de $G$ alors le calcul du logarithme discret dans $G$ se ramène à $2$ calculs de logarithmes discrets dans les sous-groupes primaires par l'application suivante :
+Supposons, pour simplifier et expliquer l'idée générale de la réduction, que l'ordre $N$ de $G$ est un produit de deux nombres premiers $p$ et $q$ distincts. Si l'on note $G[p]$ (resp. $G[q]$) la composante $p$-primaire (resp. $q$-primaire) de $G$ alors le calcul du logarithme discret dans $G$ se ramène à $2$ calculs de logarithmes discrets dans les sous-groupes primaires par l'application suivante :
 \begin{equation*}
 \begin{array}{lcl}
 G & \longrightarrow & G[p] \times G[q] \\
@@ -86,9 +86,9 @@ h & \longmapsto & (h^q, h^p)
 \end{array}
 \end{equation*}
 
-En supposant que l'on sait calculer les logarithmes discrets $x_1$ (resp $x_2$) de $h^q$ (resp $h^p$) dans la base $g^q$ (resp $g^p$) alors on peut calculer le logarithme discret de $h$ dans le groupe $G$ en utilisant une relation de Bézout entre $p$ et $q$. 
+En supposant que l'on sait calculer les logarithmes discrets $x_1$ (resp. $x_2$) de $h^q$ (resp. $h^p$) dans la base $g^q$ (resp. $g^p$) alors on peut calculer le logarithme discret de $h$ dans le groupe $G$ en utilisant une relation de Bézout entre $p$ et $q$. 
 
-En effet, supposons que l'on ait le relation de Bézout suivante :
+En effet, supposons que l'on ait la relation de Bézout suivante :
 $$u_1 q + u_2 p = 1$$
 
 On en déduit alors une expression de $h$ en fonction de $h^p$ et $h^q$ :
@@ -102,22 +102,22 @@ $$x = x_1 u_1 q + x_2 u_2 p$$
 
 En appliquant simultanément l'algorithme de Pohlig-Hellman pour réduire le logarithme discret dans $G$ en des logarithmes discrets dans des groupes d'ordres premiers et l'algorithme $\rho$ de Pollard pour résoudre le logarithme discret dans les groupes d'ordres premiers; alors on trouve un algorithme générique qui calcule le logarithme discret en $O(\sum{\alpha_i\sqrt{p_i}}+\log N)$ opérations de groupes.
 
-Si l'on considère que le groupe $G$ est une boîte noire (groupe générique) i.e. que les seules opérations que l'on peut faire sont des multiplications d'éléments de $G$, l'inversion d'un élément et un test d'égalité entre deux éléments, alors on ne peut pas faire mieux.
+Si l'on considère que le groupe $G$ est une boîte noire (groupe générique) c.-à-d. que les seules opérations que l'on peut faire sont des multiplications d'éléments de $G$, l'inversion d'un élément et un test d'égalité entre deux éléments, alors on ne peut pas faire mieux.
 
 \begin{theoreme}[Shoup \cite{shoup}]
 \label{borneShoup}
 Soit $G$ un groupe générique d'ordre $N$, notons $p$ le plus grand facteur premier de $N$. La résolution du problème du logarithme discret dans $G$ nécessite au moins $\Omega(\sqrt{p})$ opérations. 
 \end{theoreme}
 
-\subsection{Groupes cryptographique}
+\subsection{Groupes cryptographiques}
 Pour avoir un protocole de Diffie-Hellman sûr, il faut trouver des groupes dans lesquels le problème du logarithme discret est difficile.
 
 D'un point de vue historique, les premiers groupes qui sont pour des applications en cryptographie sont les groupes multiplications d'un corps fini $\mathbb{F}^*_q$; ils ont été suggérés par Diffie-Hellman \cite{diffie-hellman}.
 
-On connait des attaques sur le logarithme discret dans ces groupes qui sont plus efficace que les approches génériques i.e. qui arrivent à battre la borne de Shoup \ref{borneShoup}. Ces attaques reposent sur des méthodes de cribles qui sont aussi utilisées pour la factorisation d'entiers. La complexité de ces algorithmes est sous-exponentielle $L_q[1/3;c]$ où l'on note
+On connait des attaques sur le logarithme discret dans ces groupes qui sont plus efficaces que les approches génériques c.-à-d. qui arrivent à battre la borne de Shoup \ref{borneShoup}. Ces attaques reposent sur des méthodes de cribles qui sont aussi utilisées pour la factorisation d'entiers. La complexité de ces algorithmes est sous-exponentielle $L_q[1/3;c]$ où l'on note
 $$L_n[\alpha;c] = \exp(c(\log n)^\alpha(\log \log n)^{1-\alpha})$$
 
-L'utilisation de courbes elliptiques (resp. hyperelliptiques) a été suggérée par Neal Koblitz \cite{koblitz1} \cite{koblitz2} en 1985 (resp. 1989). A l'heure actuelle, on ne connait d'algorithme qui arrive à faire mieux que la borne de Shoup \ref{borneShoup} pour des courbes elliptiques (resp. hyperelliptiques de genre 2) générales; même si on connaît des attaques spécifiques sur des courbes particulières, comme les courbes super-singulières par exemple.
+L'utilisation de courbes elliptiques (resp. hyperelliptiques) a été suggérée par Neal Koblitz \cite{koblitz1} \cite{koblitz2} en 1985 (resp. 1989). À l'heure actuelle, on ne connait d'algorithme qui arrive à faire mieux que la borne de Shoup \ref{borneShoup} pour des courbes elliptiques (resp. hyperelliptiques de genre 2) générales; même si l'on connaît des attaques spécifiques sur des courbes particulières, comme les courbes super-singulières par exemple.
 
 \begin{definition}
 Soit $\mathbb{F}_q$ un corps fini.
@@ -131,9 +131,9 @@ L'ensemble des points sur $\mathbb{F}_q$ d'une courbe elliptique, noté $E(\math
 L'ensemble des points d'une courbe hyperelliptique de genre 2 n'est quant à lui pas naturellement muni d'une structure de groupe; cependant, si l'on considère des paires de points alors on peut munir cet ensemble d'une structure de groupe. On appelle \emph{Jacobienne} de la courbe, noté $J_C$, le groupe ainsi construit.
 
 \subsection{Comptage de points}
-La difficulté du logarithme discret repose (en partie) sur les propriétés arithmétiques de l'ordre du groupe que l'on considère pour des applications cryptographiques. Dans le cas des courbes elliptiques, l'ordre du groupe sous-jacent correspond au nombre de point sur la courbe elliptique dans $\mathbb{F}_q$; d'où l'importance d'avoir un algorithme efficace pour compter le nombre de point sur une courbe elliptique.
+La difficulté du logarithme discret repose (en partie) sur les propriétés arithmétiques de l'ordre du groupe que l'on considère pour des applications cryptographiques. Dans le cas des courbes elliptiques, l'ordre du groupe sous-jacent correspond au nombre de points sur la courbe elliptique dans $\mathbb{F}_q$; d'où l'importance d'avoir un algorithme efficace pour compter le nombre de points sur une courbe elliptique.
 
-Schoof \cite{schoof} publie en 1985 le premier algorithme polynomial de comptage de point sur une courbe elliptique. L'algorithme utilise de manière cruciale les polynômes de divisions et peut être améliorer si l'on trouve une factorisation partielle de ces polynômes; ce qui est fait par Atkin \cite{atkin} et Elkies \cite{elkies}.
+Schoof \cite{schoof} publie en 1985 le premier algorithme polynomial de comptage de point sur une courbe elliptique. L'algorithme utilise de manière cruciale les polynômes de divisions et peut être amélioré si l'on trouve une factorisation partielle de ces polynômes; ce qui est fait par Atkin \cite{atkin} et Elkies \cite{elkies}.
 
 Soit $E$ une courbe elliptique donnée par l'équation de Weierstass courte :
 $$E : y^2 = x^3 + ax + b$$
@@ -163,7 +163,7 @@ L'idée de Schoof \cite{schoof} est de faire les calculs avec un point de $l$-to
 \Psi_{ 2m} &=  \left ( \frac { \Psi_{m}}{2y} \right ) \cdot ( \Psi_{m+2}\Psi^{ 2}_{m-1} -  \Psi_{m-2} \Psi ^{ 2}_{m+1})   \text{ pour } m \geq 3
 \end{align*}
 
-On considère l'algèbre $A=\mathbb{F}_p[X,Y]/(\Psi_l(X),Y^2-X^3-aX-b)$; on dira alors que le point $(X,Y)$ de cette algèbre est un point générique de $l$-torsion. En effet, la variété engendré par l'idéal $(\Psi_l(X),Y^2-X^3-aX-b)$ dans la clôture algébrique est exactement le sous-groupe de $l$-torsion $E[l]$.
+On considère l'algèbre $A=\mathbb{F}_p[X,Y]/(\Psi_l(X),Y^2-X^3-aX-b)$; on dira alors que le point $(X,Y)$ de cette algèbre est un point générique de $l$-torsion. En effet, la variété engendrée par l'idéal $(\Psi_l(X),Y^2-X^3-aX-b)$ dans la clôture algébrique est exactement le sous-groupe de $l$-torsion $E[l]$.
 
 En résumé, l'algorithme de Schoof consiste à tester les égalités :
 \begin{equation}
@@ -171,7 +171,7 @@ En résumé, l'algorithme de Schoof consiste à tester les égalités :
 \end{equation}
 modulo l'idéal $(\Psi_l(X),Y^2-X^3-aX-b)$; ce qui nous donne $t \mod l$. On fait ce calcul pour suffisamment de $l$ et on applique le lemme chinois pour retrouver $t$.
 
-L'algorithme nécessite le calcul de $X^p$, $X^{p^2}$, etc. dans l'algèbre $A$ et au plus $2l$ additions de points. L'algèbre ayant un nombre d'éléments de l'ordre de $l^2\log p$, on peut faire les calcul en $\log p(l^2\log p)^2$ opérations pour $X^p$, $X^{p^2}$, etc.; et en $l(l^2\log p)^2$ opérations pour les additions de points.
+L'algorithme nécessite le calcul de $X^p$, $X^{p^2}$, etc. dans l'algèbre $A$ et au plus $2l$ additions de points. L'algèbre ayant un nombre d'éléments de l'ordre de $l^2\log p$, on peut faire les calculs en $\log p(l^2\log p)^2$ opérations pour $X^p$, $X^{p^2}$, etc.; et en $l(l^2\log p)^2$ opérations pour les additions de points.
 
 Le théorème des nombres premiers montre que l'on a $l = O(\log p)$. En effet, le théorème des nombres premiers est équivalent à
 $$\sum_{l \leq x}\log l = x + o(x)$$
@@ -189,12 +189,12 @@ Une telle courbe est munie d'une involution $\iota : (x,y) \longmapsto (x,-y)$. 
 On peut montrer que toute courbe de genre 2 est birationnelle à une courbe de cette forme.
 \end{remarque}
 
-D'après les bornes de Hasse-Weil \cite{weil}, on obtient l'ordre de grandeur du nombre de point sur la Jacobienne d'une courbe de genre 2 :
+D'après les bornes de Hasse-Weil \cite{weil}, on obtient l'ordre de grandeur du nombre de points sur la Jacobienne d'une courbe de genre 2 :
 $$\#J_C(\mathbb{F}_p) \approx p^2$$
 
 L'idée d'utiliser des courbes de genre $2$ vient du fait que si l'on veut un groupe du même ordre de grandeur que pour une courbe elliptique, alors on peut utiliser un corps fini de taille plus petite et donc des clés de taille plus petite. Par exemple, pour avoir un groupe d'ordre approximativement $2^{256}$; il faut dans le cas d'une courbe elliptique avoir $log_2(p) \approx 256$. Alors que pour avoir une Jacobienne d'une courbe de genre 2 du même ordre de grandeur, il nous faut $log_2(p) \approx 128$.
 
-L'ordre du groupe $N$ mesure la \emph{sécurité} que l'on peut espérer en utilisant ce groupe dans un protocole cryptographique. La borne de Shoup \ref{borneShoup} montre que le temps nécessaire pour casser un protocole à base de courbes hyperelliptiques dépend du plus grand facteur premier de l'ordre du groupe, c'est pour cette raison que l'on s'intéresse le plus souvent à des groupes dont l'ordre est proche d'être un nombre premier (i.e. $N/p$ est petit).
+L'ordre du groupe $N$ mesure la \emph{sécurité} que l'on peut espérer en utilisant ce groupe dans un protocole cryptographique. La borne de Shoup \ref{borneShoup} montre que le temps nécessaire pour casser un protocole à base de courbes hyperelliptiques dépend du plus grand facteur premier de l'ordre du groupe, c'est pour cette raison que l'on s'intéresse le plus souvent à des groupes dont l'ordre est proche d'être un nombre premier (c.-à-d. $N/p$ est petit).
 
 \subsection{Fonctions thêtas}
 Les fonctions thêtas de Riemann sont une famille de fonctions holomorphes indexées par le demi-espace de Siegel $\mathfrak{H}_2$ des matrices de $M_2(\mathbb{C})$ tels que la partie imaginaire soit une matrice définie positive. Les fonctions thêtas sont alors définies comme des translatés à un facteur exponentiel prés des fonctions thêtas de Riemann.
@@ -208,7 +208,7 @@ Soit $a,b \in \mathbb{Q}^2$, la fonction thêta de caractéristique $(a,b)$ est 
 $$\theta[a,b](z,\Omega) = exp(i\pi a^T\Omega a + 2i\pi a^T(z+b))\theta(z + \Omega a + b, \Omega)$$
 \end{definition}
 
-Dans la suite, on s'intéressera principalement aux fonctions thêtas avec caractéristiques dont les coordonnées sont dans $\{0,1/2\}$, ce qui nous donne 16 fonctions thêtas, on suit Gaudry \cite{gaudry} pour la numérotation. De plus, on appellera \emph{thêta constante} l'évaluation de ces fonctions thêtas au point $z=(0,0)$.
+Dans la suite, on s'intéressera principalement aux fonctions thêtas avec caractéristiques dont les coordonnées sont dans $\{0,1/2\}$, ce qui nous donne 16 fonctions thêtas, on suit Gaudry \cite{gaudry} pour la numérotation. De plus, on appellera \emph{thêtas constantes} l'évaluation de ces fonctions thêtas au point $z=(0,0)$.
 
 \subsection{Surface de Kummer}
 
@@ -229,9 +229,9 @@ X^4+Y^4+Z^4+T^4&+2EXYZT-F(X^2T^2+Y^2Z^2) \\
 \end{align*}
 où l'on note $(X:Y:Z:T)=(\theta_1(z):\theta_2(z):\theta_3(z):\theta_4(z))$ les coordonnées projectives sur $K$.
 
-L'application $\phi$ est $(\mathbb{Z}^2 + \Omega\mathbb{Z}^2)$-périodique, elle définie donc une application sur le tore complexe $\mathbb{C}^2/(\mathbb{Z}^2+\Omega\mathbb{Z}^2)$. Cependant, l'application $\phi$ n'est pas bijective; en effet, les 4 premières fonctions thêtas sont paires donc $\phi$ envoie deux points opposés sur le même point dans la surface de Kummer. On peut montrer que $K$ est isomorphe au tore complexe modulo $\{\pm 1\}$; autrement dit, on peut voir un point sur la surface de Kummer sous la forme $\pm P$ où $P$ est un point du tore complexe.
+L'application $\phi$ est $(\mathbb{Z}^2 + \Omega\mathbb{Z}^2)$-périodique, elle définit donc une application sur le tore complexe $\mathbb{C}^2/(\mathbb{Z}^2+\Omega\mathbb{Z}^2)$. Cependant, l'application $\phi$ n'est pas bijective; en effet, les 4 premières fonctions thêtas sont paires donc $\phi$ envoie deux points opposés sur le même point dans la surface de Kummer. On peut montrer que $K$ est isomorphe au tore complexe modulo $\{\pm 1\}$; autrement dit, on peut voir un point sur la surface de Kummer sous la forme $\pm P$ où $P$ est un point du tore complexe.
 
-Cette remarque nous permet de voir que l'on n'a pas tout à fait une structure de groupe sur la surface de Kummer mais on a une structure qui s'en approche le plus possible que l'on appellera pseudo-addition. En effet, si l'on dispose de deux points $\pm P$ et $\pm Q$ sur la surface de Kummer alors on ne peut pas faire la différence entre $\pm(P+Q)$ et $\pm(P-Q)$. Cependant, si l'on dispose de $\pm P,\pm Q$ et $\pm(P-Q)$ alors on peut calculer $\pm(P+Q)$.
+Cette remarque nous permet de voir que l'on n'a pas tout à fait une structure de groupe sur la surface de Kummer, mais l'on a une structure qui s'en approche le plus possible que l'on appellera pseudo-addition. En effet, si l'on dispose de deux points $\pm P$ et $\pm Q$ sur la surface de Kummer alors on ne peut pas faire la différence entre $\pm(P+Q)$ et $\pm(P-Q)$. Cependant, si l'on dispose de $\pm P,\pm Q$ et $\pm(P-Q)$ alors on peut calculer $\pm(P+Q)$.
 
 L'avantage de la surface de Kummer définie par les fonctions thêtas est que la multiplication scalaire est la plus rapide à l'heure actuelle pour les courbes de genre 2.
 \begin{theoreme}[Gaudry \cite{gaudry}]
@@ -240,10 +240,10 @@ Soit $P$ un point de $K$ et $n$ un entier. Le calcul de $nP$ peut se faire en $9
 
 Ce résultat est à comparer à des approches qui n'utilisent pas de fonctions thêtas, Duquesne \cite{duquesne} a besoin de $7\log_2 n$ carrés et $62\log_2 n$ produits pour une multiplication scalaire par $n$.
 
-Une comparaison avec les courbes elliptiques montre que la multiplication scalaire en genre 2 est plus rapide; donc l'utilisation de courbe de genre 2 peut être avantageux pour une utilisation cryptographique, comme une implémentation de Diffie-Hellman en genre 2. Cependant, on ne dispose pas (pour le moment) d'un algorithme de calcul du nombre de point sur la Jacobienne d'une courbe de genre qui soit aussi efficace que pour les courbes elliptiques.
+Une comparaison avec les courbes elliptiques montre que la multiplication scalaire en genre 2 est plus rapide; donc l'utilisation de courbe de genre 2 peut être avantageuse pour une utilisation cryptographique, comme une implémentation de Diffie-Hellman en genre 2. Cependant, on ne dispose pas (pour le moment) d'un algorithme de calcul du nombre de points sur la Jacobienne d'une courbe de genre qui soit aussi efficace que pour les courbes elliptiques.
 
 \section{Objectif du stage}
-L'objectif principal du stage est avant tout d'apprivoiser le sujet et de se familiariser avec la littérature dans le but de continuer sur une thèse dans la même foulée. Entre autres, quelques sujets qui auront leurs importances lors du stage : surfaces de Kummer (approche classique de Cassels-Flynn \cite{cassels-flynn}, approche par les fonctions thêtas); formules explicites sur les fonctions thêtas; calcul efficace du logarithme discret (algorithme $\rho$ de Pollard, Pohlig-Hellman, Index-Calculus, ...); calcul efficace du nombre de point sur une Jacobienne (Schoof, Atkin-Elkies, ...).
+L'objectif principal du stage est avant tout d'apprivoiser le sujet et de se familiariser avec la littérature dans le but de continuer sur une thèse dans la même foulée. Entre autres, quelques sujets qui auront leurs importances lors du stage : surfaces de Kummer (approche classique de Cassels-Flynn \cite{cassels-flynn}, approche par les fonctions thêtas); formules explicites sur les fonctions thêtas; calcul efficace du logarithme discret (algorithme $\rho$ de Pollard, Pohlig-Hellman, Index-Calculus, ...); calcul efficace du nombre de points sur une Jacobienne (Schoof, Atkin-Elkies, ...).
 
 Parmi les objectifs de la thèse, on trouvera :
 \begin{itemize}
