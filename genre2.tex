@@ -36,13 +36,15 @@
 \author{N. Du Hamel}
 \maketitle
 
-\epigraph{If people do not believe that mathematics is simple, it is only because they do not realize how complicated life is.}{\textit{John von Neumann}}
+%\epigraph{If people do not believe that mathematics is simple, it is only because they do not realize how complicated life is.}{\textit{John von Neumann}}
 
-Le présent document constitue le mémoire d'un stage de M2 intitulé \emph{Cryptographic Kummer Surfaces} qui vise à étudier l'arithmétique rapide sur les surfaces de Kummer.
+\epigraph{It may well be doubted whether human ingenuity can construct an enigma of the kind which human ingenuity may not, by proper application, resolve.}{\textit{Edgar Allan Poe}}
 
-\tableofcontents
+%Le présent document constitue le mémoire d'un stage de M2 intitulé \emph{Cryptographic Kummer Surfaces} qui vise à étudier l'arithmétique rapide sur les surfaces de Kummer.
+Dans ce mémoire de M2, on s'intéresse à l'arithmétique rapide des courbes de genre 2 et à leurs applications à la cryptographie. On commence par présenter le contexte cryptographique dans lequel on se place et l'on introduit les courbes de genre 2. On présente ensuite les théories de \citet{cassels-Flynn} et \citet{gaudry}, la première ayant pour objectif d'être la plus générale possible et le seconde d'avoir une arithmétique rapide qui puisse être compétitive face aux courbes de genre 1. On termine par une traduction entre ces deux théories et l'utilisation d'une multiplication par $\sqrt{2}$ pour avoir une arithmétique encore plus rapide.
+%\tableofcontents
 
-\section{Introduction}
+\section{Cryptographie}
 
 La cryptographie désigne un ensemble de méthodes permettant, entre autres, d'assurer l'authentification et la confidentialité des communications. On retrouve des utilisations de la cryptographie dans la vie de tous les jours; par exemple, dans les cartes bancaires et les sites web sécurisés.
 
@@ -633,6 +635,7 @@ Comme on l'a remarqué précédemment, ces formules apportent un gain significat
 
 On remarque par exemple que les calculs de $x^2,y^2,z^2,t^2$ sont nécessaire dans la pseudo-addition et dans le doublement; on peut donc faire les calculs de la pseudo-addition et du doublement en même temps et économiser certaines opérations que l'on effectue en double. On renvoie à \citep{gaudry} pour le détail des optimisations possibles; ce qui nous permet d'obtenir le théorème suivant :
 \begin{theoreme}[\citet{gaudry}]
+\label{mulscal}
 Soit $P$ un point de $\mathcal{K}$ et $n > 1$ un entier. Le calcul de $nP$ nécessite $16\log_2 n$ produits et $9\log_2 n$ élévations aux carrés.
 \end{theoreme}
 
@@ -772,11 +775,13 @@ Lors de notre analyse pour obtenir une surface de Kummer autoduale, on a vu que 
 Dans la pseudo addition, on voit apparaitre l'isogénie duale et pas l'autre isogénie. Ce qui peut sembler étrange puisqu'il apparait alors une certaine dissymétrie par rapport au doublement.
 \end{remarque}
 
-\section{Isogénie de Richelot}
+\section{Vers une arithmétique à la Gaudry}
+
+Dans cette section, on s'intéresse à des conditions suffisantes pour qu'une courbe de genre 2 admette une arithmétique rapide; en particulier, l'existence d'une isogénie de Richelot jouera un rôle très important. Comme nous l'avons expliqué précédemment, pour avoir une arithmétique rapide, il est important que les translations par un point de 2-torsion soit les plus simples possibles; c'est pourquoi, on s'efforcera de diagonaliser le plus possible ces translations.
+
+\subsection{Isogénie de Richelot}
 
 On remarque que l'algorithme \ref{DOUBLE} se décompose en deux parties similaires qui correspondent à des \emph{isogénies de Richelot}. La première isogénie envoie un point de $\mathcal{K}$ sur la surface de Kummer duale $\hat{\mathcal{K}}$ et la deuxième renvoie le point sur $\mathcal{K}$. On s'intéressera plus tard au cas où les deux isogénies sont identiques; c'est à dire lorsque $\mathcal{K}$ est isomorphe à sa duale $\hat{\mathcal{K}}$.
-
-On présente dans cette section la théorie des isogénies de Richelot qui permet de décomposer le doublement en deux parties plus simples (les isogénies de Richelot).
 
 On suppose que la courbe $C$ de genre 2 admet une équation de la forme :
 $$y^2 = F(x) = G_1(x)G_2(x)G_3(x)$$
@@ -784,10 +789,9 @@ où $G_1(X),G_2(X),G_3(X)$ sont des polynômes de degré 2 sans racine double et
 $$G_j(X) = g_{2j}X^2 + g_{1j}X + g_{0j}$$
 
 \begin{remarque}
-Une telle factorisation du polynôme $F(X)$ permet de distinguer 3 points de 2-torsion particulier qui correspondent à $G_1(X),G_2(X),G_3(X)$ et qui joueront un rôle important dans la suite.
+Une telle factorisation du polynôme $F(X)$ permet de distinguer 3 points de 2-torsion particulier (en plus de l'élément neutre) qui correspondent à $G_1(X),G_2(X),G_3(X)$ et qui joueront un rôle important dans la suite.
 \end{remarque}
 
-\subsection{Duale de Richelot}
 \begin{definition}
 Une courbe $\hat{C}$ est dite \emph{duale de Richelot} à la courbe $C$ si elle admet une équation de la forme :
 $$\hat{C} : \Delta y^2 = L_1(x)L_2(x)L_3(x)$$
@@ -800,7 +804,7 @@ L_3(X) &= G'_1(X)G_2(X) - G'_2(X)G_1(X)
 \end{definition}
 
 \begin{remarque}
-On fera attention au fait qu'il y a potentiellement plusieurs duale de Richelot $\hat{C}$ pour une même courbe $C$; il nous arrivera cependant de parler de \emph{la} duale de Richelot lorsque la factorisation du polynôme $F(X)$ est fixée.
+On fera attention au fait qu'il y a potentiellement plusieurs duale de Richelot $\hat{C}$ pour une même courbe $C$, correspondant à différente factorisation du polynôme $F(X)$; il nous arrivera cependant de parler de \emph{la} duale de Richelot lorsque la factorisation est fixée.
 \end{remarque}
 
 \begin{remarque}
@@ -813,9 +817,7 @@ Un calcul montre que si l'on applique le même procédé à $L_1,L_2,L_3$ on ret
 La surface de Kummer duale $\hat{\mathcal{K}}$ est la surface de Kummer associée à la duale de Richelot $\hat{C}$.
 \end{definition}
 
-\subsection{Tétraèdre de G\"opel}
-
-Comme on l'a précédemment remarqué, la décomposition du polynôme $F(X)$ en produit de 3 polynômes $G_j(X)$ fait apparaitre 4 points de 2-torsion particulier; le neutre $(0,0,0,1)$ et les diviseurs donnés par $G_j=0$.
+Comme nous l'avons déjà remarqué, la décomposition du polynôme $F(X)$ en produit de 3 polynômes $G_j(X)$ fait apparaitre 4 points de 2-torsion particulier; le neutre $(0,0,0,1)$ et les diviseurs donnés par $G_j=0$.
 
 \begin{definition}
 On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}$ formé de l'élément neutre $(0,0,0,1)$ et des 3 points donnés par $G_j=0$; où $G_1(X)G_2(X)G_3(X)$ est une factorisation du polynôme $F(X)$.
@@ -823,23 +825,26 @@ On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}
 
 Un tétraèdre de G\"opel est particulièrement adaptée à l'isogénie de Richelot et l'on va voir que les translations dans cette base sont simples; on pourra comparer les applications linéaires avec celles que l'on a vu dans la section \ref{add2tors}.
 
-Une propriété importante des applications linéaires associées au tétraèdre de G\"opel est qu'elles commutent entre elles; ce qui nous permettra de les diagonaliser simultanément. 
+Une propriété importante des applications linéaires associées au tétraèdre de G\"opel est qu'elles commutent entre elles \citep{cassels-Flynn}; ce qui nous permettra de les diagonaliser simultanément. 
 
-Plus précisément, notons $S_j$ la matrice de translation par le point de 2-torsion donné par $G_j=0$; alors il existe des éléments non nuls $e_1,e_2,e_3$ de $k$ tel que l'on ait les relations suivantes :
+Plus précisément, on a la proposition suivante :
+
+\begin{proposition}
+Notons $S_j$ la matrice de translation par le point de 2-torsion donné par $G_j=0$; alors il existe des éléments non nuls $e_1,e_2,e_3$ de $k$ tel que l'on ait les relations suivantes :
 \begin{align}
 S_3S_2 &= S_2S_3 = e_1S_1 \\
 S_1S_3 &= S_3S_1 = e_2S_2 \\
 S_2S_1 &= S_1S_2 = e_3S_3
 \end{align}
-En combinant les lignes $j+1$ et $j+2$, on obtient la relation :
+De plus, en combinant les lignes $j+1$ et $j+2$, on obtient :
 $$S_j^2 = e_{j+1}e_{j+2}I$$
+\end{proposition}
 
-On note $O=(0,0,0,1)$ l'élément neutre.
 \begin{remarque}
-Si les 4 points $O,S_1O,S_2O,S_3O$ sont linéairement dépendants, alors la Jacobienne $\mathcal{J}$ est réductible \citep{cassels-Flynn}; c-à-d produit de deux courbes elliptiques. On exclut ce cas et on suppose que $O,S_1O,S_2O,S_3O$ forment une base.
+On note $O=(0,0,0,1)$ l'élément neutre, si les 4 points $O$, $S_1O$, $S_2O$, $S_3O$ sont linéairement dépendants, alors la Jacobienne $\mathcal{J}$ est réductible \citep{cassels-Flynn}; c-à-d produit de deux courbes elliptiques. On exclut ce cas et on suppose que $O,S_1O,S_2O,S_3O$ forment une base.
 \end{remarque}
 
-La base $(O,S_1O,S_2O,S_3O)$ est adaptée à l'isogénie de Richelot et les translations par un point du tétraèdre de G\"opel sont relativement simples dans cette base. Par exemple, la matrice de $S_1$ dans la base  $(O,S_1O,S_2O,S_3O)$ est :
+La base $(O,S_1O,S_2O,S_3O)$ est particulièrement adaptée à l'isogénie de Richelot et les translations par un point du tétraèdre de G\"opel sont relativement simples dans cette base. Par exemple, la matrice de $S_1$ dans la base  $(O,S_1O,S_2O,S_3O)$ est :
 \[ \left(
   \begin{array}{ c c c c}
      0 & e_2e_3 & 0  & 0  \\
@@ -848,9 +853,9 @@ La base $(O,S_1O,S_2O,S_3O)$ est adaptée à l'isogénie de Richelot et les tran
      0 & 0   & e_3  & 0  \\
   \end{array} \right)
 \]
-Le polynôme caractéristique de cette matrice est :
+De plus, le polynôme caractéristique de cette matrice est :
 $$(X^2-e_2e_3)^2$$
-donc si l'on veut complètement diagonaliser les translations par un point du tétraèdre de G\"opel, comme c'est le cas dans \citep{gaudry}, il nous faut extraire des racines carrées.
+donc si l'on veut complètement diagonaliser les translations par un point du tétraèdre de G\"opel (comme dans \citep{gaudry}) il nous faut extraire des racines carrées.
 
 Notons $\epsilon_j$ une racine carrée de $e_j$ et considérons le changement de base suivant \citep{cassels-Flynn} :
 \begin{align}
@@ -887,10 +892,9 @@ Il nous faut vérifier que l'on a bien l'égalité $\epsilon_{12}\epsilon_{13} =
 Pour ce faire, on peut de calculer $\epsilon_{12}$ et $\epsilon_{13}$ en prenant une racine carré arbitraire puis poser $\epsilon_{23} = \epsilon_{12}\epsilon_{13}/e_1$.
 
 \begin{remarque}
-La base correspondante n'est pas encore la base de \citet{gaudry} mais on s'y intéressera plus en détail dans la suite, pour des questions de généricité et de rationalité. En effet, on arrive à diagonaliser une partie de la 2-torsion et on peut imaginer que les formes biquadratiques seront suffisamment simples pour être intéressante tout en relaxant les hypothèses de \citep{gaudry}.
+La base correspondante n'est pas encore la base de \citet{gaudry} mais on s'y intéressera plus en détail dans la suite, pour des questions de généricité et de rationalité. En effet, on arrive à diagonaliser une partie de la 2-torsion et on peut imaginer que les formes biquadratiques seront suffisamment simples pour être intéressante tout s'autorisant une classe de courbes plus large que dans \citep{gaudry}.
 \end{remarque}
 
-\subsection{Expression de l'isogénie (TODO)}
 L'équation de la surface de Kummer $\mathcal{K}$ dans les variables $v_i$ est de la forme \citep{cassels-Flynn} :
 \begin{equation}
 \label{eqKumDiag}
@@ -911,15 +915,13 @@ Y &= \alpha_0v_0^2+\alpha_1v_1^2-\alpha_2v_2^2-\alpha_3v_3^2 \\
 Z &= \alpha_0v_0^2-\alpha_1v_1^2+\alpha_2v_2^2-\alpha_3v_3^2 \\
 T &= \alpha_0v_0^2-\alpha_1v_1^2-\alpha_2v_2^2+\alpha_3v_3^2
 \end{align*}
-où les constantes $A,B,C,D$ seront à déterminer.
+où les constantes $\alpha_0,\alpha_1,\alpha_2,\alpha_3$ seront à déterminer.
 
 On remarquera la similarité de ces expression avec les formules de l'algorithme \ref{DOUBLE}; on a aussi une isogénie de Richelot sur $\hat{\mathcal{K}}$ qui correspond à la deuxième partie de l'algorithme \ref{DOUBLE}.
 
-\section{Passage de Cassels-Flynn à Gaudry}
-
-En partant la base de \citet{gaudry} et en effectuant le changement de base $x'=ax,y'=by,z'=cz,t'=dt$; on se rend compte que les constantes qui apparaissent dans les biquadratiques (les constantes $A,B,C,D$ que l'on cherche à déterminer) sont essentiellement les thêtas constantes au carré; c-à-d $a^2,b^2,c^2,d^2$. On peut les calculer à partir des coefficients quadratiques de l'équation de la surface de Kummer $\mathcal{K}$ et en prenant des racines carrées.
-
 \subsection{Calcul des coefficients}
+
+En partant la base de \citet{gaudry} et en effectuant le changement de base $x'=ax,y'=by,z'=cz,t'=dt$; on se rend compte que les constantes qui apparaissent dans les biquadratiques (les constantes $\alpha_0,\alpha_1,\alpha_2,\alpha_3$ que l'on cherche à déterminer) sont essentiellement les thêtas constantes au carré; c-à-d $a^2,b^2,c^2,d^2$. On peut les calculer à partir des coefficients quadratiques de l'équation de la surface de Kummer $\mathcal{K}$ et en prenant des racines carrées.
 
 Pour des raisons de simplicité, on suppose que l'un des $G_i$ (par ex. $G_1$) est de la forme $X^2 + g_1$ (ce que l'on peut supposer en effectuant une translation) et l'on note :
 \begin{align*}
@@ -1031,10 +1033,10 @@ Dans tous les cas, à un signe près on a des formules analogues (décrites dans
 
 Si l'on veut passer dans la base de \citet{gaudry}, il faut supposer que les $c_i$ sont des puissances 4-ième alors que l'on suppose seulement que ce sont des carrés dans la base intermédiaire; on effectue alors le changement de base $x'=x/c_1^{1/4},y'=y/c_2^{1/4},z'=z/c_3^{1/4},t'=t/c_4^{1/4}$ pour passer dans la base de \citet{gaudry}.
 
-\subsection{Une application de la surface de Kummer vers la Jacobienne}
+\subsection{Relèvement vers la Jacobienne}
 Une des formules présente dans l'article de \citep{gaudry} concerne le calcul d'une représentation de Mumford associé à un point de $\mathcal{K}$. La formule est compliqué et on ne comprend pas bien d'où elle provient.
 
-Les formules de changement de base que l'on propose permettent de simplifier cette application de la surface de Kummer $\mathcal{K}$ vers la Jacobienne $\mathcal{J}$. En effet, à partir d'un point de $\mathcal{K}$ dans la base de \citet{gaudry}, on effectue la transformation linéaire que l'on a trouvé précédemment pour l'avoir dans la base de \citet{cassels-Flynn}; finalement, on peut facilement remonter à une représentation de Mumford dans la Jacobienne $\mathcal{J}$.
+Les formules de changement de base que l'on propose permettent de simplifier (ou pas) cette application de la surface de Kummer $\mathcal{K}$ vers la Jacobienne $\mathcal{J}$. En effet, à partir d'un point de $\mathcal{K}$ dans la base de \citet{gaudry}, on effectue la transformation linéaire que l'on a trouvé précédemment pour l'avoir dans la base de \citet{cassels-Flynn}; finalement, on peut facilement remonter à une représentation de Mumford dans la Jacobienne $\mathcal{J}$.
 
 En effet, les coordonnées sur la surface de Kummer de \citet{cassels-Flynn} sont de la forme $(1,x+u,xu,\beta_0(x,y,u,v))$; si l'on note $<a,b>$ les coordonnées de Mumford d'un relèvement dans $\mathcal{J}$, on trouve facilement le polynôme $a$ en fonction des 3 premières coordonnées de la surface de Kummer (les coefficients du polynôme $a$ sont exactement $-(x+u)$ et $xu$).
 
@@ -1189,107 +1191,116 @@ Cependant, il faut faire une trentaine d'essai avant de trouver une bonne courbe
 
 \subsection{Utilisation de $\sqrt{2}$}
 
-Au lieu de calculer une multiplication scalaire sous la forme $nP$, on calcule des multiplications scalaire de la forme $(a+b\sqrt{2})P$ avec $a,b$ de l'ordre de $\sqrt{n}$.
-De plus, l'algorithme de Bernstein permet de calculer $(a+b\sqrt{2})P$ en utilisant de l'ordre de $max(a,b)$ opérations de groupe.
+On a vu précédemment que le calcul d'une multiplication scalaire nécessite $c \log_2 n$ opérations dans le corps de base pour une multiplication par $n$. L'objectif est maintenant d'améliorer la constante $c$ en utilisant un endomorphisme rapide; dans le cas présent, la $\sqrt{2}$ que l'on s'est donné tant de mal à calculer.
 
-\section{Autres}
+Lorsque l'on restreint la $\sqrt{2}$ à un sous-groupe cyclique $G \cong \mathbb{Z}/N\mathbb{Z}$ de $\mathcal{J}$, elle agit sur $G$ comme une multiplication par un entier $\lambda$ tel que l'on ait $\lambda^2 = 2$ dans $G$.
 
-\subsection{Algorithme de Schoof}
-\emph{Détails d'implémentation} : On effectue tous les calculs modulo l'idéal de $l$-division par l'intermédiaire des bases de Gröbner; les performances de l'algorithme sont donc dépendantes de l'ordre monomial choisi. Dans le cas présent, l'ordre monomial le mieux adapté est l'ordre lexicographique avec $Y < X$; ce qui consiste lorsque l'on effectue une réduction modulo l'idéal, à d'abord remplacer les polynômes en $X,Y$ par des polynômes de degré $\leq 1$ en $Y$ en utilisant la relation $Y^2 = X^3 + aX + b$ puis à utiliser la relation $\Psi_l=0$ pour finalement obtenir un polynôme de degré $\leq 1$ en Y et de degré $< deg(\Psi_l)$ en X.
+Pour calculer la multiplication scalaire $nP$, on écrit $n$ sous la forme :
+$$ n = a + \lambda b \mod N$$
+On utilise alors cette relation pour calculer $nP$ grâce à la relation suivante :
+$$nP = aP + b(\sqrt{2}P)$$
 
-\emph{Passage à la droite projective} : L'objectif consistant à adapter l'algorithme de Schoof pour des surfaces de Kummer en genre 2, on commence par effectuer une variante de l'algorithme de Schoof classique de genre 1 pour les variétés de Kummer de courbe elliptique qui n'est autre que la droite projective. La majeure partie de l'algorithme s'adapte facilement étant donné que l'on sait faire des multiplications scalaires sur la variété de Kummer en utilisant des chaines d'addition différentielle. Il n'y a qu'une opération que l'on ne sait pas faire sur la variété de Kummer; c'est une addition "pure" i.e. on ne sait pas calculer le point $(X^{p^2},Y^{p^2}) + p(X,Y)$ si l'on ne connait pas le point $(X^{p^2},Y^{p^2}) - p(X,Y)$. Bien entendu, on ne connait ni l'un ni l'autre à priori; cependant, a posteriori on veut tester l'égalité \eqref{polCarFrob}. On peut donc calculer le point $(X^{p^2},Y^{p^2}) - p(X,Y)$ en supposant l'égalité \eqref{polCarFrob}. Comme on ne sait pas à priori que l'égalité \eqref{polCarFrob} est vérifiée, on ne sait pas si le calcul que l'on vient d'effectuer est juste; cependant, pour le vérifier, il nous suffit de tester si les deux points obtenus vérifient les mêmes relations que les points $(X^{p^2},Y^{p^2}) + p(X,Y)$ et $(X^{p^2},Y^{p^2}) - p(X,Y)$. À savoir, on veut vérifier que l'on a bien
-\begin{align*}
-((X^{p^2},Y^{p^2}) + p(X,Y)) - ((X^{p^2},Y^{p^2}) - p(X,Y)) &= 2p(X,Y) \\
-((X^{p^2},Y^{p^2}) + p(X,Y)) + ((X^{p^2},Y^{p^2}) - p(X,Y)) &= 2(X^{p^2},Y^{p^2})
-\end{align*}
-Encore une fois, on n'a pas de vraie addition sur la variété de Kummer; on ne peut donc pas vérifier ces deux égalités directement. On peut cependant supposer la première égalité et vérifier que l'on obtient bien la seconde égalité. Si l'on a bien ces égalités alors on sait que l'égalité \eqref{polCarFrob} est vérifiée dans la surface de Kummer. Bien entendu, la variété de Kummer ne fait pas la différence entre $t'(X^p,Y^p)$ et $-t'(X^p,Y^p)$; au final, on obtient donc $\pm t \mod l$. On a effectué le compromis suivant : on a supprimé la coordonnée $y$ en passant à la surface de Kummer ce qui nous économise un certain nombre de calculs et évite l'usage des bases de Gröbner; la contrepartie étant que l'on ne connait pas $t \mod l$ entièrement, on ne connait que $\pm t \mod l$. Ce dernier point peut s'expliquer a posteriori d'une seconde manière; en effet, la variété de Kummer ne distingue pas la courbe elliptique de son twist quadratique et on sait que la trace du twist quadratique est l'opposé de la trace de la courbe d'origine. \emph{Le problème qui se pose est de savoir si l'on peut reconstituer la trace à partir de ces seules informations locales .} En effet, on a deux possibilités pour chaque nombre premier $l$ et on ne sait pas comment les recombiner sans informations supplémentaires, car toutes les combinaisons sont possibles d'après le lemme chinois.
+On est alors amené à se poser la question de savoir si cette écriture va nous permettre effectivement de calculer plus rapidement la multiplication scalaire. Il existe des algorithmes de multiexponentiations rapide qui permettent de faire ce calcul en utilisant une boucle de longueur $max(\log_2 a, \log_2 b)$. On peut trouver $a$ et $b$ de l'ordre de $\sqrt{n}$; ce qui permet de faire la multiexponentiations en une boucle de longueur $\frac{1}{2}\log_2 n$.
 
-\subsection{Calcul de $(1 \pm \phi)(P)$}
+\citet{bernstein} présente une chaine d'addition en dimension 2 qui permet de calculer la multiexponentiation rapide sur la surface de Kummer dans une boucle qui nécessite un unique DBLDBLADD par itération et un calcul préliminaire de $(1+\sqrt{2})P$; où DBLDBLADD est le résultat du calcul de $2P$, $P+Q$, $R+S$ à partir des points $P$, $Q$, $R$, $S$, $P-Q$ et $R-S$.
 
-La première étape du calcul de la pseudo addition entre $P$ et $\phi(P)$ consiste à appliquer l'isogénie à $P$ et $\phi(P)$, ce qui donne les points $\phi(P)$ et $2P$ respectivement puis à multiplier les deux points coordonnées à coordonnées; la seconde étape du calcul consiste alors à appliquer une application linéaire, plus précisément, l'application linéaire donnée par la matrice suivante :
-\[ \left(
-  \begin{array}{ c c c c}
-     1 & 1 & 1 & 1\\
-     1 & 1 & -1 & -1\\
-     1 & -1 & 1 & -1\\
-     1 & -1 & -1 & 1\\
-  \end{array} \right)
-\]
-Arrivé à ce point, on obtient les coordonnées d'un point obtenu en multipliant $(1 \pm \phi)(P)$ coordonnées à coordonnées.
+Un décompte précis du nombre d'opérations nécessaire dans le calcul de DBLDBLADD en utilisant des optimisations à la Gaudry donne la proposition suivante :
+\begin{proposition}
+Avec les formules de \citep{gaudry}, le calcul d'un DBLDBLADD nécessite $23$ produits et $13$ élévations au carré dans le corps de base.
+\end{proposition}
 
-On aimerait décomposer ce produit en deux morceaux pour obtenir les coordonnées des deux points $(1 + \phi)(P)$ et $(1 - \phi)(P)$ avec éventuellement une ambiguïté sur les deux points. On utilise un logiciel de calcul formel pour voir si on arrive à faire cette décomposition lorsque les coordonnées de P sont des indéterminées $P=(X,Y,Z,T)$, malheureusement les polynômes que l'on obtient sont irréductibles. On est peut-être trop optimiste de penser pouvoir factoriser ce polynôme sans prendre en compte l'équation de la surface de Kummer; on essaie donc de factoriser le polynôme en partant d'un point générique, autrement dit, à factoriser l'idéal engendré par l'équation de la surface de Kummer et ce polynôme. Cette fois encore le résultat n'est pas à la hauteur des espérances.
-On sait que pour un point d'ordre deux la pseudo-addition est bien définie, car alors les deux points sont égaux; cependant, on se retrouve à résoudre le système
-\begin{align*}
-X^2 &= \alpha  &Y^2 &= \beta \\
-Z^2 &= \gamma  &T^2 &= \delta
-\end{align*}
-Il n'y a aucun choix des racines carrées à privilégier, on n'a pas à déterminer entièrement la somme alors que la théorie nous dit qu'on devrait pouvoir en être capable. Le cas le plus flagrant de ce phénomène intervient lorsque que l'on calcule $P+0$, où $P=(x,y,z,t)$ et $0=(a,b,c,d)$ est le neutre; on obtient alors les équations :
-\begin{align*}
-X^2 &= x^2  &Y^2 &= y^2 \\
-Z^2 &= z^2  &T^2 &= t^2
-\end{align*}
-Le résultat est bien entendu censé être $(X,Y,Z,T)=(x,y,z,t)=P$; cependant, la formule permettant de calculer la pseudo-addition ne le permet pas. En effet, pour calculer $P+Q$ avec l'algorithme de pseudo-addition, on a besoin de connaître le point $P-Q$ (en dehors de $P$ et $Q$).
-\emph{Il pourrait être intéressant de trouver une formule qui permette de trouver le point $P \pm Q$ sans connaitre aucun des deux points $P+Q$ et $P+Q$.}
-Une telle formule existe pour la variété de Kummer d'une courbe elliptique qui correspond à une représentation de la courbe elliptique par la coordonnée $x$ uniquement (voir \citet{montgomery}).
+Ce qui nous permet d'en déduire grâce à la discussion précédente le coût d'un multiplication scalaire en utilisant une chaine d'addition en dimension 2 et la $\sqrt{2}$ :
+\begin{corollaire}
+Avec les formules de \citep{gaudry}, le calcul d'une multiplication scalaire d'un point $P \in \mathcal{K}$ par un entier $n > 1$ nécessite $11,5\log_2 n$ produits, $6,5\log_2 n$ élévations au carré dans le corps de base et le calcul de $(1+\sqrt{2})P$.
+\end{corollaire}
 
-La première idée qui vient à l'esprit est de remonter les points $P$ et $Q$ dans la Jacobienne en $\pm P$ et $\pm Q$, d'utiliser l'addition sur la Jacobienne (qui est bien définie) et finalement de redescendre dans la surface de Kummer. Cette stratégie est un peu lourde à mettre en place pour les coordonnées thêtas mais en théorie on devrait pouvoir mener le calcul à bien. Le problème étant que l'on a les mêmes relations pour les fonctions thêtas dans la Jacobienne et dans la surface de Kummer; ce qui paraît étrange puisque l'on est censé avoir une addition bien définie sur la Jacobienne, mais les relations thêtas ne permettent pas de faire le calcul aussi facilement. \citet{cosset} donne une formule qui pourrait être utile à nos besoins; elle permet de calculer $\theta_i(2(z+z'))\theta_j(2(z-z'))$ en fonction des autres fonctions thêtas aux points $2z$ et $2z'$. On pourrait penser que les formules de \citet{gaudry} donnent la même chose; cependant, la différence fondamentale est que $i$ et $j$ peuvent être différents contrairement aux formules de Gaudry. En laissant fixe l'indice $j$, on peut utiliser le fait que la surface de Kummer est projective pour en déduire $\theta_i(2(z+z'))$. Le désavantage de cette formule est qu'il nous faut calculer toutes les fonctions thêtas; on dispose uniquement des fonctions thêtas au carré, ce qui paraît normal vu que la connaissance de toutes les fonctions thêtas nous donne un point sur la Jacobienne et il n'y aurait plus d'ambiguïté entre $\pm P$. Cette formule est donc une façon déguisée d'obtenir $P \pm Q$ en remontant d'abord dans la Jacobienne. Pour finir, l'idée la plus intéressante consiste à obtenir des formules similaires aux formules de Gaudry i.e. en passant par les fonctions thêtas duales, pour calculer $\theta_i(2(z+z'))\theta_j(2(z-z'))$; de telles formules existent. Par exemple, en prenant $j=1$, on obtient les formules suivantes :
-\[
-\begin{aligned}
-\vartheta_1(z+z')\vartheta_1(z-z') ={}& \Theta_1(2z)\Theta_1(2z') + \Theta_2(2z)\Theta_2(2z')\\
- &+ \Theta_3(2z)\Theta_3(2z') + \Theta_4(2z)\Theta_4(2z') \\
-\vartheta_2(z+z')\vartheta_1(z-z') ={}& \Theta_5(2z)\Theta_5(2z') + \Theta_6(2z)\Theta_6(2z') \\
- &+ \Theta_7(2z)\Theta_7(2z') + \Theta_8(2z)\Theta_8(2z') \\
-\vartheta_3(z+z')\vartheta_1(z-z') ={}& \Theta_9(2z)\Theta_9(2z') + \Theta_{10}(2z)\Theta_{10}(2z') \\
- &+ \Theta_{11}(2z)\Theta_{11}(2z') + \Theta_{12}(2z)\Theta_{12}(2z') \\
-\vartheta_4(z+z')\vartheta_1(z-z') ={}& \Theta_{13}(2z)\Theta_{13}(2z') + \Theta_{14}(2z)\Theta_{14}(2z') \\
- &+ \Theta_{15}(2z)\Theta_{15}(2z') + \Theta_{16}(2z)\Theta_{16}(2z') \\
-\end{aligned}
-\]
-L'avantage de ces formules est que l'on peut calculer la plupart des fonctions thêtas duales à partir des carrés des fonctions thêtas de départ que l'on connait en utilisant des formules analogues à celles présentes dans \citep{gaudry}. On ne peut pas calculer directement toutes les fonctions thêtas duales, car cela reviendrait à remonter sur la Jacobienne duale; en effet, on ne peut pas calculer les fonctions thêtas impaires par ces formules, car les thêtas constantes sont nulles.
+L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'on dispose d'une multiplication par $\sqrt{2}$, nous permet d'améliorer de 28\% la constante dans le théorème \ref{mulscal} au prix d'un calcul de $(1+\sqrt{2})P$.
 
-\subsection{Idéal de $l$-division}
-L'idéal de $l$-division de la surface de Kummer correspond à un point de $l$-torsion générique i.e. la variété correspondante est la variété de $l$-torsion de la surface de Kummer. Il est engendré par l'équation de la surface de Kummer et les équations que l'on dérive de l'égalité $[l]P=0$.
-
-La multiplication par $2$ étant donnée relativement explicitement, on obtient facilement l'idéal de $2$-division; de même, les idéaux de $2^n$-division sont tout aussi facilement obtenus par des applications successives de la multiplication par $2$.
-
-Pour $l$ premier impair, la situation est plus délicate car on doit utiliser des pseudo-additions. En effet, la dernière étape de la pseudo-addition consiste en des divisions des coordonnées de $P-Q$; on travaille avec des coordonnées polynomiales et bien souvent on ne peut pas faire cette division directement. La première solution envisageable consiste à se rappeler que l'on travaille dans l'espace projectif et à remplacer les divisions par des multiplications. Cette solution a l'avantage d'être simple, la contrepartie étant qu'elle augmente le degré des polynômes. \emph{Malheureusement, il semblerait que la variété projective correspondante en utilisant cette solution soit de dimension $1$ projective donc cette solution n'est pas utilisable.}
-La seconde solution est d'utiliser les bases de Gröbner pour faire ladite division. Cette fois on n'augmente pas inutilement le degré des polynômes, mais on fait des calculs de base de Gröbner qui peuvent être couteux. \emph{Je n'ai pas encore testé cette solution, il me faut trouver comment on calcule les quotients; cependant, j'espère qu'elle donnera quelque chose d'intéressant pas comme la solution précédente.}
-
-Le degré $d(n)$ des polynômes de $n$-division vérifie la formule de récurrence suivante :
-$$d(n+1) = 2d(n) + 2 - d(n-1)$$
-On peut en déduire une relation simple pour les différences $d(n+1)-d(n)$ en fonction de $d(n)-d(n-1)$ :
-$$d(n+1)-d(n) = d(n) - d(n-1) + 2$$
-On voit donc que la suite $(d(n+1)-d(n))$ est une suite arithmétique de raison $2$ et de premier terme $d(2)-d(1) = 4 - 1 = 3$; on en déduit que $d(n+1)-d(n) = 3 + 2(n-1) = 2n + 1$.
-On a alors
-\begin{align*}
-d(n) &= (d(n) - d(n-1)) + (d(n-1) - d(n-2)) + ... + (d(2)-d(1)) + d(1) \\
- &= (2n-1) + (2n - 3) + ... + 1 \\
- &= n^2
-\end{align*}
-
-%\begin{equation}
-%    d(n) =
-%    \begin{cases}
-%       1 & \text{si } n = 1 \\
-%      4*d(n/2) & \text{si } n \text{ est pair} \\
-%      6*d((n-1)/2) + 1 & \text{si } n \text{ est impair} \\
-%    \end{cases}
-%\end{equation}
-
-Le temps de calcul des polynômes de $2^k$-division (qui devrait être les moins couteux à obtenir) explose rapidement; les polynômes de $8$-division s'obtiennent en $0.2$s alors que le calcul des polynômes de $16$-division prend $15$ minutes (pour $p=31$). On ne pourra pas raisonnablement aller plus loin.
-
-\subsection{Multiplication scalaire}
-L'avantage de la surface de Kummer définie par les fonctions thêtas est que la multiplication scalaire est la plus rapide à l'heure actuelle pour les courbes de genre 2.
-\begin{theoreme}[\citet{gaudry}]
-\label{mulscal}
-Soit $P$ un point de $K$ et $n$ un entier. Le calcul de $nP$ peut se faire en $9\log_2 n$ carrés et $16\log_2 n$ produits.
-\end{theoreme}
-
-Ce résultat est à comparer aux approches n'utilisant pas de fonctions thêtas, \citet{duquesne} a besoin de $7\log_2 n$ carrés et $62\log_2 n$ produits pour une multiplication scalaire par $n$. Si l'on n'utilise pas les surfaces de Kummer; sur la Jacobienne on a besoin de $10\log_2 n$ carrés et $78\log_2 n$ produits.
-
-Une comparaison avec les courbes elliptiques montre que la multiplication scalaire en genre 2 est plus rapide. L'utilisation des courbes de genre 2 peut être avantageuse pour une utilisation cryptographique; comme une implémentation de Diffie-Hellman en genre 2. Cependant, on ne dispose pas (pour le moment) d'un algorithme de calcul du nombre de points sur la Jacobienne d'une courbe de genre qui soit aussi efficace que pour les courbes elliptiques.
-
-L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'on dispose d'une multiplication par $\sqrt{2}$, nous permet d'améliorer de 28\% le théorème de Gaudry \ref{mulscal}. Il nous faut alors calculer $P+\sqrt{2}P$; on utilise la méthode de \citet[p.100]{robert} qui nous permet de calculer $P\pm\sqrt{2}P$ au prix d'une racine carrée et quelques multiplications dans $\mathbb{F}_p$.
+%\section{Autres}
+%
+%\subsection{Algorithme de Schoof}
+%\emph{Détails d'implémentation} : On effectue tous les calculs modulo l'idéal de $l$-division par l'intermédiaire des bases de Gröbner; les performances de l'algorithme sont donc dépendantes de l'ordre monomial choisi. Dans le cas présent, l'ordre monomial le mieux adapté est l'ordre lexicographique avec $Y < X$; ce qui consiste lorsque l'on effectue une réduction modulo l'idéal, à d'abord remplacer les polynômes en $X,Y$ par des polynômes de degré $\leq 1$ en $Y$ en utilisant la relation $Y^2 = X^3 + aX + b$ puis à utiliser la relation $\Psi_l=0$ pour finalement obtenir un polynôme de degré $\leq 1$ en Y et de degré $< deg(\Psi_l)$ en X.
+%
+%\emph{Passage à la droite projective} : L'objectif consistant à adapter l'algorithme de Schoof pour des surfaces de Kummer en genre 2, on commence par effectuer une variante de l'algorithme de Schoof classique de genre 1 pour les variétés de Kummer de courbe elliptique qui n'est autre que la droite projective. La majeure partie de l'algorithme s'adapte facilement étant donné que l'on sait faire des multiplications scalaires sur la variété de Kummer en utilisant des chaines d'addition différentielle. Il n'y a qu'une opération que l'on ne sait pas faire sur la variété de Kummer; c'est une addition "pure" i.e. on ne sait pas calculer le point $(X^{p^2},Y^{p^2}) + p(X,Y)$ si l'on ne connait pas le point $(X^{p^2},Y^{p^2}) - p(X,Y)$. Bien entendu, on ne connait ni l'un ni l'autre à priori; cependant, a posteriori on veut tester l'égalité \eqref{polCarFrob}. On peut donc calculer le point $(X^{p^2},Y^{p^2}) - p(X,Y)$ en supposant l'égalité \eqref{polCarFrob}. Comme on ne sait pas à priori que l'égalité \eqref{polCarFrob} est vérifiée, on ne sait pas si le calcul que l'on vient d'effectuer est juste; cependant, pour le vérifier, il nous suffit de tester si les deux points obtenus vérifient les mêmes relations que les points $(X^{p^2},Y^{p^2}) + p(X,Y)$ et $(X^{p^2},Y^{p^2}) - p(X,Y)$. À savoir, on veut vérifier que l'on a bien
+%\begin{align*}
+%((X^{p^2},Y^{p^2}) + p(X,Y)) - ((X^{p^2},Y^{p^2}) - p(X,Y)) &= 2p(X,Y) \\
+%((X^{p^2},Y^{p^2}) + p(X,Y)) + ((X^{p^2},Y^{p^2}) - p(X,Y)) &= 2(X^{p^2},Y^{p^2})
+%\end{align*}
+%Encore une fois, on n'a pas de vraie addition sur la variété de Kummer; on ne peut donc pas vérifier ces deux égalités directement. On peut cependant supposer la première égalité et vérifier que l'on obtient bien la seconde égalité. Si l'on a bien ces égalités alors on sait que l'égalité \eqref{polCarFrob} est vérifiée dans la surface de Kummer. Bien entendu, la variété de Kummer ne fait pas la différence entre $t'(X^p,Y^p)$ et $-t'(X^p,Y^p)$; au final, on obtient donc $\pm t \mod l$. On a effectué le compromis suivant : on a supprimé la coordonnée $y$ en passant à la surface de Kummer ce qui nous économise un certain nombre de calculs et évite l'usage des bases de Gröbner; la contrepartie étant que l'on ne connait pas $t \mod l$ entièrement, on ne connait que $\pm t \mod l$. Ce dernier point peut s'expliquer a posteriori d'une seconde manière; en effet, la variété de Kummer ne distingue pas la courbe elliptique de son twist quadratique et on sait que la trace du twist quadratique est l'opposé de la trace de la courbe d'origine. \emph{Le problème qui se pose est de savoir si l'on peut reconstituer la trace à partir de ces seules informations locales .} En effet, on a deux possibilités pour chaque nombre premier $l$ et on ne sait pas comment les recombiner sans informations supplémentaires, car toutes les combinaisons sont possibles d'après le lemme chinois.
+%
+%\subsection{Calcul de $(1 \pm \phi)(P)$}
+%
+%La première étape du calcul de la pseudo addition entre $P$ et $\phi(P)$ consiste à appliquer l'isogénie à $P$ et $\phi(P)$, ce qui donne les points $\phi(P)$ et $2P$ respectivement puis à multiplier les deux points coordonnées à coordonnées; la seconde étape du calcul consiste alors à appliquer une application linéaire, plus précisément, l'application linéaire donnée par la matrice suivante :
+%\[ \left(
+%  \begin{array}{ c c c c}
+%     1 & 1 & 1 & 1\\
+%     1 & 1 & -1 & -1\\
+%     1 & -1 & 1 & -1\\
+%     1 & -1 & -1 & 1\\
+%  \end{array} \right)
+%\]
+%Arrivé à ce point, on obtient les coordonnées d'un point obtenu en multipliant $(1 \pm \phi)(P)$ coordonnées à coordonnées.
+%
+%On aimerait décomposer ce produit en deux morceaux pour obtenir les coordonnées des deux points $(1 + \phi)(P)$ et $(1 - \phi)(P)$ avec éventuellement une ambiguïté sur les deux points. On utilise un logiciel de calcul formel pour voir si on arrive à faire cette décomposition lorsque les coordonnées de P sont des indéterminées $P=(X,Y,Z,T)$, malheureusement les polynômes que l'on obtient sont irréductibles. On est peut-être trop optimiste de penser pouvoir factoriser ce polynôme sans prendre en compte l'équation de la surface de Kummer; on essaie donc de factoriser le polynôme en partant d'un point générique, autrement dit, à factoriser l'idéal engendré par l'équation de la surface de Kummer et ce polynôme. Cette fois encore le résultat n'est pas à la hauteur des espérances.
+%On sait que pour un point d'ordre deux la pseudo-addition est bien définie, car alors les deux points sont égaux; cependant, on se retrouve à résoudre le système
+%\begin{align*}
+%X^2 &= \alpha  &Y^2 &= \beta \\
+%Z^2 &= \gamma  &T^2 &= \delta
+%\end{align*}
+%Il n'y a aucun choix des racines carrées à privilégier, on n'a pas à déterminer entièrement la somme alors que la théorie nous dit qu'on devrait pouvoir en être capable. Le cas le plus flagrant de ce phénomène intervient lorsque que l'on calcule $P+0$, où $P=(x,y,z,t)$ et $0=(a,b,c,d)$ est le neutre; on obtient alors les équations :
+%\begin{align*}
+%X^2 &= x^2  &Y^2 &= y^2 \\
+%Z^2 &= z^2  &T^2 &= t^2
+%\end{align*}
+%Le résultat est bien entendu censé être $(X,Y,Z,T)=(x,y,z,t)=P$; cependant, la formule permettant de calculer la pseudo-addition ne le permet pas. En effet, pour calculer $P+Q$ avec l'algorithme de pseudo-addition, on a besoin de connaître le point $P-Q$ (en dehors de $P$ et $Q$).
+%\emph{Il pourrait être intéressant de trouver une formule qui permette de trouver le point $P \pm Q$ sans connaitre aucun des deux points $P+Q$ et $P+Q$.}
+%Une telle formule existe pour la variété de Kummer d'une courbe elliptique qui correspond à une représentation de la courbe elliptique par la coordonnée $x$ uniquement (voir \citet{montgomery}).
+%
+%La première idée qui vient à l'esprit est de remonter les points $P$ et $Q$ dans la Jacobienne en $\pm P$ et $\pm Q$, d'utiliser l'addition sur la Jacobienne (qui est bien définie) et finalement de redescendre dans la surface de Kummer. Cette stratégie est un peu lourde à mettre en place pour les coordonnées thêtas mais en théorie on devrait pouvoir mener le calcul à bien. Le problème étant que l'on a les mêmes relations pour les fonctions thêtas dans la Jacobienne et dans la surface de Kummer; ce qui paraît étrange puisque l'on est censé avoir une addition bien définie sur la Jacobienne, mais les relations thêtas ne permettent pas de faire le calcul aussi facilement. \citet{cosset} donne une formule qui pourrait être utile à nos besoins; elle permet de calculer $\theta_i(2(z+z'))\theta_j(2(z-z'))$ en fonction des autres fonctions thêtas aux points $2z$ et $2z'$. On pourrait penser que les formules de \citet{gaudry} donnent la même chose; cependant, la différence fondamentale est que $i$ et $j$ peuvent être différents contrairement aux formules de Gaudry. En laissant fixe l'indice $j$, on peut utiliser le fait que la surface de Kummer est projective pour en déduire $\theta_i(2(z+z'))$. Le désavantage de cette formule est qu'il nous faut calculer toutes les fonctions thêtas; on dispose uniquement des fonctions thêtas au carré, ce qui paraît normal vu que la connaissance de toutes les fonctions thêtas nous donne un point sur la Jacobienne et il n'y aurait plus d'ambiguïté entre $\pm P$. Cette formule est donc une façon déguisée d'obtenir $P \pm Q$ en remontant d'abord dans la Jacobienne. Pour finir, l'idée la plus intéressante consiste à obtenir des formules similaires aux formules de Gaudry i.e. en passant par les fonctions thêtas duales, pour calculer $\theta_i(2(z+z'))\theta_j(2(z-z'))$; de telles formules existent. Par exemple, en prenant $j=1$, on obtient les formules suivantes :
+%\[
+%\begin{aligned}
+%\vartheta_1(z+z')\vartheta_1(z-z') ={}& \Theta_1(2z)\Theta_1(2z') + \Theta_2(2z)\Theta_2(2z')\\
+% &+ \Theta_3(2z)\Theta_3(2z') + \Theta_4(2z)\Theta_4(2z') \\
+%\vartheta_2(z+z')\vartheta_1(z-z') ={}& \Theta_5(2z)\Theta_5(2z') + \Theta_6(2z)\Theta_6(2z') \\
+% &+ \Theta_7(2z)\Theta_7(2z') + \Theta_8(2z)\Theta_8(2z') \\
+%\vartheta_3(z+z')\vartheta_1(z-z') ={}& \Theta_9(2z)\Theta_9(2z') + \Theta_{10}(2z)\Theta_{10}(2z') \\
+% &+ \Theta_{11}(2z)\Theta_{11}(2z') + \Theta_{12}(2z)\Theta_{12}(2z') \\
+%\vartheta_4(z+z')\vartheta_1(z-z') ={}& \Theta_{13}(2z)\Theta_{13}(2z') + \Theta_{14}(2z)\Theta_{14}(2z') \\
+% &+ \Theta_{15}(2z)\Theta_{15}(2z') + \Theta_{16}(2z)\Theta_{16}(2z') \\
+%\end{aligned}
+%\]
+%L'avantage de ces formules est que l'on peut calculer la plupart des fonctions thêtas duales à partir des carrés des fonctions thêtas de départ que l'on connait en utilisant des formules analogues à celles présentes dans \citep{gaudry}. On ne peut pas calculer directement toutes les fonctions thêtas duales, car cela reviendrait à remonter sur la Jacobienne duale; en effet, on ne peut pas calculer les fonctions thêtas impaires par ces formules, car les thêtas constantes sont nulles.
+%
+%\subsection{Idéal de $l$-division}
+%L'idéal de $l$-division de la surface de Kummer correspond à un point de $l$-torsion générique i.e. la variété correspondante est la variété de $l$-torsion de la surface de Kummer. Il est engendré par l'équation de la surface de Kummer et les équations que l'on dérive de l'égalité $[l]P=0$.
+%
+%La multiplication par $2$ étant donnée relativement explicitement, on obtient facilement l'idéal de $2$-division; de même, les idéaux de $2^n$-division sont tout aussi facilement obtenus par des applications successives de la multiplication par $2$.
+%
+%Pour $l$ premier impair, la situation est plus délicate car on doit utiliser des pseudo-additions. En effet, la dernière étape de la pseudo-addition consiste en des divisions des coordonnées de $P-Q$; on travaille avec des coordonnées polynomiales et bien souvent on ne peut pas faire cette division directement. La première solution envisageable consiste à se rappeler que l'on travaille dans l'espace projectif et à remplacer les divisions par des multiplications. Cette solution a l'avantage d'être simple, la contrepartie étant qu'elle augmente le degré des polynômes. \emph{Malheureusement, il semblerait que la variété projective correspondante en utilisant cette solution soit de dimension $1$ projective donc cette solution n'est pas utilisable.}
+%La seconde solution est d'utiliser les bases de Gröbner pour faire ladite division. Cette fois on n'augmente pas inutilement le degré des polynômes, mais on fait des calculs de base de Gröbner qui peuvent être couteux. \emph{Je n'ai pas encore testé cette solution, il me faut trouver comment on calcule les quotients; cependant, j'espère qu'elle donnera quelque chose d'intéressant pas comme la solution précédente.}
+%
+%Le degré $d(n)$ des polynômes de $n$-division vérifie la formule de récurrence suivante :
+%$$d(n+1) = 2d(n) + 2 - d(n-1)$$
+%On peut en déduire une relation simple pour les différences $d(n+1)-d(n)$ en fonction de $d(n)-d(n-1)$ :
+%$$d(n+1)-d(n) = d(n) - d(n-1) + 2$$
+%On voit donc que la suite $(d(n+1)-d(n))$ est une suite arithmétique de raison $2$ et de premier terme $d(2)-d(1) = 4 - 1 = 3$; on en déduit que $d(n+1)-d(n) = 3 + 2(n-1) = 2n + 1$.
+%On a alors
+%\begin{align*}
+%d(n) &= (d(n) - d(n-1)) + (d(n-1) - d(n-2)) + ... + (d(2)-d(1)) + d(1) \\
+% &= (2n-1) + (2n - 3) + ... + 1 \\
+% &= n^2
+%\end{align*}
+%
+%%\begin{equation}
+%%    d(n) =
+%%    \begin{cases}
+%%       1 & \text{si } n = 1 \\
+%%      4*d(n/2) & \text{si } n \text{ est pair} \\
+%%      6*d((n-1)/2) + 1 & \text{si } n \text{ est impair} \\
+%%    \end{cases}
+%%\end{equation}
+%
+%Le temps de calcul des polynômes de $2^k$-division (qui devrait être les moins couteux à obtenir) explose rapidement; les polynômes de $8$-division s'obtiennent en $0.2$s alors que le calcul des polynômes de $16$-division prend $15$ minutes (pour $p=31$). On ne pourra pas raisonnablement aller plus loin.
 
 
 \bibliographystyle{plainnat-fr}
