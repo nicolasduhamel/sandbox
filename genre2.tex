@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,12pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -15,6 +15,25 @@
 \usepackage{epigraph}
 % Citation avec nom d'auteur
 \usepackage[square]{natbib}
+% Réduire les marges
+%\usepackage[a4paper]{geometry}
+%\geometry{hmargin=3cm,vmargin=4cm}
+
+% Répare le problème des boites trop large dans algorithm
+\makeatletter
+\renewcommand{\algocf@caption@boxruled}{%
+  \hrule
+  \hbox to \hsize{%
+    \vrule\hskip-0.4pt
+    \vbox{   
+       \vskip\interspacetitleboxruled%
+       \unhbox\algocf@capbox\hfill
+       \vskip\interspacetitleboxruled
+       }%
+     \hskip-0.4pt\vrule%
+   }\nointerlineskip%
+}%
+\makeatother
 
 % Theorem Styles
 \newtheorem{theoreme}{Theorème}[section]
@@ -32,27 +51,33 @@
 
 \begin{document}
 
-\title{Prélude de genre 2}
-\author{N. Du Hamel}
+\title{Prélude de genre 2 \\ \large{Vers un analogue de genre 2 des courbes de Montgomery}}
+\author{N. Du Hamel\footnote{\href{mailto:nicolas.duhamel@inria.fr}{nicolas.duhamel@inria.fr}} \\
+\emph{sous la direction de \href{http://www.lix.polytechnique.fr/~smith/}{Ben Smith}}}
 \maketitle
 
 %\epigraph{If people do not believe that mathematics is simple, it is only because they do not realize how complicated life is.}{\textit{John von Neumann}}
 
-\epigraph{It may well be doubted whether human ingenuity can construct an enigma of the kind which human ingenuity may not, by proper application, resolve.}{\textit{Edgar Allan Poe}}
+%\epigraph{It may well be doubted whether human ingenuity can construct an enigma of the kind which human ingenuity may not, by proper application, resolve.}{\textit{Edgar Allan Poe}}
+
+\epigraph{La chance ne sourit qu'aux esprits bien préparés.}{\textit{Louis Pasteur}}
 
 %Le présent document constitue le mémoire d'un stage de M2 intitulé \emph{Cryptographic Kummer Surfaces} qui vise à étudier l'arithmétique rapide sur les surfaces de Kummer.
-Dans ce mémoire de M2, on s'intéresse à l'arithmétique rapide des courbes de genre 2 et à leurs applications à la cryptographie. On commence par présenter le contexte cryptographique dans lequel on se place et l'on introduit les courbes de genre 2. On présente ensuite les théories de \citet{cassels-Flynn} et \citet{gaudry}, la première ayant pour objectif d'être la plus générale possible et le seconde d'avoir une arithmétique rapide qui puisse être compétitive face aux courbes de genre 1. On termine par une traduction entre ces deux théories et l'utilisation d'une multiplication par $\sqrt{2}$ pour avoir une arithmétique encore plus rapide.
+Les courbes de Montgomery ont été introduites en 1987 par Peter Montgomery pour avoir une arithmétique rapide sur certaines courbes elliptiques, sa motivation principale était l'amélioration de la méthode de factorisation à base de courbe elliptique \citep{montgomery}. Les courbes de Montgomery sont les plus utilisé en cryptographie, ceci venant du fait que leur arithmétique est très efficace.
+
+Dans ce mémoire, on s'intéresse à l'arithmétique rapide des courbes de genre 2 et à leurs applications à la cryptographie. On commence par présenter le contexte cryptographique dans lequel on se place et l'on introduit les courbes de genre 2. On présente ensuite les théories de \citet{cassels-Flynn} et \citet{gaudry} sur l'arithmétique des courbes de genre 2; la première ayant pour objectif d'être la plus générale possible et le seconde d'avoir une arithmétique qui puisse être compétitive face aux courbes elliptiques (genre 1).
+On enchaine par une traduction partielle entre ces deux théories, ce qui nous permettra d'avoir un point de vue légèrement différent sur l'arithmétique rapide de genre 2; et pour finir, on spécialise notre étude aux courbes de genre 2 à multiplication réelle par $\sqrt{2}$ pour avoir une arithmétique légèrement plus rapide.
 %\tableofcontents
 
 \section{Cryptographie}
 
-La cryptographie désigne un ensemble de méthodes permettant, entre autres, d'assurer l'authentification et la confidentialité des communications. On retrouve des utilisations de la cryptographie dans la vie de tous les jours; par exemple, dans les cartes bancaires et les sites web sécurisés.
+La cryptographie désigne un ensemble de méthodes permettant, entre autres, d'assurer l'authentification et la confidentialité des communications. On retrouve des utilisations de la cryptographie dans la vie de tous les jours; par exemple, par l'intermédiaire des cartes bancaires ou des sites web sécurisés (le fameux protocole HTTPS).
 
-Notre vie privée est sous surveillance par certaines entités (gouvernementales ou pas) qui possèdent des capacités de collectes et de traitements des données inimaginables ("Assume your adversary is capable of one trillion guesses per second" - Edward Snowden).
+Notre vie privée est mise sous surveillance par certaines entités (gouvernementales ou non) qui possèdent des capacités de collectes et de traitements des données inimaginables\footnote{Assume your adversary is capable of one trillion guesses per second. -- Edward Snowden}.
 La cryptographie est un moyen de se protéger contre ces pratiques qui viennent à se généraliser.
 
 \subsection{Diffie-Hellman}
-\cite{diffie-hellman} ont introduit le concept de \emph{cryptographie à clé publique} aussi appelé cryptographie asymétrique. Contrairement à la cryptographie symétrique, où les deux parties communiquent en ayant au préalable convenu d'une clé secrète, chaque entité dispose d'une clé publique et d'une clé privée. La clé publique est diffusée sur le réseau, l'expéditeur l'utilise pour chiffrer son message; tandis que le destinataire utilise sa clé privée pour déchiffrer le message. D'autre part, l'expéditeur a la possibilité de signer le message avec sa clé privée; le destinataire utilise alors la clé publique de l'expéditeur pour vérifier l'authenticité du message.
+\cite{diffie-hellman} ont introduit le concept de \emph{cryptographie à clé publique}, que l'on appelle aussi \emph{cryptographie asymétrique}. Contrairement à la cryptographie symétrique, où les deux parties communiquent en ayant au préalable convenu d'une clé secrète, chaque entité dispose d'une clé publique et d'une clé privée. La clé publique est diffusée sur le réseau, l'expéditeur l'utilise pour chiffrer son message; tandis que le destinataire utilise sa clé privée pour déchiffrer le message. D'autre part, l'expéditeur a la possibilité de signer le message avec sa clé privée; le destinataire utilise alors la clé publique de l'expéditeur pour vérifier l'authenticité du message.
 
 Les implémentations de protocole à clé publique sont plus lentes que leurs homologues symétriques; c'est pourquoi en pratique, la cryptographie à clé publique est souvent utilisée dans le seul but de partager une clé secrète qui pourra ensuite servir de base pour des protocoles symétriques.
 
@@ -134,7 +159,7 @@ L'utilisation de courbes elliptiques (resp. hyperelliptiques) a été suggérée
 \begin{definition}
 Soit $\mathbb{F}_q$ un corps fini de caractéristique impaire.
 
-On appelle \emph{courbe elliptique} ( resp. \emph{courbe hyperelliptique de genre 2} ) sur $\mathbb{F}_q$ une courbe algébrique projective dont un modèle affine est de la forme :
+On appelle \emph{courbe elliptique} (resp. \emph{courbe hyperelliptique de genre 2}) sur $\mathbb{F}_q$ une courbe algébrique projective dont un modèle affine est de la forme :
 $$C : y^2 = F(x)$$
 où $F(X)$ est un polynôme séparable de degré 3 (resp. de degré 5) à coefficients dans $\mathbb{F}_q$.
 \end{definition}
@@ -146,12 +171,12 @@ L'ensemble des points d'une courbe hyperelliptique de genre 2 n'est, quant à lu
 \subsection{Comptage de points}
 La difficulté du logarithme discret repose (en partie) sur les propriétés arithmétiques de l'ordre du groupe que l'on considère pour des applications cryptographiques. Dans le cas des courbes elliptiques, l'ordre du groupe sous-jacent correspond au nombre de points sur la courbe elliptique dans $\mathbb{F}_q$; d'où l'importance d'avoir un algorithme efficace pour compter le nombre de points sur une courbe elliptique.
 
-Schoof \cite{schoof} publie en 1985 le premier algorithme polynomial de comptage de point sur une courbe elliptique. L'algorithme utilise de manière cruciale les polynômes de divisions et peut être amélioré si l'on trouve une factorisation partielle de ces polynômes; ce qui est fait par Atkin \cite{atkin} et Elkies \cite{elkies}.
+\citet{schoof} publie en 1985 le premier algorithme polynomial de comptage de point sur une courbe elliptique. L'algorithme utilise de manière cruciale les polynômes de divisions et peut être amélioré si l'on trouve une factorisation partielle de ces polynômes; ce qui est fait par \citet{atkin} et \citet{elkies}.
 
 Soit $E$ une courbe elliptique donnée par l'équation de Weierstass courte :
 $$E : y^2 = x^3 + ax + b$$
 
-On cherche à calculer le nombre de points sur $\mathbb{F}_p$ de la courbe $E$, que l'on notera $\#E(\mathbb{F}_p)$. Pour ce faire, on va calculer $\#E(\mathbb{F}_p)$ modulo $l$ pour plusieurs nombres premiers $l \neq p$ et utiliser le lemme Chinois pour retrouver $\#E(\mathbb{F}_p)$. D'après la borne de Hasse-Weil \cite{weil}, on a :
+On cherche à calculer le nombre de points sur $\mathbb{F}_p$ de la courbe $E$, que l'on notera $\#E(\mathbb{F}_p)$. Pour ce faire, on va calculer $\#E(\mathbb{F}_p)$ modulo $l$ pour plusieurs nombres premiers $l \neq p$ et utiliser le lemme Chinois pour retrouver $\#E(\mathbb{F}_p)$. D'après la borne de Hasse-Weil \citep{weil}, on a :
 $$p+1 - 2\sqrt{p} \leq \#E(\mathbb{F}_p) \leq p+1 + 2\sqrt{p}$$
 La largeur de l'intervalle dans la borne de Hasse étant $4\sqrt{p}$; il suffit de calculer $\#E(\mathbb{F}_p) \mod l$ pour suffisamment de $l$ jusqu'à ce que l'on ait l'inégalité suivante :
 \begin{equation}
@@ -171,7 +196,7 @@ Le sous-groupe de $l$-torsion
 $$E[l] = \{P \in E(\bar{\mathbb{F}}_p), lP = 0\}$$
 est défini sur une extension finie de $\mathbb{F}_p$. Cependant, on ne sait pas à priori borner le degré d'une telle extension sans informations supplémentaires.
 
-L'idée de Schoof \cite{schoof} est de faire les calculs avec un point de $l$-torsion générique. Un polynôme de $l$-division $\Psi_l \in \mathbb{F}_p[X]$ est un polynôme dont les racines sont exactement les coordonnées $x$ des points de $l$-torsion, il est de degré $\frac{l^2-1}{2}$ pour $l \neq 2,p$. On peut calculer les polynômes de division par la relation de récurrence suivante :
+L'idée de Schoof est de faire les calculs avec un point de $l$-torsion générique. Un polynôme de $l$-division $\Psi_l \in \mathbb{F}_p[X]$ est un polynôme dont les racines sont exactement les coordonnées $x$ des points de $l$-torsion, il est de degré $\frac{l^2-1}{2}$ pour $l \neq 2,p$. On peut calculer les polynômes de division par la relation de récurrence suivante :
 \begin{align*}
 \Psi_{0} &= 0, \quad \Psi_{1} = 1, \quad \Psi_{2} = 2y \\
 \Psi_{2n} &=  \left ( \frac { \Psi_{n}}{2y} \right ) \cdot ( \Psi_{n+2}\Psi^{2}_{n-1} -  \Psi_{n-2} \Psi ^{2}_{n+1})  \quad &(n \geq 1) \\
@@ -196,18 +221,19 @@ D'après l'inégalité \ref{inegaliteSchoof}, on en déduit bien que $l = O(\log
 
 \section{Courbes de genre 2}
 
-L'utilisation des courbes elliptiques en cryptographie connait une montée en puissance depuis son introduction par \citet{koblitz1}. Jusqu'à récemment, les records de rapidité concernant le protocole de Diffie-Hellman ont été obtenus grâce à une arithmétique rapide sur les courbes elliptiques.
+L'utilisation des courbes elliptiques en cryptographie connait une montée en puissance depuis son introduction par Koblitz en 1985, l'avantage principal de cette approche est que les clés sont de tailles plus petites ce qui est très apprécié pour des systèmes embarqués dont la mémoire est limité. Jusqu'à récemment, les records de rapidité concernant le protocole de Diffie-Hellman ont été obtenus grâce à une arithmétique rapide sur les courbes elliptiques.
 
-Les courbes hyperelliptiques de genre $> 2$ offrent une généralisation naturelle pour des applications en cryptographie; cependant, ils existent des attaques sous-exponentielles au logarithme discret dans les Jacobiennes de ces courbes \citep{gaudry2}.
+Les courbes hyperelliptiques de genre $> 2$ offrent une généralisation naturelle pour des applications en cryptographie; cependant, il existe des attaques sous-exponentielles au logarithme discret dans les Jacobiennes de ces courbes \citep{gaudry2} ce qui nous oblige à compenser par des paramètre plus grand.
 
-À l'heure actuelle, on ne connait aucune attaque sous-exponentielle pour des courbes de genre 2; ce qui explique (du moins en partie) leur intérêt en cryptographie.
-D'autre part, \citet{gaudry} montre que la multiplication scalaire sur la surface de Kummer d'une courbe de genre 2 est compétitive par rapport à la multiplication scalaire sur une courbe elliptique.
+À l'heure actuelle, on ne connait aucune attaque sous-exponentielle au logarithme discret sur les Jacobiennes de courbes de genre 2; ce qui explique (du moins en partie) leur intérêt en cryptographie.
+
+D'autre part, \citet{gaudry} présente un algorithme de multiplication scalaire sur la surface de Kummer d'une courbe de genre 2 qui est compétitif par rapport à la multiplication scalaire sur une courbe elliptique.
 
 \subsection{Définition}
 Soit $k$ un corps de caractéristique impaire.
 
 \begin{definition}
-Une courbe algébrique $C$ est dite \emph{hyperelliptique de genre 2} si elle admet une équation de la forme :
+Une courbe algébrique $C$ définie sur $k$ est dite \emph{hyperelliptique de genre 2} si elle admet une équation de la forme :
 $$C : y^2 = F(x)$$
 où $$F(X) = f_0 + f_1X + ... + f_6X^6 \in k[X]$$
 est un polynôme séparable de degré 6.
@@ -219,24 +245,35 @@ On se permet un abus de notation dans la définition précédente; en effet, on 
 Si l'on considère l'équation homogène associée :
 $$Y^2Z^4 = \mathbf{F}(X,Z)$$
 alors le point à l'infini $Z=0$ est un point singulier; pour obtenir une courbe lisse, on effectue un éclatement au point singulier. La courbe que l'on obtient présente alors deux points à l'infini $\infty_1$ et $\infty_2$.
+
+Un modèle projectif non-singulier dans $\mathbb{P}^4$ de la courbe $C$ est donné par \citep{cassels-Flynn} :
+\begin{align*}
+Y^2 &= f_0X_0^2 + f_1X_0X_1 + f_2X_1^2 + f_3X_1X_2 + f_4X_2^2 + f_5X_2X_3 + f_6X_3^2 \\
+0 &= X_0X_2 - X_1^2 \\
+0 &= X_0X_3 - X_1X_2 \\
+0 &= X_1X_3 - X_2^2
+\end{align*}
+Les points correspondant à l'équation affine ($X_0 \neq 0$) sont obtenus en posant :
+$$X_j = X^j, \quad Y = Y$$
 \end{remarque}
 
 \begin{remarque}
-On peut montrer \citep{cassels-Flynn} que toute courbe de genre 2 est birationnelle à une courbe de cette forme. Lorsque l'on parlera de courbe de genre 2, on sous-entend que l'on considère une équation sous forme hyperelliptique; autrement dit une équation de la forme $y^2 = F(x)$.
+On peut montrer que toute courbe de genre 2 est birationnelle à une courbe hyperelliptique de genre 2 \citep{cassels-Flynn}. Lorsque l'on parlera de courbe de genre 2, on sous-entend que l'on considère une équation sous forme hyperelliptique; autrement dit une équation de la forme $y^2 = F(x)$.
 \end{remarque}
 
-Une telle courbe est munie d'une involution 
+Une telle courbe est munie d'une \emph{involution hyperelliptique}
 \begin{equation*}
 \begin{array}{lrcl}
 \iota :&C & \longrightarrow & C \\
 & (x,y) & \longmapsto & (x,-y)
 \end{array}
 \end{equation*}
+
 Le point $(x,-y)$ est appelé l'opposé de $(x,y)$. Il y a 6 points particuliers sur la courbe qui sont invariants par l'involution, on les appelle \emph{points de Weierstrass}; ils sont de la forme $(\theta,0)$ où $\theta$ est l'une des 6 racines de $F(X)$.
 
 Dans la suite, on s'intéressera à des fonctions (rationnelles) sur la courbe $C$ à valeurs dans $k$.
 \begin{definition}
-Une \emph{fonction} $f : C \subset k^2 \longrightarrow k$ est par une fraction rationnelle $f = \frac{P}{Q}$; où $P(X,Y)$ et $Q(X,Y)$ sont des polynômes à coefficients dans $k$ avec $Q \not\equiv 0$ sur $C$.
+On dira que $f : C \subset k^2 \longrightarrow k$ est une \emph{fonction} sur $C$ si elle est une fraction rationnelle $f = \frac{P}{Q}$; où $P(X,Y)$ et $Q(X,Y)$ sont des polynômes à coefficients dans $k$ avec $Q \not\equiv 0$ sur $C$.
 \end{definition}
 
 En utilisant l'équation de la courbe, on peut remplacer toutes les apparitions de $y^2$ dans $P$ et $Q$ par l'expression $F(x)$; on en déduit que les fonctions sur $C$ sont de la forme :
@@ -244,13 +281,14 @@ $$\frac{P_1(x) + P_2(x)y}{Q_1(x) + Q_2(x)y}$$
 où $P_1(X),P_2(X),Q_1(X),Q_2(X)$ sont des polynômes à coefficients dans $k$.
 
 \begin{definition}
-L'ensemble des fonctions (rationnelles) sur $C$ est appelé \emph{corps de fonctions}, on le note $k(C)$. Une définition équivalente du corps de fonctions est :
+L'ensemble des fonctions (rationnelles) sur $C$ est appelé \emph{corps de fonctions}, on le note $k(C)$.
+\end{definition}
+
+On peut aussi définir le corps de fonctions comme le corps des fractions de l'anneau des coordonnées :
 \begin{align*}
 k(C) &= k(x)[y]/(y^2-F(x)) \\
   &= Frac(k[x,y]/(y^2-F(x)))
 \end{align*}
-\end{definition}
-
 \subsection{Diviseurs et Jacobienne}
 
 \begin{definition}
@@ -263,24 +301,24 @@ Une fonction non nulle $f$ sur $C$ détermine un diviseur noté $div(f)$; la mul
 
 Les diviseurs principaux forment un sous-groupe de $Div$, noté $Pr$.
 \begin{definition}
-On considère le groupe quotient $Pic = Div/Pr$, que l'on appelle \emph{groupe de Picard}.
-La Jacobienne de la courbe $C$, notée $\mathcal{J}$, est le sous-groupe des éléments de $Pic$ de degré 0.
+On considère le quotient du groupe des diviseurs par les diviseurs principaux $Pic = Div/Pr$ et on l'appelle \emph{groupe de Picard}.
+La Jacobienne de la courbe $C$, notée $\mathcal{J}$, est le sous-groupe des éléments du groupe de Picard de degré 0; que l'on note aussi $Pic^0$.
 \end{definition}
 
 On dira que deux diviseurs sont \emph{linéairement équivalents} s'ils sont dans la même classe; autrement dit, s'ils diffèrent d'un diviseur principal.
 
 \begin{remarque}
-Dans le cas des courbes elliptiques, la courbe elle-même est munie naturellement d'une structure de groupe; ce n'est plus le cas en genre $2$. Cependant, la Jacobienne étant munie d'une structure de groupe sous-jacente, on verra que les 2-points forment un groupe sur une courbe de genre $2$.
+Dans le cas des courbes elliptiques, la courbe est munie naturellement d'une structure de groupe; ce n'est plus le cas en genre $2$. Cependant, la Jacobienne étant munie d'une structure de groupe sous-jacente, on remarque que les 2-points forment un groupe sur une courbe de genre $2$.
 \end{remarque}
 
 \begin{remarque}
-La Jacobienne $\mathcal{J}$ est munie d'une structure de variété algébrique; la construction \citep{cassels-Flynn} consiste essentiellement à prendre 2 copies de $C$ et à faire un recollement le long du graphe de l'involution $\iota$.
+La Jacobienne $\mathcal{J}$ est munie d'une structure de variété algébrique; la construction consiste essentiellement à prendre 2 copies de $C$ que l'on recolle le long du graphe de l'involution hyperelliptique \citep{cassels-Flynn}.
 \end{remarque}
 
 Soit $P=(x_0,y_0) \in C$, les points $P$ et $\iota(P)$ sont les zéros de la fonction $(x-x_0)$ qui a deux pôles à l'infini $\infty_1$ et $\infty_2$; autrement dit, on a :
-$$P + \iota(P) - \infty_1 - \infty_2 = 0$$
+$$div(x-x_0) = P + \iota(P) = \infty_1 + \infty_2$$
 
-On en déduit que tout élément $D$ de la Jacobienne $\mathcal{J}$ se représente sous la forme :
+On en déduit que toute classe de diviseur $D$ dans la Jacobienne $\mathcal{J}$ se représente sous la forme :
 $$D = \sum_{i=1}^r{P_i} - r\infty_2$$
 où $P_i \neq \infty_2$ et $P_j \neq \iota(P_i)$ pour $i \neq j$. Un diviseur sous cette forme sera appelé \emph{semi-réduit}.
 
@@ -292,14 +330,7 @@ Il existe un diviseur $K$, appelé diviseur canonique, tel que
 $$l(D) = dim (L(D)) = deg(D) - 1 + dim (L(K - D))$$
 \end{theoreme}
 
-\begin{corollaire}
-\label{div_red}
-Tout point de la Jacobienne $\mathcal{J}$ est représenté par un diviseur $D$ de la forme :
-$$D = P_1 + P_2 - 2\infty_2$$
-où $P_1,P_2 \in C$.
-\end{corollaire}
-
-En effet, d'après le théorème de Riemann-Roch, on a :
+D'après le théorème de Riemann-Roch, on a :
 $$l(D+2\infty_2) = 1 + l(K-D)$$
 
 On en déduit alors que $l(D+2\infty_2) \geq 1$ car $l(K-D) \geq 0$; donc il existe une fonction $f$ non nulle telle que $div(f) \geq -D - 2\infty_2$.
@@ -309,15 +340,25 @@ $$D' - 2\infty_2 \sim D$$
 De plus, $deg(D') = 2$; donc il existe $P_1, P_2 \in C$ tel que :
 $$D' = P_1 + P_2$$
 
-Pour obtenir un diviseur réduit, il nous suffit de mettre $D = P_1 + P_2 - 2\infty_2$ sous forme semi-réduit; ce qui conserve la condition $r \leq 2$.
+Pour obtenir un diviseur réduit, il nous suffit de mettre $D = P_1 + P_2 - 2\infty_2$ sous forme semi-réduite; ce qui conserve la condition $r \leq 2$. On en déduit alors le corollaire suivant :
+
+\begin{corollaire}
+\label{div_red}
+Tout point de la Jacobienne $\mathcal{J}$ est représenté par un diviseur réduit.
+\end{corollaire}
 
 \subsection{Applications en cryptographie}
-D'après les bornes de Hasse-Weil \citep{weil}, l'ordre de grandeur du nombre de points de la Jacobienne d'une courbe de genre 2 est :
+D'après les bornes de Hasse-Weil, l'ordre de grandeur du nombre de points de la Jacobienne d'une courbe de genre 2 est :
 $$\#\mathcal{J}(\mathbb{F}_p) \approx p^2$$
 
 L'idée d'utiliser des courbes de genre $2$ vient du fait que si l'on veut un groupe du même ordre de grandeur que pour une courbe elliptique, alors on peut utiliser un corps fini de taille plus petite. Par exemple, pour avoir un groupe d'ordre approximativement $2^{256}$, dans le cas d'une courbe elliptique il nous faut $log_2(p) \approx 256$; alors que pour une courbe de genre 2 il nous faut seulement $log_2(p) \approx 128$.
 
-L'ordre du groupe $N$ mesure la \emph{sécurité} que l'on peut espérer en utilisant ce groupe dans un protocole cryptographique. En effet, en supposant que le groupe est une boite noire pour lequel on n'a aucune information supplémentaire; alors le meilleur algorithme connu pour résoudre le logarithme discret est en $O(log(N)+\sqrt{p_1})$, où $p_1$ est le plus grand facteur premier dans l'ordre du groupe. On voit donc que le temps nécessaire pour casser un protocole à base de courbes hyperelliptiques dépend du plus grand facteur premier de l'ordre du groupe, c'est pour cette raison que l'on s'intéresse le plus souvent à des groupes dont l'ordre est proche d'être un nombre premier (c.-à-d. $N/p_1$ est petit).
+L'ordre du groupe $N$ mesure la \emph{sécurité} que l'on peut espérer en utilisant ce groupe dans un protocole cryptographique.
+En effet, en supposant que le groupe est une boite noire pour lequel on n'a aucune information supplémentaire; alors le meilleur algorithme connu pour résoudre le logarithme discret est en $O(log(N)+\sqrt{p_1})$, où $p_1$ est le plus grand facteur premier dans l'ordre du groupe.
+
+On voit donc que le temps nécessaire pour casser un protocole à base de courbes hyperelliptiques dépend uniquement (d'un point de vue heuristique) du plus grand facteur premier de l'ordre du groupe, c'est pour cette raison que l'on s'intéresse le plus souvent à des groupes dont l'ordre est proche d'être un nombre premier (c.-à-d. $N/p_1$ est petit).
+
+Il y a un compromis à faire entre la complexité des formules d'addition et la taille du corps fini sous-jacent, on espère ainsi avoir une \emph{arithmétique plus efficace} en genre 2 comparée aux courbes elliptiques à un niveau de sécurité fixe.
  
 \subsection{Représentation de Mumford}
 Soit $D = \sum_{i=1}^r{P_i} - r\infty_2$ un diviseur réduit sur $C$, alors $D$ peut se représenter de manière unique par deux polynômes $(u,v)$ à coefficients dans $k$ tel que :
@@ -329,13 +370,13 @@ Soit $D = \sum_{i=1}^r{P_i} - r\infty_2$ un diviseur réduit sur $C$, alors $D$ 
 \end{itemize}
 On appelle $(u,v)$ la représentation de Mumford du diviseur $D$.
 
-Le théorème suivant assure qu'il y a bien une équivalence entre points de la Jacobienne et représentations de Mumford.
+Le théorème suivant nous assure qu'il y a bien une correspondance biunivoque entre les points de la Jacobienne et les représentations de Mumford :
 
 \begin{theoreme}[Mumford]
 Toute paire de polynômes $(u,v)$ à coefficients dans $k$ vérifiant ces conditions est la représentation de Mumford d'un diviseur réduit sur $C$.
 \end{theoreme}
 
-La loi de groupe sur la Jacobienne $\mathcal{J}$ peut s'interpréter géométriquement. Soit $D_1 = P_1 + P_2 - 2\infty_2$ et $D_2 = P_3 + P_4 - 2\infty_2$. Pour calculer $D_1 + D_2$, on commence par trouver le polynôme $Q(X)$ (par interpolation de Lagrange) de degré $3$ passant par $P_1,P_2,P_3,P_4$. La courbe d'équation $y = Q(x)$ coupe la courbe $C$ en $2$ autres points $P_5$ et $P_6$.
+On donne maintenant une interprétation géométrique de la loi de groupe sur la Jacobienne $\mathcal{J}$. Soit $D_1 = P_1 + P_2 - 2\infty_2$ et $D_2 = P_3 + P_4 - 2\infty_2$. Pour calculer $D_1 + D_2$, on commence par trouver le polynôme $Q(X)$ (par interpolation de Lagrange) de degré $3$ passant par $P_1,P_2,P_3,P_4$. La courbe d'équation $y = Q(x)$ coupe la courbe $C$ en $2$ autres points $P_5$ et $P_6$.
 
 On note $D_3 = P_5 + P_6 - 2\infty_2$, alors on a :
 $$D_1 + D_2 + D_3 = div(P) = 0$$
@@ -346,9 +387,9 @@ $$D_1 + D_2 = -D_3 = \iota(P_5) + \iota(P_6) - 2\infty_2$$
 L'algorithme de \citet{cantor} explicite la loi de groupe sur la Jacobienne pour des points dans leurs représentations de Mumford.
 
 \section{Arithmétique de genre 2 selon Cassels et Flynn}
-On développe dans cette section l'approche de \citet{cassels-Flynn} sur les courbes de genre 2 et les surfaces de Kummer. On mettra l'accent sur l'aspect calculatoire, l'objectif étant d'avoir des formules explicites de pseudo-addition et de doublement.
+On développe dans cette section la théorie de Cassels et Flynn sur l'arithmétique des courbes de genre 2 et des surfaces de Kummer. On mettra l'accent sur l'aspect calculatoire, l'objectif étant d'avoir des formules explicites de pseudo-addition et de doublement.
 
-Les formules que Cassels et Flynn obtiennent sont relativement lourdes, l'avantage étant que l'on ne fait aucune restriction sur les courbes de genre 2 que l'on considère. On verra plus loin l'approche de \citet{gaudry} qui se base sur une paramétrisation par des fonctions thêtas, on obtient ainsi des formules relativement simple et très rapide.
+Les formules que Cassels et Flynn obtiennent sont relativement lourdes, l'avantage étant que l'on ne fait aucune restriction sur les courbes de genre 2 que l'on considère. On verra plus loin l'approche de Gaudry qui se base sur une paramétrisation par des fonctions thêtas, on obtient ainsi des formules relativement simple et très rapide.
 
 Soit $k$ un corps de caractéristique impaire, soit $C$ une courbe de genre 2 sous la forme :
 $$C : y^2 = F(x)$$
@@ -357,7 +398,7 @@ où $$F(X) = f_6X^6 + f_5X_5 + ... + f_0$$ est un polynôme séparable de degré
 \subsection{Surface de Kummer}
 Les surfaces de Kummer ont été introduites par Kummer en 1864 dans le cadre de recherches sur la diffraction de la lumière. Sur $\mathbb{C}$ ce sont des quartiques qui possèdent 16 points singuliers; c'est le nombre maximal de points singuliers pour une telle quartique qui ne contient pas de courbe singulière.
 
-Pour nous, les surfaces de Kummer sont un moyen d'avoir une arithmétique plus rapide que sur la Jacobienne au prix d'une légère perte d'information que l'on arrive à contrôler.
+Pour nous, les surfaces de Kummer seront un moyen d'avoir une arithmétique plus rapide que sur la Jacobienne au prix d'une légère perte d'information.
 
 \begin{definition}
 La \emph{surface de Kummer} $\mathcal{K}$ de la courbe $C$ est l'image de l'application suivante :
@@ -376,15 +417,19 @@ F_0(x,u)=2f_0&+f_1(x+u)+2f_2xu+f_3(x+u)xu \\
 \end{align*}
 \end{definition}
 
+\begin{remarque}
+La paramétrisation de la surface de Kummer semble un peu arbitraire. On peut tout de même remarquer que les trois premières coordonnées permettent de reconstruire le premier polynôme dans la représentation de Mumford. La dernière coordonnée quand à elle donne une information sur le produit $yv$ et permet de retrouver une partie du deuxième polynôme dans la représentation de Mumford. Avec un peu de calcul, on arrive à calculer $(y+v)^2$ et l'on a juste un choix de signe à faire pour retrouver complètement la représentation de Mumford.
+\end{remarque}
+
 Soit $P \in \mathcal{J}$, on note $\xi_1(P),...,\xi_4(P)$ les coordonnées homogènes de l'image $\xi(P)$ du point $P$ dans la surface de Kummer.
 
 \begin{remarque}
-Dans le cas des courbes elliptiques, la Jacobienne est isomorphe à la courbe elle-même et la variété de Kummer est simplement la droite projective correspondant à la coordonnée $X$.
+Dans le cas des courbes elliptiques, la Jacobienne est isomorphe à la courbe elle-même et la variété de Kummer est simplement la droite projective que l'on considère en tant que coordonnée $X$.
 \end{remarque}
 
 La surface de Kummer est une variété projective définie par une équation homogène de degré 4 de la forme :
 $$K(\xi_1,\xi_2,\xi_3,\xi_4)=K_2\xi_4^2 + K_1\xi_4 + K_0 = 0$$
-où les formules pour $K_0$,$K_1$ et $K_2$ sont données par \citet{eqKum}.
+où les formules pour $K_0$, $K_1$ et $K_2$ sont données par \citet{eqKum}.
 
 Deux points opposés $P$ et $-P$ dans $\mathcal{J}$ sont envoyés sur le même point dans $\mathcal{K}$. Les 16 points de 2-torsion de la Jacobienne sont leurs propres opposés et sont envoyés sur les 16 points singuliers de la surface de Kummer. La Jacobienne est un revêtement de degré 2 de la surface de Kummer ramifié aux points singuliers.
 
@@ -407,7 +452,7 @@ Cependant, $\mathcal{J}$ est munie d'une structure de groupe et l'on peut donc d
 
 \subsection{Addition par un point de 2-torsion}
 \label{add2tors}
-La surface de Kummer $\mathcal{K}$ identifie deux points opposés $P$ et $-P$; donc si l'on veut additionner $\pm P$ et $\pm Q$, on ne fait pas la différence entre $\pm (P+Q)$ et $\pm (P-Q)$. Cependant, pour un point de 2-torsion, on a l'égalité $-Q=Q$; donc l'addition $P+Q$ est bien définie sur $\mathcal{K}$. La translation par un point de 2-torsion est en fait une application linéaire de $\mathbb{P}^3(k)$.
+La surface de Kummer $\mathcal{K}$ identifie deux points opposés $P$ et $-P$; donc si l'on veut additionner $\pm P$ et $\pm Q$, on ne peut pas faire la différence entre $\pm (P+Q)$ et $\pm (P-Q)$. Cependant, pour un point de 2-torsion, on a l'égalité $-Q=Q$; donc l'addition $P+Q$ est bien définie sur $\mathcal{K}$. La translation par un point de 2-torsion est en fait une application linéaire de $\mathbb{P}^3$.
 
 Un point de 2-torsion non trivial est donné par un facteur de degré 2 du polynôme $F(X)$; dans le cas où le polynôme $F(X)$ est irréductible alors la Jacobienne $\mathcal{J}$ ne contient pas de point de 2-torsion rationnel non trivial.
 
@@ -444,14 +489,14 @@ w_{44} &= -g_2^2h_0 - g_0g_2h_2 - g_0^2h_4.
 De plus, la constante $c$ telle que $W^2 = cI$ est égale au résultant de $G(X)$ et de $H(X)$ comme le montre un \href{run:./add2tors.sag}{calcul formel}.
 
 \subsection{Pseudo-addition et doublement}
-Le théorème suivant permet de calculer le point $\pm (P+Q)$ à partir des points $\pm P$,$\pm Q$ et $\pm(P-Q)$. Cette opération s'appelle la pseudo-addition de $P$ et $Q$.
+Le théorème suivant permet de calculer le point $\pm (P+Q)$ à partir des points $\pm P$,$\pm Q$ et $\pm(P-Q)$. On appellera cette opération la \emph{pseudo-addition} de $P$ et $Q$; sous entendu, sachant que l'on se donne le point $\pm(P-Q)$.
 
 \begin{theoreme}[\citet{cassels-Flynn}]
 Soit $P,Q \in \mathcal{K}$. Il existe des polynômes $B_{ij}$ biquadratiques tels que projectivement on ait les relations :
 $$(\xi_i(P+Q)\xi_j(P-Q) + \xi_i(P-Q)\xi_j(P+Q)) = (2B_{ij}(\xi(P),\xi(Q))$$
 \end{theoreme}
 
-Les polynômes $B_{ij}$ sont calculables explicitement et l'on trouvera les expressions sur la page de \citet{biquad}. La méthode pour calculer lesdits polynômes $B_{ij}$ consiste d'une part à remarquer que l'on sait calculer cette expression dans le cas où l'un des points est de 2-torsion et ensuite à montrer qu'il existe un unique polynôme qui se spécialise en donnant cette expression sur la 2-torsion; on renvoie à \citet{cassels-Flynn} pour plus de détails.
+Les polynômes $B_{ij}$ sont calculables explicitement et l'on trouvera les expressions sur la page de \citet{biquad}. La méthode pour calculer lesdits polynômes $B_{ij}$ consiste d'une part à remarquer que l'on sait calculer cette expression dans le cas où l'un des points est de 2-torsion et ensuite à montrer qu'il existe un unique polynôme qui se spécialise en donnant cette expression sur la 2-torsion; on renvoie à \citep{cassels-Flynn} pour plus de détails.
 
 Une fois que l'on a défini la pseudo-addition, on peut définir un doublement en prenant $P=Q$; dans ce cas $P-Q = 0$ dans $\mathcal{J}$ qui est envoyé sur $(0,0,0,1)$ dans $\mathcal{K}$. On en déduit les relations de doublement suivantes :
 $$\xi_4(2P) = B_{44}(\xi(P),\xi(P))$$
@@ -460,31 +505,34 @@ $$\xi_i(2P) = 2B_{i4}(\xi(P),\xi(P)), \quad (1\leq i \leq 3)$$
 
 Une fois que l'on sait calculer le doublement $2P$, on peut calculer par récurrence la multiplication scalaire $nP$ pour tout $n\in\mathbb{N}$. Pour ce faire, on suppose par récurrence que l'on connait $(n-1)P$ et $(n-2)P$; on calcule alors la pseudo-addition de $(n-1)P$ et $P$ (la différence étant $(n-2)P$), ce qui donne bien le point $nP$ que l'on cherche à calculer.
 
-\subsection{Forme de Montgomery en genre 2}
-Comme on l'a déjà signalé, les formules de pseudo-addition et de doublement qu'obtiennent \citet{cassels-Flynn} ne sont pas adaptées à des applications en cryptographie, car elles ne sont pas compétitives comparées à l'arithmétique sur les courbes de Montgomery.
+\subsection{Courbes de Montgomery en genre 2 selon Duquesne}
+Les formules de pseudo-addition et de doublement qu'obtiennent Cassels et Flynn ne sont pas adaptées à des applications en cryptographie. Ces formules ne sont pas compétitives comparées à l'arithmétique sur les courbes de Montgomery.
 
-\citet{duquesne} donne un analogue des courbes sous forme de Montgomery en genre 2 et utilise ces courbes pour avoir une arithmétique plus rapide que dans le cas général.
+\citet{duquesne} donne un analogue des courbes sous forme de Montgomery en genre 2 et utilise ces courbes pour avoir une arithmétique relativement rapide.
 
-\begin{definition}
-Une courbe $C$ de genre 2 sous forme de Montgomery est une courbe algébrique d'équation :
+\begin{definition}[\citep{duquesne}]
+Une courbe $C$ de genre 2 sous forme de Montgomery est une courbe lisse d'équation :
 $$C : By^2 = x^5 + f_4x^4 + f_3x^3 + f_2x^2 + x.$$
 \end{definition}
 
 \begin{remarque}
-Cette définition est un analogue des courbes elliptiques sous forme de Montgomery; qui sont des courbes algébriques dont l'équation est de la forme :
-$$E : By^2 = x^3 + Ax^2 + x.$$
+Comme Ben me le fait remarquer, malgré l'apparente similarité avec les courbes de Montgomery, qui sont des courbes elliptiques dont l'équation est de la forme
+$$E : By^2 = x^3 + Ax^2 + x,$$
+la définition de Dusquesne ne partage pas les mêmes propriétés que celles-ci.
+
+En effet, les courbes de Montgomery disposent d'une 2-isogénie, ce qui est un élément crucial pour avoir une arithmétique rapide; en ce qui concerne les courbes de Dusquesne, elles ne disposent pas forcément d'une (2,2)-isogénie (pour que ce soit le cas, il faudrait que le polynôme $X^4+f_4X^3+f_3X^2+f_2X+1$ se décompose en produit de deux polynômes quadratiques). Notre but dans la suite va être de donner des conditions sur la courbe pour quelle dispose d'une (2,2)-isogénie et que celle-ci soit relativement rapide à calculer.
 \end{remarque}
 
 Comme pour les surfaces de Kummer dans \citep{cassels-Flynn}, on obtient des biquadratiques qui permettent de calculer la pseudo-addition et le doublement; donc par récurrence la multiplication scalaire.
 
-L'avantage de ces formules (par rapport aux formules générales) est que l'on obtient une arithmétique plus rapide tout en ayant un espace de courbe suffisamment grand pour des applications cryptographiques.
+L'avantage de ces formules (à celles de Cassels et Flynn) est que l'on obtient une arithmétique légèrement plus rapide tout en gardant un espace de courbe suffisamment grand pour des applications cryptographiques.
 
 \begin{proposition}[\citet{duquesne}]
 \label{propDuquesne}
 Soit $C$ une courbe de genre 2 sous forme de Montgomery. Le calcul d'une pseudo-addition nécessite 31 multiplications et 2 élévations au carré. Le calcul d'un doublement nécessite 31 multiplications et 5 élévations au carré.
 \end{proposition}
 
-La méthode de \citet{montgomery} pour le calcul de la multiplication scalaire dans une courbe elliptique consiste à effectuer les calculs sur la variété de Kummer (qui correspond à la coordonnée X). Il s'agit d'une variante de la méthode d'exponentiation rapide par doublement successif; cependant, on doit faire un peu plus de calcul à chaque itération à cause du fait que l'on a perdu une partie de l'information sur le groupe de départ (qui n'est autre que la Jacobienne $\mathcal{J}$).
+La méthode de Montgomery pour le calcul de la multiplication scalaire dans une courbe elliptique consiste à effectuer les calculs sur la variété de Kummer (qui correspond à la coordonnée X). Il s'agit d'une variante de la méthode d'exponentiation rapide par doublement successif; cependant, on doit faire un peu plus de calcul à chaque itération à cause du fait que l'on a perdu une partie de l'information sur le groupe de départ (qui n'est autre que la Jacobienne $\mathcal{J}$).
 
 L'algorithme \ref{algoMontgomery} donne le pseudo-code de la méthode de Montgomery générale sans se préoccuper de l'implémentation exacte de l'arithmétique sur $\mathcal{K}$; on utilise les primitives suivantes dans l'algorithme :
 \begin{itemize}
@@ -521,7 +569,11 @@ $$By^2 = x^5 + f_3 x^3 + \epsilon x^2 + x$$
 où $\epsilon \in \{0,\pm 1\}$, alors la multiplication scalaire par $n > 1$ dans $\mathcal{K}$ nécessite $46\log_2 n$ multiplications et $6\log_2 n$ élévations au carré.
 \end{theoreme}
 
-Un avantage supplémentaire de la méthode de Montgomery pour la cryptographie est que son utilisation permet de se prémunir contre des attaques de type \emph{side-channel}; où l'on analyse la consommation en énergie pour en déduire une information sur la clé secrète. Cette approche est donc intéressante pour des applications cryptographiques sur des cartes à puces.
+\begin{remarque}
+Comme peut le laisser sous-entendre ce théorème, on voit que l'apparente rapidité de l'arithmétique vient finalement du fait que certains coefficients sont nuls ou suffisamment simples pour que les formules d'addition et de duplication se simplifient légèrement.
+\end{remarque}
+
+Un avantage supplémentaire de la méthode de Montgomery pour la cryptographie est que son utilisation permet de se prémunir contre des attaques de type \emph{side-channel}; où l'on analyse la consommation en énergie ou le temps d'exécution pour en déduire une information sur la clé secrète. Cette approche est donc intéressante pour des applications cryptographiques sur des cartes à puces.
 
 \section{Arithmétique rapide de genre 2}
 
@@ -582,10 +634,6 @@ Cette observation nous permet de voir que l'on n'a pas tout à fait une structur
 
 \subsection{Pseudo-addition et doublement}
 
-L'avantage de l'utilisation des fonctions thêtas pour paramétrer la surface de Kummer $\mathcal{K}$ est que l'on obtient ainsi des formules de pseudo-addition et de doublement compacte et très rapide. En particulier, la multiplication scalaire de genre 2 que l'on obtient est la plus rapide à l'heure actuelle.
-
-Les algorithmes \ref{ADD} et \ref{DOUBLE} utilisent des constantes $y_0,z_0,t_0,y'_0,z'_0,t'_0$ que l'on peut exprimer en fonction des thêtas constantes \citep{gaudry}.
-
 \begin{algorithm}
 \label{DOUBLE}
 \SetKwInOut{Input}{Entrée}\SetKwInOut{Output}{Sortie}
@@ -603,7 +651,11 @@ $T = t_0(x' - y' - z' + t')$ \\
 \Return{$(X,Y,Z,T)$}
 \end{algorithm}
 
-Le calcul du doublement nécessite 6 produits et 8 élévations au carré. On voit que le coût du doublement est divisé par 2 ou 3 par rapport aux formules de Dusquesne \ref{propDuquesne}.
+L'avantage de l'utilisation des fonctions thêtas pour paramétrer la surface de Kummer $\mathcal{K}$ est que l'on obtient ainsi des formules de pseudo-addition et de doublement compacte et très rapide. En particulier, la multiplication scalaire de genre 2 que l'on obtient est la plus rapide à l'heure actuelle.
+
+Les algorithmes \ref{ADD} et \ref{DOUBLE} utilisent des constantes $y_0,z_0,t_0,y'_0,z'_0,t'_0$ qui s'expriment en fonction des thêtas constantes \citep{gaudry}.
+
+Le calcul du doublement nécessite 6 produits et 8 élévations au carré. On voit que le coût du doublement est divisé par 2 ou 3 par rapport aux formules \ref{propDuquesne} de Dusquesne.
 
 \begin{algorithm}
 \label{ADD}
@@ -623,7 +675,7 @@ $T = (x' - y' - z' + t')/\bar{t}$ \\
 \Return{$(X,Y,Z,T)$}
 \end{algorithm}
 
-Le calcul d'une pseudo-addition nécessite 7 produits, 8 élévations au carré et 4 divisions. Comme les coordonnées sont projectives, on peut remplacer les 4 divisions par 10 multiplications; ce qui ramène à 17 produits et 8 élévations au carré le calcul d'une pseudo-addition. Le gain par rapport aux formules de Duquesne \ref{propDuquesne} est légèrement moins bon que pour le doublement, mais on divise encore pratiquement par 2 le coût d'une pseudo-addition.
+Le calcul d'une pseudo-addition nécessite 7 produits, 8 élévations au carré et 4 divisions. Comme les coordonnées sont projectives, on peut remplacer les 4 divisions par 10 multiplications; ce qui ramène à 17 produits et 8 élévations au carré le calcul d'une pseudo-addition. Le gain par rapport aux formules \ref{propDuquesne} de Duquesne est légèrement moins bon que pour le doublement, mais on divise encore pratiquement par 2 le coût d'une pseudo-addition.
 
 \begin{remarque}
 Dans l'algorithme \ref{ADD}, on suppose que les coordonnées du point $R$ sont non nulles. C'est cependant une restriction mineure étant donné que le point $R$ est toujours le même dans l'algorithme de Montgomery \ref{algoMontgomery}; on peut donc le détecter au départ et agir en conséquence.
@@ -631,12 +683,12 @@ Dans l'algorithme \ref{ADD}, on suppose que les coordonnées du point $R$ sont n
 
 \subsection{Multiplication scalaire}
 
-Comme on l'a remarqué précédemment, ces formules apportent un gain significatif par rapport aux formules de Duquesne \ref{propDuquesne}; de plus, la symétrie des formules nous permet d'économiser encore plus de calcul dans l'algorithme de Montgomery car certaines opérations sont communes au doublement et à la pseudo-addition.
+Comme on l'a remarqué précédemment, ces formules apportent un gain significatif par rapport aux formules \ref{propDuquesne} de Duquesne; de plus, la symétrie des formules nous permet d'économiser encore plus de calcul dans l'algorithme de Montgomery car certaines opérations sont communes au doublement et à la pseudo-addition.
 
 On remarque par exemple que les calculs de $x^2,y^2,z^2,t^2$ sont nécessaire dans la pseudo-addition et dans le doublement; on peut donc faire les calculs de la pseudo-addition et du doublement en même temps et économiser certaines opérations que l'on effectue en double. On renvoie à \citep{gaudry} pour le détail des optimisations possibles; ce qui nous permet d'obtenir le théorème suivant :
 \begin{theoreme}[\citet{gaudry}]
 \label{mulscal}
-Soit $P$ un point de $\mathcal{K}$ et $n > 1$ un entier. Le calcul de $nP$ nécessite $16\log_2 n$ produits et $9\log_2 n$ élévations aux carrés.
+Soit $P$ un point de $\mathcal{K}$ dont les coordonnées sont non nulles et $n > 1$ un entier. Le calcul de $nP$ nécessite $16\log_2 n$ produits et $9\log_2 n$ élévations aux carrés.
 \end{theoreme}
 
 Ce résultat est à comparer aux approches précédentes n'utilisant pas les fonctions thêtas, Duquesne \ref{thduquesne} a besoin de $62\log_2 n$ produits et $7\log_2 n$ élévations aux carrés. Tandis que si l'on n'utilise pas les surfaces de Kummer, on a besoin de $78\log_2 n$ produits et $10\log_2 n$ élévations aux carrés pour une multiplication scalaire sur la Jacobienne $\mathcal{J}$.
@@ -647,7 +699,7 @@ Une rapide comparaison avec les courbes elliptiques montre que la multiplication
 
 \subsection{Points de 2-torsion}
 
-La surface de Kummer $\mathcal{K}$ admet 16 points singuliers, on les appellera parfois des \emph{noeuds}, qui sont exactement les 16 points de 2-torsion :
+La surface de Kummer $\mathcal{K}$ admet 16 points singuliers, on les appellera les \emph{noeuds} de la surface. Ce sont exactement les 16 points de 2-torsion de $\mathcal{K}$ :
 \begin{align*}
    &(a,b,c,d),(a,b,-c,-d),(a,-b,c,-d),(a,-b,-c,d),& \\
    &(b,a,d,c),(b,a,-d,-c),(b,-a,d,-c),(b,-a,-d,c),& \\
@@ -659,7 +711,7 @@ La 2-torsion joue un rôle important dans le calcul des formes biquadratiques et
 En effet, l'approche de \citet{cassels-Flynn} pour calculer les formes biquadratiques consiste à partir du calcul des translations par un point de 2-torsion et à trouver un polynôme qui se spécialise sur la 2-torsion en l'expression correspondante.
 On peut donc imaginer que plus les translations par la 2-torsion sont simples et plus les formes biquadratiques le seront aussi.
 
-\citet{gaudry} explique que la translation par un point de 2-torsion consiste à effectuer la même permutation et les mêmes changements de signes qui exprime ledit point en partant du point $(a,b,c,d)$ qui est l'élément neutre de $\mathcal{K}$. Par exemple, le point $(y,-x,-t,z)$ correspond à la translation du point $(x,y,z,t)$ par le point $(b,-a,-d,c)$.
+\citet{gaudry} explique que la translation par un point de 2-torsion consiste à effectuer la même permutation et les mêmes changements de signes qui expriment ledit point en partant du point $(a,b,c,d)$ qui est l'élément neutre de $\mathcal{K}$. Par exemple, le point $(y,-x,-t,z)$ correspond à la translation du point $(x,y,z,t)$ par le point $(b,-a,-d,c)$.
 
 On voit bien que les translations par des points de 2-torsion sont plus simples (en général) que celles de \citet{eqKum}; en particulier, la translation par l'un des 4 points de la première ligne est diagonale à coefficients $\pm 1$.
 
@@ -674,7 +726,7 @@ On remarque donc que toute relation d'incidence entre un point et un plan donne 
 
 Pour trouver ces relations d'incidence tropes/noeuds, on va utiliser un analogue du fait bien connu que le plan $\alpha X + \beta Y=0$ de coordonnées duales $(\alpha,\beta)$ est incident au point $(-\beta, \alpha)$; on remarque que l'on a effectué une transposition des coordonnées et un changement de signe.
 
-On généralise maintenant ceci pour un plan de coordonnées duales $(\alpha, \beta, \gamma, \delta)$; en utilisant des doubles transpositions et des changements de signes, on trouve que le plan précédent est incident aux 6 points dont les coordonnées sont :
+On généralise maintenant ceci pour un hyperplan dans $\mathbb{P}^3$ de coordonnées duales $(\alpha, \beta, \gamma, \delta)$; en utilisant des doubles transpositions et des changements de signes, on trouve que le plan précédent est incident aux 6 points dont les coordonnées sont :
 \begin{align*}
    &(\delta, -\gamma, \beta, -\alpha), \quad (\delta, \gamma, -\beta, -\alpha), \\
    &(\gamma, \delta, -\alpha, -\beta), \quad (-\gamma, \delta, \alpha, -\beta), \\
@@ -698,26 +750,30 @@ On peut résumer les relations d'incidence dans le tableau suivant :
  \end{tabular}
 \end{center}
 
-Les relations d'incidence associées à un élément du tableau correspondent aux éléments de la même ligne ou de la même colonne en enlevant l'élément dont on veut connaitre lesdites relations.
+Les relations d'incidences associées à un élément du tableau correspondent aux éléments de la même ligne ou de la même colonne en enlevant l'élément dont on veut connaitre lesdites relations.
 
 Le tableau précédent se construit en plaçant arbitrairement la diagonale puis en utilisant des corrélations entre les relations d'incidence. Par exemple, en supposant la diagonale fixée, l'élément du tableau en bas à gauche est alors l'unique élément qui est présent à la fois dans les relations d'incidence de l'élément en haut à gauche du tableau et dans celles de l'élément en bas à droite du tableau.
 
 \subsection{Surface de Kummer autoduale}
-La duale de la surface de Kummer $K_{a,b,c,d}$ est $K_{A,B,C,D}$ où les constantes $a,b,c,d,A,B,C,D$ sont reliées par le système d'équations suivant \citep{gaudry} :
-\begin{align*}
+
+En suivant les notations de Gaudry, la duale de la surface de Kummer $K_{a,b,c,d}$ est $K_{A,B,C,D}$; où les paramètres sont reliées par le système d'équations suivant \citep{gaudry} :
+\begin{align}
+\begin{split}
+\label{constDual}
 4A^2 &= a^2 + b^2 + c^2 + d^2 \\
 4B^2 &= a^2 + b^2 - c^2 - d^2 \\
 4C^2 &= a^2 - b^2 + c^2 - d^2 \\
 4D^2 &= a^2 - b^2 - c^2 + d^2
-\end{align*}
+\end{split}
+\end{align}
 
-On cherche des conditions pour que les surfaces de Kummer $K_{a,b,c,d}$ et $K_{A,B,C,D}$ soient isomorphes entre elles; on dira alors que la surface de Kummer est \emph{autoduale}. 
+On cherche des conditions pour que ces surfaces de Kummer soient isomorphes entre elles; on dira alors que la surface de Kummer est \emph{autoduale}. 
 
-Les coefficients de la surface de Kummer $K_{a,b,c,d}$ sont homogènes de degré 0 par rapport aux variables $a,b,c,d$; il suffit donc de trouver des conditions pour que $(A,B,C,D)=\lambda(a,b,c,d)$. Cette dernière condition n'est pas forcément nécessaire; cependant, on s'intéresse ici uniquement à trouver une famille de surfaces de Kummer autoduale.
+Les coefficients de la surface de Kummer $K_{a,b,c,d}$ sont homogènes de degré 0 par rapport aux variables $a,b,c,d$; il nous suffit donc de trouver des conditions pour que projectivement l'on ait $(A:B:C:D)=(a:b:c:d)$. Cette dernière condition n'est pas forcément nécessaire; cependant, on s'intéresse ici uniquement à trouver une sous-famille de surfaces de Kummer autoduale.
 
-Si les constantes $a,b,c,d$ et $A,B,C,D,$ sont projectivement équivalentes, alors l'isogénie $\phi$ qui apparait dans le doublement de Gaudry est un endomorphisme de $\mathcal{K}$. Cette isogénie est alors une racine carrée de 2 c.-à-d. vérifie $\phi^2 = [2]$ où l'on note $[2]$ pour la multiplication par 2; on écrira souvent $\sqrt{2}$ à la place de $\phi$ dans ce cas.
+Si les constantes $a,b,c,d$ et $A,B,C,D,$ sont projectivement équivalentes, alors l'isogénie $\phi$ qui apparait dans le doublement de Gaudry est un endomorphisme de $\mathcal{K}$. Cette isogénie est alors une racine carrée de 2 c.-à-d. vérifie $\phi^2 = [2]$ où l'on note $[2]$ pour la multiplication par 2; dans ce cas, on notera alors $\phi$ par le symbole $\sqrt{2}$.
 
-Revenons maintenant au système d'équations et remplaçons $A,B,C,D$ par $\lambda a,\lambda b,\lambda c,\lambda d$; on trouve alors le système suivant :
+Revenons maintenant au système d'équations et remplaçons $A$, $B$, $C$, $D$ par $\lambda a$, $\lambda b$, $\lambda c$, $\lambda d$ dans le système \ref{constDual}; on a alors le système suivant :
 \begin{align*}
 4\lambda^2a^2 &= a^2 + b^2 + c^2 + d^2 \\
 4\lambda^2b^2 &= a^2 + b^2 - c^2 - d^2 \\
@@ -749,9 +805,15 @@ he maintains that an identity, if true, can be verified in a few
 lines by anybody obtuse enough to feel the need of verification. -- \citet{dyson}} que l'on a bien l'identité suivante :
 $$(m^2 + n^2 + p^2 + q^2)^2 = (m^2 + n^2 - p^2 - q^2)^2 + 4(mq+np)^2 + 4(nq-mp)^2$$
 
-On cherche à utiliser ces formules dans un corps fini $\mathbb{F}_p$, il faut donc dans le premier cas que 2 soit un résidu quadratique modulo $p$ ce qui impose la condition $p \equiv \pm 1 \mod{8}$. Dans le second cas, il faut que $-2$ et $-1$ soit des résidus quadratiques modulo $p$ ce qui impose que $2$ le soit aussi; ce qui donne la condition $p \equiv 1 \mod{8}$.
+\begin{remarque}
+On cherche à utiliser ces formules dans un corps fini $\mathbb{F}_p$, il semble donc nécessaire que le facteur projectif $\lambda$ soit définit sur $\mathbb{F}_p$. Cependant, dans $\mathbb{F}_{p^2}$, les points $(A:B:C:D)$ et $(1:B/A:C/A:D/A)$ sont égaux; de plus, le point $(1:B/A:C/A:D/A)$ est bien définit sur $\mathbb{F}_p$.
 
-Il semble étrange que dans la relation $a^2 = b^2 + c^2 + d^2$, le paramètre $a$ ne joue pas le même rôle que $b,c,d$. Que se passe-t-il si l'on a plutôt la relation $b^2 = a^2 + c^2 + d^2$. On obtient alors les relations suivantes qui relient les thêtas constantes aux thêtas constantes duales :
+Ceci nous assure que la surface de Kummer $K_{1,B/A,C/A,D/A}$ est définit sur $\mathbb{F}_p$ et est bien la duale de $K_{a,b,c,d}$; on arrive donc à contourner le problème si jamais $2$ ou $-2$ ne sont pas des résidus quadratiques sur $\mathbb{F}_p$.
+\end{remarque}
+
+%faut donc dans le premier cas que 2 soit un résidu quadratique modulo $p$ ce qui impose la condition $p \equiv \pm 1 \mod{8}$. Dans le second cas, il faut que $-2$ et $-1$ soit des résidus quadratiques modulo $p$ ce qui impose que $2$ le soit aussi; ce qui donne la condition $p \equiv 1 \mod{8}$.
+
+Il peut sembler étrange que dans la relation $a^2 = b^2 + c^2 + d^2$, le paramètre $a$ ne joue pas le même rôle que $b$, $c$ ou $d$. Que se passe-t-il si l'on a plutôt la relation $b^2 = a^2 + c^2 + d^2$. On obtient alors les relations suivantes qui relient les thêtas constantes aux thêtas constantes duales :
 \begin{align*}
 4A^2 &= 2b^2  &4B^2 &= 2a^2 \\
 4C^2 &= -2d^2  &4D^2 &= -2c^2
@@ -764,15 +826,20 @@ Alors qu'en utilisant la relation $a^2 = b^2 + c^2 + d^2$, on obtenait :
 
 On voit donc que l'on a échangé les rôles respectifs de $a,b,c,d$ ce qui explique que l'on ne pouvait pas obtenir d'autres relations en cherchant uniquement une colinéarité entre $(a,b,c,d)$ et $(A,B,C,D)$.
 
-Maintenant que l'on a vu ce qui se passe si l'on a vu que l'on échange les rôles de $a,b,c,d$ lorsque l'on change la relation $a^2 = b^2 + c^2 + d^2$; on peut se demander ce qu'il se passe lorsque $(a,b,c,d)$ et $(A,B,C,D)$ ne sont pas projectivement équivalent, mais en supposant tout de même que la surface de Kummer soit autoduale. On remarque alors que les deux isogénies qui apparaissent dans le doublement font intervenir d'une part $a/b,a/c,a/d$ et d'autre part $A/B,A/C,A/D$. Ces constantes sont différentes car les points ne sont pas projectivement équivalents; on en déduit que les deux isogénies qui apparaissent dans le doublement sont distinctes.
-Dans ce cas, les surfaces de Kummer $\mathcal{K}$ et $\hat{\mathcal{K}}$ sont isomorphes mais n'ont pas la même équation. Le calcul de $\sqrt{2}$ fait alors intervenir cet isomorphisme non trivial et nuit grandement au calcul rapide de $\sqrt{2}$; ce qui ne nous intéresse pas pour des applications cryptographiques.
+Maintenant que l'on a vu ce qui se passe si lorsque l'on échange les rôles de $a$, $b$, $c$, $d$ dans la relation $a^2 = b^2 + c^2 + d^2$; on peut se demander ce qu'il se passe lorsque les points $(a,b,c,d)$ et $(A,B,C,D)$ ne sont pas projectivement équivalent, mais en supposant tout de même que la surface de Kummer soit autoduale.
+
+On remarque alors que les deux isogénies qui apparaissent dans le doublement font intervenir pour la première les constantes $A/B,A/C,A/D$ et pour la seconde les constantes $a/b,a/c,a/d$. Ces constantes sont différentes car les points ne sont pas projectivement équivalents; on en déduit que les deux isogénies qui apparaissent dans le doublement sont distinctes.
+
+Les surfaces de Kummer $\mathcal{K}$ et $\hat{\mathcal{K}}$ sont alors isomorphes mais n'ont pas la même équation. Le calcul de $\sqrt{2}$ fait alors intervenir un isomorphisme non trivial entre $\mathcal{K}$ et $\hat{\mathcal{K}}$; ceci nuit grandement au calcul rapide de $\sqrt{2}$ et ne nous intéressera pas pour des applications cryptographiques.
 
 %\emph{Y aurait-il un argument théorique qui permette d'affirmer que lorsque la surface de Kummer est autoduale alors les deux isogénies sont égales ? Et ainsi, éliminer le cas où $(a,b,c,d)$ et $(A,B,C,D)$ ne sont pas projectivement équivalent.}
 
-Lors de notre analyse pour obtenir une surface de Kummer autoduale, on a vu que l'on avait à priori besoin d'extraire une racine carrée de 2. On peut alors se poser la question de savoir si on a effectivement besoin d'une racine carrée de 2. En effet, l'équation de la Kummer $K_{A,B,C,D}$ ne fait intervenir que les carrés des paramètres et le produit $ABCD$; la racine carrée de 2 n'est donc pas nécessaire dans l'équation de la Kummer. D'autre part, dans l'isogénie on n'a besoin que des quotients $A/B,A/C,A/D$ dans lesquels la racine carrée de 2 disparait. Cependant, les relations entre les paramètres duaux sont de la forme $2A^2 = a^2$. Si l'on veut que les points $(a,b,c,d)$ et $(A,B,C,D)$ soit rationnels; ce qui semble indispensable, car ce sont les neutres de $K_{a,b,c,d}$ et $K_{a,b,c,d}$. Alors on obtient $2 = (\frac{a}{A})^2$, ce qui nous assure que 2 doit être un carré.
+%Lors de notre analyse pour obtenir une surface de Kummer autoduale, on a vu que l'on avait à priori besoin d'extraire une racine carrée de 2. On peut alors se poser la question de savoir si on a effectivement besoin de cette racine carrée de 2 dans le corps de base. En effet, l'équation de la Kummer $K_{A,B,C,D}$ ne fait intervenir que les carrés des paramètres et le produit $ABCD$; la racine carrée de 2 n'est donc pas nécessaire dans l'équation de la Kummer.
+%
+%D'autre part, dans l'isogénie on n'a besoin que des quotients $A/B$, $A/C$, $A/D$ dans lesquels la racine carrée de 2 disparait miraculeusement. Cependant, les relations entre les paramètres duaux sont de la forme $2A^2 = a^2$. Si l'on veut que les points $(a,b,c,d)$ et $(A,B,C,D)$ soit rationnels; ce qui semble indispensable, car ce sont les neutres de $K_{a,b,c,d}$ et $K_{a,b,c,d}$. Alors on obtient $2 = (\frac{a}{A})^2$, ce qui nous assure que 2 doit être un carré.
 
 \begin{remarque}
-Dans la pseudo addition, on voit apparaitre l'isogénie duale et pas l'autre isogénie. Ce qui peut sembler étrange puisqu'il apparait alors une certaine dissymétrie par rapport au doublement.
+Dans la pseudo addition, on voit apparaitre uniquement l'isogénie duale. Ce qui peut sembler étrange puisqu'il apparait alors une certaine dissymétrie contrairement au doublement.
 \end{remarque}
 
 \section{Vers une arithmétique à la Gaudry}
@@ -781,7 +848,7 @@ Dans cette section, on s'intéresse à des conditions suffisantes pour qu'une co
 
 \subsection{Isogénie de Richelot}
 
-On remarque que l'algorithme \ref{DOUBLE} se décompose en deux parties similaires qui correspondent à des \emph{isogénies de Richelot}. La première isogénie envoie un point de $\mathcal{K}$ sur la surface de Kummer duale $\hat{\mathcal{K}}$ et la deuxième renvoie le point sur $\mathcal{K}$. On s'intéressera plus tard au cas où les deux isogénies sont identiques; c'est à dire lorsque $\mathcal{K}$ est isomorphe à sa duale $\hat{\mathcal{K}}$.
+On remarque que l'algorithme \ref{DOUBLE} fait apparaître un découpage en deux parties similaires qui correspondent à une \emph{isogénie de Richelot}. La première isogénie envoie un point de $\mathcal{K}$ sur la surface de Kummer duale $\hat{\mathcal{K}}$ et la deuxième renvoie le point sur $\mathcal{K}$. On s'intéressera plus tard au cas où les deux isogénies sont identiques; c'est à dire lorsque $\mathcal{K}$ est isomorphe à sa duale $\hat{\mathcal{K}}$.
 
 On suppose que la courbe $C$ de genre 2 admet une équation de la forme :
 $$y^2 = F(x) = G_1(x)G_2(x)G_3(x)$$
@@ -789,7 +856,7 @@ où $G_1(X),G_2(X),G_3(X)$ sont des polynômes de degré 2 sans racine double et
 $$G_j(X) = g_{2j}X^2 + g_{1j}X + g_{0j}$$
 
 \begin{remarque}
-Une telle factorisation du polynôme $F(X)$ permet de distinguer 3 points de 2-torsion particuliers (en plus de l'élément neutre) qui correspondent à $G_1(X),G_2(X),G_3(X)$ et qui joueront un rôle important dans la suite.
+Une telle factorisation du polynôme $F(X)$ permet de distinguer 3 points de 2-torsion particuliers (en plus de l'élément neutre) qui correspondent à $G_1(X)$, $G_2(X)$, $G_3(X)$ et qui joueront un rôle important dans la suite.
 \end{remarque}
 
 \begin{definition}
@@ -804,7 +871,7 @@ L_3(X) &= G'_1(X)G_2(X) - G'_2(X)G_1(X)
 \end{definition}
 
 \begin{remarque}
-On fera attention au fait qu'il y a potentiellement plusieurs duales de Richelot $\hat{C}$ pour une même courbe $C$, correspondant à différente factorisation du polynôme $F(X)$; il nous arrivera cependant de parler de \emph{la} duale de Richelot lorsque la factorisation est fixée.
+On fera attention au fait qu'il y a potentiellement plusieurs duales de Richelot $\hat{C}$ pour une même courbe $C$, correspondant à plusieurs factorisations du polynôme $F(X)$; il nous arrivera cependant de parler de \emph{la} duale de Richelot lorsque la factorisation est fixée.
 \end{remarque}
 
 \begin{remarque}
@@ -820,10 +887,10 @@ La surface de Kummer duale $\hat{\mathcal{K}}$ est la surface de Kummer associé
 Comme nous l'avons déjà remarqué, la décomposition du polynôme $F(X)$ en produit de 3 polynômes $G_j(X)$ fait apparaitre 4 points de 2-torsion particuliers; le neutre $(0,0,0,1)$ et les diviseurs donnés par $G_j=0$.
 
 \begin{definition}
-On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}$ formé de l'élément neutre $(0,0,0,1)$ et des 3 points donnés par $G_j=0$; où $G_1(X)G_2(X)G_3(X)$ est une factorisation du polynôme $F(X)$.
+On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}$ formé de l'élément neutre $(0,0,0,1)$ et de 3 points donnés par $G_j=0$; où $G_1(X)G_2(X)G_3(X)$ est une factorisation du polynôme $F(X)$ et où les polynômes $G_j$ sont de degré $2$.
 \end{definition}
 
-Un tétraèdre de G\"opel est particulièrement adapté à l'isogénie de Richelot et l'on va voir que les translations dans cette base sont simples; on pourra comparer les applications linéaires avec celles que l'on a vues dans la section \ref{add2tors}.
+Un tétraèdre de G\"opel est particulièrement adapté à l'isogénie de Richelot correspondante et l'on va voir que les translations dans cette base sont relativement simples; on pourra comparer les applications linéaires avec celles que l'on a vues dans la section \ref{add2tors}.
 
 Une propriété importante des applications linéaires associées au tétraèdre de G\"opel est qu'elles commutent entre elles \citep{cassels-Flynn}; ce qui nous permettra de les diagonaliser simultanément. 
 
@@ -831,17 +898,18 @@ Plus précisément, on a la proposition suivante :
 
 \begin{proposition}
 Notons $S_j$ la matrice de translation par le point de 2-torsion donnée par $G_j=0$; alors il existe des éléments non nuls $e_1,e_2,e_3$ de $k$ tel que l'on ait les relations suivantes :
-\begin{align}
+\begin{align*}
 S_3S_2 &= S_2S_3 = e_1S_1 \\
 S_1S_3 &= S_3S_1 = e_2S_2 \\
 S_2S_1 &= S_1S_2 = e_3S_3
-\end{align}
+\end{align*}
 De plus, en combinant les lignes $j+1$ et $j+2$, on obtient :
 $$S_j^2 = e_{j+1}e_{j+2}I$$
 \end{proposition}
 
+On note $O=(0,0,0,1)$ l'élément neutre.
 \begin{remarque}
-On note $O=(0,0,0,1)$ l'élément neutre, si les 4 points $O$, $S_1O$, $S_2O$, $S_3O$ sont linéairement dépendants, alors la Jacobienne $\mathcal{J}$ est réductible \citep{cassels-Flynn}; c.-à-d. produit de deux courbes elliptiques. On exclut ce cas et on suppose que $O,S_1O,S_2O,S_3O$ forment une base.
+Si les 4 points $O$, $S_1O$, $S_2O$, $S_3O$ sont linéairement dépendants, alors la Jacobienne $\mathcal{J}$ est réductible \citep{cassels-Flynn}; c.-à-d. produit de deux courbes elliptiques. On exclut ce cas et on suppose dans la suite que $(O,S_1O,S_2O,S_3O)$ est une base de $\mathbb{P}^3$.
 \end{remarque}
 
 La base $(O,S_1O,S_2O,S_3O)$ est particulièrement adaptée à l'isogénie de Richelot et les translations par un point du tétraèdre de G\"opel sont relativement simples dans cette base. Par exemple, la matrice de $S_1$ dans la base  $(O,S_1O,S_2O,S_3O)$ est :
@@ -855,15 +923,18 @@ La base $(O,S_1O,S_2O,S_3O)$ est particulièrement adaptée à l'isogénie de Ri
 \]
 De plus, le polynôme caractéristique de cette matrice est :
 $$(X^2-e_2e_3)^2$$
-donc si l'on veut complètement diagonaliser les translations par un point du tétraèdre de G\"opel (comme dans \citep{gaudry}) il nous faut extraire des racines carrées.
+
+Si l'on veut donc diagonaliser complètement les translations par un point du tétraèdre de G\"opel (comme c'est le cas dans \citep{gaudry}), il nous faut extraire certaines racines carrées.
 
 Notons $\epsilon_j$ une racine carrée de $e_j$ et considérons le changement de base suivant \citep{cassels-Flynn} :
 \begin{align}
+\begin{split}
 \label{chgBase}
 X &= \epsilon_1\epsilon_2\epsilon_3(v_0+v_1+v_2+v_3) \\
 Y &= \epsilon_1(v_0+v_1-v_2-v_3) \\
 Z &= \epsilon_2(v_0-v_1+v_2-v_3) \\
 T &= \epsilon_3(v_0-v_1-v_2+v_3)
+\end{split}
 \end{align}
 où $X,Y,Z,T$ sont les coordonnées dans la base du tétraèdre de G\"opel et $v_0,v_1,v_2,v_3$ sont les nouvelles coordonnées.
 
@@ -892,23 +963,25 @@ Il nous faut vérifier que l'on a bien l'égalité $\epsilon_{12}\epsilon_{13} =
 Pour ce faire, on peut de calculer $\epsilon_{12}$ et $\epsilon_{13}$ en prenant une racine carrée arbitraire puis poser $\epsilon_{23} = \epsilon_{12}\epsilon_{13}/e_1$.
 
 \begin{remarque}
-La base correspondante n'est pas encore la base de \citet{gaudry} mais on s'y intéressera plus en détail dans la suite, pour des questions de généricité et de rationalité. En effet, on arrive à diagonaliser une partie de la 2-torsion et on peut imaginer que les formes biquadratiques seront suffisamment simples pour être intéressante tout s'autorisant une classe de courbes plus large que dans \citep{gaudry}.
+La base correspondante n'est pas encore la base de \citep{gaudry} mais on s'y intéressera plus en détail dans la suite, pour des questions de généricité et de rationalité. En effet, on arrive à diagonaliser une partie de la 2-torsion et on peut imaginer que les formes biquadratiques seront suffisamment simples pour être intéressantes tout s'autorisant une classe de courbes plus large que dans \citep{gaudry}.
 \end{remarque}
 
-L'équation de la surface de Kummer $\mathcal{K}$ dans les variables $v_i$ est de la forme \citep{cassels-Flynn} :
+On reprend dans ce qui suit l'explication de Cassels et Flynn en ce qui concerne l'expression de l'isogénie de Richelot sur la surface de Kummer; ils ne donnent pas l'expression exacte mais on va tout de même essayer d'extrapoler légèrement pour obtenir quelque chose qui devrait ressembler à l'expression de l'isogénie.
+
+L'équation de la surface de Kummer $\mathcal{K}$ dans les variables $v_i$ est de la forme suivante \citep{cassels-Flynn} :
 \begin{equation}
 \label{eqKumDiag}
 \mathcal{K} : q(v_0^2,v_1^2,v_2^2,v_3^2)+\gamma v_0v_1v_2v_3 = 0
 \end{equation}
 où $q$ est une forme quadratique et $\gamma$ une constante.
 
-Si l'on pose $V_i = v_i^2$, les variables $V_i$ vérifient alors l'équation suivante :
+Si l'on pose $V_i = v_i^2$, les variables $V_i$ vérifient alors
 \begin{equation}
 \label{dualeKum}
 q(V_0,V_1,V_2,V_3)^2 = \gamma^2 V_0V_1V_2V_3
 \end{equation}
 
-L'équation \ref{dualeKum} est l'équation de la surface de Kummer duale $\hat{\mathcal{K}}$ \citep{cassels-Flynn}; on cherche maintenant à mettre l'équation \ref{dualeKum} sous la forme \ref{eqKumDiag}. On utilise pour ce faire un changement de base similaire à \ref{chgBase}; l'isogénie de Richelot s'exprime alors sous la forme suivante :
+L'équation \ref{dualeKum} est l'équation de la surface de Kummer duale $\hat{\mathcal{K}}$ \citep{cassels-Flynn}; on cherche maintenant à mettre l'équation \ref{dualeKum} sous la forme \ref{eqKumDiag}. On utilise pour ce faire un changement de base similaire à \ref{chgBase}; l'isogénie de Richelot devrait avoir une expression de la forme
 \begin{align*}
 X &= \alpha_0v_0^2+\alpha_1v_1^2+\alpha_2v_2^2+\alpha_3v_3^2 \\
 Y &= \alpha_0v_0^2+\alpha_1v_1^2-\alpha_2v_2^2-\alpha_3v_3^2 \\
@@ -917,20 +990,33 @@ T &= \alpha_0v_0^2-\alpha_1v_1^2-\alpha_2v_2^2+\alpha_3v_3^2
 \end{align*}
 où les constantes $\alpha_0,\alpha_1,\alpha_2,\alpha_3$ seront à déterminer.
 
+\begin{remarque}
+Comme on va le voir dans la suite, l'isogénie ne s'exprime pas tout à fait sous cette forme; il manque les constantes duales qui vont apparaître. Cependant, on n'arrive pas à trouver de bonne explication pour l'apparition de ces constantes.
+\end{remarque}
+
 On remarquera la similarité de ces expressions avec les formules de l'algorithme \ref{DOUBLE}; on a aussi une isogénie de Richelot sur $\hat{\mathcal{K}}$ qui correspond à la deuxième partie de l'algorithme \ref{DOUBLE}.
 
+\begin{remarque}
+Comme nous l'avons déjà fait remarquer, les courbes de Montgomery disposent d'une 2-isogénie; ce qui est (selon toute vraisemblance) une composante essentielle pour avoir une arithmétique rapide.
+L'existence d'une isogénie de Richelot simple est donc un bon point de départ pour un analogue de genre 2 des courbes de Montgomery.
+\end{remarque}
 \subsection{Calcul des coefficients}
 
-En partant la base de \citet{gaudry} et en effectuant le changement de base $x'=ax,y'=by,z'=cz,t'=dt$; on se rend compte que les constantes qui apparaissent dans les biquadratiques (les constantes $\alpha_0,\alpha_1,\alpha_2,\alpha_3$ que l'on cherche à déterminer) sont essentiellement les thêtas constantes au carré; c.-à-d. $a^2,b^2,c^2,d^2$. On peut les calculer à partir des coefficients quadratiques de l'équation de la surface de Kummer $\mathcal{K}$ et en prenant des racines carrées.
+En partant de la paramétrisation par les fonctions thêtas de \citep{gaudry} et en effectuant le changement de base
+$$x'=ax, \quad y'=by, \quad z'=cz, \quad t'=dt;$$
+on se rend compte que les constantes qui apparaissent dans les biquadratiques (les constantes $\alpha_0,\alpha_1,\alpha_2,\alpha_3$ que l'on cherche à déterminer) sont essentiellement les thêtas constantes au carré; c.-à-d. $a^2,b^2,c^2,d^2$. On peut alors les calculer à partir de certains coefficients de l'équation de la surface de Kummer $\mathcal{K}$.
 
-Pour des raisons de simplicité, on suppose que l'un des $G_i$ (par ex. $G_1$) est de la forme $X^2 + g_1$ (ce que l'on peut supposer en effectuant une translation) et l'on note :
+Pour des raisons de simplicité, on va supposer que le polynôme $G_1$ est de la forme $X^2 + g_1$ (ce que l'on peut supposer en effectuant une translation) et l'on note :
 \begin{align*}
 G_1 &= X^2 + g_1 \\
 G_2 &= X^2+g_2X+g_3 \\
 G_3 &= X^2+g_4X+g_5
 \end{align*}
 
-En effectuant un changement de variable dans l'équation de la surface de Kummer, on obtient ces fameux coefficients. Si l'on note $c_1,c_2,c_3,c_4$ les coefficients devant $k_1^4,k_2^4,k_3^4,k_4^4$, alors on a les relations suivantes :
+On suppose que l'équation de la surface de Kummer sous la forme \ref{eqKumDiag} est :
+$$K(\xi_1,\xi_2,\xi_3,\xi_4) = c_1\xi^4_1 + c_2\xi^4_2 + c_3\xi^4_3 + c_4\xi^4_4 + ...$$ 
+
+En effectuant un \href{run:./chgBase.sag}{changement de base} à partir de l'équation de \citep{eqKum}, on obtient les relations suivantes qui nous permettent de calculer ces coefficients :
 \begin{align*}
 c_1+c_2+c_3+c_4 &= \lambda(-2g_1Res(G_2,G_3)-2g_3Res(G_1,G_3)-2g_5Res(G_2,G_1) \\
  &+ g_1g_2^2g_4^2 + g_1^2g_2g_4 - g_1g_2g_3g_4 - g_1g_2g_4g_5 + g_2g_3g_4g_5) \\
@@ -941,12 +1027,12 @@ c_1-c_2-c_3+c_4 &= 2\lambda(g_1+g_3)\epsilon_1\epsilon_2
 où
 $$\lambda = 32Res(G_1,G_2)Res(G_2,G_3)Res(G_1,G_3)$$
 
-Une fois les coefficients obtenus, on sait que l'on a les égalités suivantes :
-$$a^4 = c_1, b^4 = c_2, c^4 = c_3 , d^4 = c_4$$
+Une fois que l'on a calculé ces coefficients et en revenant aux thêtas constantes, on sait que l'on a les égalités suivantes :
+$$a^4 = c_1, \quad b^4 = c_2, \quad c^4 = c_3, \quad d^4 = c_4$$
 
-On calcule alors une partie des constantes en prenant simplement des racines carrées de $c_1,c_2,c_3,c_4$ et pour les constantes duales il suffit d'appliquer la transformation de Hadamard.
+On calcule alors une partie des constantes de l'isogénie en prenant simplement des racines carrées de $c_1,c_2,c_3,c_4$ et pour les constantes duales il nous suffit d'utiliser les relations \ref{constDual}.
 
-On peut vérifier sur quelques exemples que les formules sont correctes en les comparant avec les biquadratiques qui viennent de \citep{cassels-Flynn} après changement de base.
+On peut alors vérifier sur quelques exemples que les formules sont correctes en les comparant avec les biquadratiques qui viennent de \citep{biquad} après changement de base.
 
 On obtient alors facilement les algorithmes \ref{DOUBLE2} et \ref{ADD2} en partant des formules de \citep{gaudry} et en effectuant un changement de variable pour revenir dans la bonne base; où les constantes dans les algorithmes \ref{DOUBLE2} et \ref{ADD2} sont reliés aux thêtas constantes par les relations :
 $$y_0 = (b/a)^2, \quad z_0 = (c/a)^2, \quad t_0 = (d/a)^2$$
@@ -970,7 +1056,9 @@ $T = 1/t_0(x' - y' - z' + t')$ \\
 \Return{$(X,Y,Z,T)$}
 \end{algorithm}
 
-L'algorithme \ref{DOUBLE2} montre un découpage du doublement optimisé pour minimiser le nombre d'opérations, un autre découpage permet de mettre en évidence l'isogénie de Richelot. On peut alors, en revenant aux thêtas constantes, écrire le doublement sous la forme : 
+L'algorithme \ref{DOUBLE2} montre un découpage du doublement optimisé pour minimiser le nombre d'opérations, un autre découpage va nous permettre de mettre en évidence l'isogénie de Richelot.
+
+On peut, en revenant aux thêtas constantes, écrire le doublement sous la forme : 
 \begin{align*}
 x' &= 1/A^2(a^2x^2 + b^2y^2 + c^2z^2 + d^2t^2) \\
 y' &= 1/B^2(a^2x^2 + b^2y^2 - c^2z^2 - d^2t^2) \\
@@ -982,19 +1070,24 @@ Z &= 1/c^2(A^2x'^2 - B^2y'^2 + C^2z'^2 - D^2t'^2) \\
 T &= 1/d^2(A^2x'^2 - B^2y'^2 - C^2z'^2 + D^2t'^2) \\
 \end{align*}
 
-On a bien un découpage du doublement en deux parties qui se ressemblent où l'on a simplement échangé les constantes $a,b,c,d$ et $A,B,C,D$. Il ne nous reste plus qu'à vérifier que ces deux parties sont bien des isogénies de Richelot.
+On a bien un découpage du doublement en deux parties qui se ressemblent où l'on a simplement échangé les constantes $a,b,c,d$ et $A,B,C,D$; ce qui nous fait penser que l'on a bien l'isogénie de Richelot et son isogénie duale. 
 
-Pour ce faire, il nous suffit de calculer le noyau des isogénies; on notera $\phi$ la première isogénie et $\hat{\phi}$ l'isogénie duale. On montre facilement que lorsque l'on cherche à résoudre le système d'équations
+Il ne nous reste plus qu'à vérifier que l'on a bien une isogénie de Richelot et sa duale. Pour ce faire, on va utiliser une propriété importante des isogénies de Richelot :
+\begin{proposition}
+Tout tétraèdre de G\"opel détermine uniquement à isomorphisme prés une isogénie de Richelot, ce tétraèdre étant le noyau $\cong (\mathbb{Z}/2\mathbb{Z})^2$ d'une (2,2)-isogénie.
+\end{proposition}
+
+Il nous suffit alors de calculer le noyau du premier morphisme, que l'on notera $\phi$. On montre facilement que lorsque l'on cherche à résoudre le système d'équations
 $$x' = y' = z' = t' = 1$$
 On trouve alors que l'on a (projectivement) :
 $$x^2 = y^2 = z^2 = t^2 = 1$$
-Autrement dit, que le noyau de $\phi$ est :
+Autrement dit, que le noyau de $\phi$ est bien le tétraèdre de G\"opel :
 $$(1,1,1,1),(1,1,-1,-1),(1,-1,1,-1),(1,-1,-1,1)$$
 
-De la même façon, on montre que le noyau de $\hat{\phi}$ est identique; de plus, dans la clôture algébrique la 2-torsion est somme directe de ce noyau et du sous-groupe formé des points suivants :
-$$(1,1,1,1),(b/a,a/b,d/c,c/d),(c/a,d/b,a/c,b/d),(d/a,c/b,b/c,a/d)$$
-On montre alors que l'image de la 2-torsion par $\phi$ correspond au noyau de $\hat{\phi}$.
-Ce qui montre bien que $\phi$ est une $(2,2)$-isogénie; donc $\phi$ est l'isogénie de Richelot de noyau le tétraèdre de G\"opel.
+%De la même façon, on montre que le noyau de $\hat{\phi}$ est identique; de plus, dans la clôture algébrique la 2-torsion est somme directe de ce noyau et du sous-groupe formé des points suivants :
+%$$(1,1,1,1),(b/a,a/b,d/c,c/d),(c/a,d/b,a/c,b/d),(d/a,c/b,b/c,a/d)$$
+%On montre alors que l'image de la 2-torsion par $\phi$ correspond au noyau de $\hat{\phi}$.
+Ce qui montre bien que $\phi$ est une $(2,2)$-isogénie; donc $\phi$ est une isogénie de Richelot.
 
 \begin{algorithm}
 \label{ADD2}
@@ -1013,28 +1106,31 @@ $Z = (x' - y' + z' - t')/(z_0\bar{z})$ \\
 $T = (x' - y' - z' + t')/(t_0\bar{t})$ \\
 \Return{$(X,Y,Z,T)$}
 \end{algorithm}
-Les constantes $y_0,z_0,t_0,y'_0,z'_0,t'_0$ se calculent à partir des coefficients $c_1,c_2,c_3,c_4$ :
-\begin{align*}
-y_0 &= \sqrt{\frac{c_2}{c_1}} \\
-z_0 &= \sqrt{\frac{c_3}{c_1}} \\
-t_0 &= \sqrt{\frac{c_4}{c_1}} \\
-y'_0 &= \frac{1+y_0-z_0-t_0}{1+y_0+z_0+t_0} \\
-z'_0 &= \frac{1-y_0+z_0-t_0}{1+y_0+z_0+t_0} \\
-t'_0 &= \frac{1-y_0-z_0+t_0}{1+y_0+z_0+t_0}
-\end{align*}
 
-Le seul obstacle (mineur) qui reste à résoudre est un problème de signe qui peut apparaitre. En effet, lorsque l'on prend des racines carrées on choisit arbitrairement un signe. Si l'on effectue un nombre pair changement de signes, ce n'est pas très grave puisque cela correspond juste à une permutation des opérations; par contre, si l'on effectue un nombre impair de changements de signes alors les formules sont fausses.
+En tenant compte du fait que les constantes $y_0$, $z_0$, $t_0$, $y'_0$, $z'_0$, $t'_0$ correspondent aux quotients $(b/a)^2$, $(c/a)^2$, $(d/a)^2$, $(B/A)^2$, $(C/A)^2$,$(D/A)^2$; on peut les calculer à partir de $c_1$, $c_2$, $c_3$, $c_4$ par les relations suivantes :
+$$y_0 = \sqrt{\frac{c_2}{c_1}}, \quad z_0 = \sqrt{\frac{c_3}{c_1}}, \quad t_0 = \sqrt{\frac{c_4}{c_1}}$$
+$$y'_0 = \frac{1+y_0-z_0-t_0}{1+y_0+z_0+t_0}, \quad z'_0 = \frac{1-y_0+z_0-t_0}{1+y_0+z_0+t_0}, \quad
+t'_0 = \frac{1-y_0-z_0+t_0}{1+y_0+z_0+t_0}$$
 
 \begin{remarque}
-Pour l'instant, je ne sais pas comment décider si l'on a fait un choix de signe consistant, c'est le genre de chose que fait \citet{cosset} dans sa thèse et on devrait pouvoir l'adapter dans notre cas.
+Le seul obstacle (mineur) qu'il reste à résoudre est un problème de signe qui peut apparaitre lorsque l'on prend des racines carrées; en effet, on fait un choix arbitraire de signe qui peuvent entrainer des incohérences.
+
+Si l'on effectue un nombre pair changement de signes, ce n'est pas très grave puisque cela correspond seulement à une permutation des opérations. Par contre, si l'on effectue un nombre impair de changements de signes alors les formules sont tout simplement fausses.
+
+Pour l'instant, nous ne savons pas comment décider si l'on a fait un choix de signe consistant, un étude plus approfondie de la thèse de \citet{cosset} pourrait nous en apprendre suffisamment pour résoudre le problème.
 \end{remarque}
 
-Dans tous les cas, à un signe près on a des formules analogues (décrites dans les algorithmes \ref{DOUBLE2} et \ref{ADD2} ) à celles de \citep{gaudry} et on remarque qu'il y a des cas où la 2-torsion n'est pas rationnelle; contrairement à \citep{gaudry}.
+Dans tous les cas, à un signe près on a des formules analogues (décrites dans les algorithmes \ref{DOUBLE2} et \ref{ADD2} ) à celles de \citep{gaudry}.
 
-Si l'on veut passer dans la base de \citet{gaudry}, il faut supposer que les $c_i$ sont des puissances 4-ième alors que l'on suppose seulement que ce sont des carrés dans la base intermédiaire; on effectue alors le changement de base $x'=x/c_1^{1/4},y'=y/c_2^{1/4},z'=z/c_3^{1/4},t'=t/c_4^{1/4}$ pour passer dans la base de \citet{gaudry}.
+\begin{remarque}
+En réponse à une question de Gaudry, on remarque qu'il y a des cas où la 2-torsion n'est pas entièrement rationnelle; contrairement à ce qu'impose l'utilisation des fonctions thêtas \citep{gaudry}.
+\end{remarque}
+
+Si l'on veut maintenant passer dans la base de \citet{gaudry}, il faut supposer que les constantes $c_i$ sont des puissances 4-ième alors que jusqu'à présent on a seulement supposer que les quotients $c_2/c_1$, $c_3/c_1$ et $c_4/c_1$ sont des carrés; on effectue alors le changement de base
+$$x'=x/c_1^{1/4}, \quad y'=y/c_2^{1/4}, \quad z'=z/c_3^{1/4}, \quad t'=t/c_4^{1/4}$$ pour passer dans la base de \citet{gaudry}. Il faudra (encore une fois) faire attention au choix des racines 4-ièmes.
 
 \subsection{Relèvement vers la Jacobienne}
-Une des formules présentes dans l'article de \citep{gaudry} concerne le calcul d'une représentation de Mumford associé à un point de $\mathcal{K}$. La formule est compliquée et on ne comprend pas bien d'où elle provient.
+Une des formules présentes dans \citep{gaudry} concerne le calcul d'une représentation de Mumford associé à un point de $\mathcal{K}$. La formule est compliquée et on ne comprend pas bien d'où elle provient.
 
 Les formules de changement de base que l'on propose permettent de simplifier (ou pas) cette application de la surface de Kummer $\mathcal{K}$ vers la Jacobienne $\mathcal{J}$. En effet, à partir d'un point de $\mathcal{K}$ dans la base de \citet{gaudry}, on effectue la transformation linéaire que l'on a trouvée précédemment pour l'avoir dans la base de \citet{cassels-Flynn}; finalement, on peut facilement remonter à une représentation de Mumford dans la Jacobienne $\mathcal{J}$.
 
@@ -1068,7 +1164,7 @@ Ce qui donne une expression du dernier coefficient au carré en fonction des coo
 
 \section{Courbe à multiplication réelle}
 
-Dans cette section, on présente la famille de courbe de \citet{bending} qui dispose d'une multiplication par $\sqrt{2}$ et l'on montre comment utiliser cette $\sqrt{2}$ pour avoir une multiplication scalaire encore plus rapide.
+Dans cette section, on présente la famille de courbe de Bending qui dispose d'une multiplication par $\sqrt{2}$ et l'on montre comment utiliser cette $\sqrt{2}$ pour avoir une multiplication scalaire encore plus rapide.
 
 \begin{definition}
 On dit qu'une courbe $C$ de genre 2 est munie d'une multiplication réelle s'il existe un endomorphisme $\phi$ de la Jacobienne $\mathcal{J}$ qui est annulé par un polynôme $P(X)$ quadratique irréductible.
@@ -1076,9 +1172,9 @@ On dit qu'une courbe $C$ de genre 2 est munie d'une multiplication réelle s'il 
 Dans ce cas, le polynôme $P(X)$ engendre une extension quadratique de la forme $k(\sqrt\Delta)$ et l'on dit alors que la courbe est à multiplication réelle par $\sqrt\Delta$.
 \end{definition}
 
-\subsection{Une famille de courbe à multiplication par $\sqrt{2}$}
+\subsection{Une famille de courbe à multiplication par \texorpdfstring{$\sqrt{2}$}{sqrt2}}
 
-On reprend un résultat de \citet{bending} qui présente une famille universelle de courbe de genre 2 dont la Jacobienne dispose d'une multiplication réelle par $\sqrt2$ définie sur le corps de base et fixée par l'involution de Rosati.
+On reprend un résultat de Bending qui présente une famille universelle de courbe de genre 2 dont la Jacobienne dispose d'une multiplication réelle par $\sqrt2$ définie sur le corps de base et fixée par l'involution de Rosati.
 
 Le théorème suivant est une conséquence immédiate du Théorème 4.1 de \citep{bending} :
 \begin{theoreme}[\citet{bending}]
@@ -1091,7 +1187,7 @@ G_1(X) &= X^2 + 4s \\
 G_2(X) &= X^2 - tX - \frac{1}{s} \\
 G_3(X) &= X^2 - \frac{4s^2+1}{s^2t}X - \frac{1}{s}
 \end{align*}
-où $\Delta,s,t$ sont des éléments non nuls de $k$.
+où $\Delta$, $s$ et $t$ sont des éléments non nuls de $k$.
 
 Alors $C$ dispose d'une multiplication réelle par $\sqrt2$, notée $\epsilon$, définie sur $k$ et fixée par l'involution de Rosati. De plus, on a la relation suivante :
 $$\epsilon = \pm \iota^{-1}\rho$$
@@ -1102,15 +1198,15 @@ où $\rho$ est l'isogénie de Richelot et $\iota$ est l'isomorphisme entre la co
 & (x,y) & \longmapsto & (\frac{2}{x},\frac{4y}{x^3})
 \end{array}
 \end{equation*}
-
-La duale de Richelot $\hat{C}$ a pour équation :
-$$\hat{C} : 4sy^2 = \Delta H_1(x)H_2(x)H_3(x)$$
-où
-\begin{align*}
-H_1(X) &= X^2 + \frac{1}{s} \\
-H_2(X) &= X^2 + 2stX - 4s \\
-H_3(X) &= X^2 + 2\frac{4s^2+1}{st}X - 4s
-\end{align*}
+%
+%La duale de Richelot $\hat{C}$ a pour équation :
+%$$\hat{C} : 4sy^2 = \Delta H_1(x)H_2(x)H_3(x)$$
+%où
+%\begin{align*}
+%H_1(X) &= X^2 + \frac{1}{s} \\
+%H_2(X) &= X^2 + 2stX - 4s \\
+%H_3(X) &= X^2 + 2\frac{4s^2+1}{st}X - 4s
+%\end{align*}
 \end{theoreme}
 
 On reprend maintenant ce que l'on a fait précédemment en spécialisant les résultats à cette famille de courbe. Un calcul de résultant donne facilement :
@@ -1120,14 +1216,14 @@ e_2 = -Res(G_2,G_3) &= \frac{(s^2t^2 - 4s^2 - 1)^2}{s^5t^2} \\
 e_3 = -Res(G_1,G_3) &= -\frac{(st^2 + 4)(4s^2 + 1)^2}{s^3t^2}
 \end{align*}
 
-On cherche une condition pour que les éléments $e_1e_2$, $e_1e_3$ et $e_2e_3$ soit des carrés dans $k$; ceci pour pouvoir calculer explicitement l'isogénie de Richelot et un doublement rapide.
+On cherche une condition pour que les éléments $e_1e_2$, $e_1e_3$ et $e_2e_3$ soient des carrés dans $k$; ceci pour pouvoir calculer explicitement l'isogénie de Richelot et un doublement rapide.
 
 \begin{proposition}
 Les éléments $e_1e_2$, $e_1e_3$ et $e_2e_3$ sont des carrés dans $k$ si et seulement si
 $-\frac{4s^3t^2 + 16s^4 + 8s^2 + 1}{s}$, $-(st^2+4)$ sont des carrés dans $k$.
 \end{proposition}
 
-Une fois que l'on a calculé des racines carrées de $e_je_{j+1}$, on calcule les coefficients de la surface de Kummer $\mathcal{K}$ en utilisant les relations suivantes :
+Une fois que l'on a calculé des racines carrées de $e_je_{j+1}$, on calcule les coefficients de la surface de Kummer $\mathcal{K}$ en utilisant les relations que l'on a trouvé précédemment mais spécialisé à cette famille de courbe; ce qui donne les égalités suivantes :
 \begin{align*}
 c_1+c_2+c_3+c_4 &= (64s^6t^2 + 16s^4t^4 + 128s^5t^2 - 16s^4t^2 + 64s^3t^2 \\
     & + 256s^4 - 4s^2t^2 + 8st^2 + 128s^2 + t^2 + 16)/(s^4t^2) \\
@@ -1139,16 +1235,6 @@ c_1-c_2-c_3+c_4 &= \frac{2(4s^2 - 1)}{s}\epsilon_1\epsilon_2
 \begin{remarque}
 Par rapport aux relations précédentes, on a divisé par le facteur projectif $\lambda$ qui n'est pas nécessaire pour faire les calculs.
 \end{remarque}
-
-Finalement, on calcule les coefficients des isogénies grâce aux relations suivantes :
-\begin{align*}
-y_0 &= \sqrt{\frac{c_2}{c_1}} \\
-z_0 &= \sqrt{\frac{c_3}{c_1}} \\
-t_0 &= \sqrt{\frac{c_4}{c_1}} \\
-y'_0 &= \frac{1+y_0-z_0-t_0}{1+y_0+z_0+t_0} \\
-z'_0 &= \frac{1-y_0+z_0-t_0}{1+y_0+z_0+t_0} \\
-t'_0 &= \frac{1-y_0-z_0+t_0}{1+y_0+z_0+t_0}
-\end{align*}
 
 %D'autre part, un calcul de discriminant montre que l'on a :
 %\begin{align*}
@@ -1175,34 +1261,43 @@ t'_0 &= \frac{1-y_0-z_0+t_0}{1+y_0+z_0+t_0}
 %\end{corollaire}
 %
 \begin{remarque}
-On vérifie expérimentalement (pour la famille de Bending \ref{bending}) que le fait que $e_1e_2$,$e_1e_3$ et $e_2e_3$ soient des carrés est suffisant pour que $y_0,z_0,t_0$ soient définis sur le corps de base.
+On vérifie expérimentalement (pour la famille de Bending \ref{bending}) que le fait que $e_1e_2$, $e_1e_3$ et $e_2e_3$ soient des carrés est suffisant pour que les constantes $y_0$, $z_0$, $t_0$ soient définies sur le corps de base.
 \end{remarque}
 
-Le calcul de la $\sqrt{2}$ est compliqué (en général) par la présence de l'isomorphisme $\iota$ et on perd en efficacité en passant par celui-ci.
-En effet, le problème est que malgré le fait que la courbe $C$ et sa duale de Richelot $\hat{C}$ soient isomorphes, dans certains cas la surface de Kummer duale $\hat{\mathcal{K}}$ a une équation différente de la surface de Kummer $\mathcal{K}$ et on est obligé de passer par un isomorphisme non trivial entre les deux surfaces.
-Le calcul de cet isomorphisme semble plutôt compliqué et il semble que l'on n'aura pas une $\sqrt{2}$ rapide dans le cas général.
+Le calcul de la $\sqrt{2}$ tel que l'exprime le théorème \ref{bending} est (semble t'il) plus complexe qu'un doublement par la présence de l'isomorphisme $\iota$ et on perd en efficacité en passant par celui-ci.
+En effet, le problème est que malgré le fait que la courbe $C$ et sa duale de Richelot $\hat{C}$ soient isomorphes, la surface de Kummer duale $\hat{\mathcal{K}}$ peut avoir une équation différente de la surface de Kummer $\mathcal{K}$ ce qui nous oblige à passer par un isomorphisme non trivial entre ces deux surfaces.
+Le calcul de cet isomorphisme semble plutôt compliqué et il semble que l'on n'aura pas de $\sqrt{2}$ rapide dans ce cas.
 
-Expérimentalement, on trouve que la proportion des courbes dans la famille de Bending pour lesquelles tout se passe bien est d'environ 3\%; ce qui donne environ $0,03p^2$ courbes avec une $\sqrt{2}$ rapide dans $\mathbb{F}_p$.
+Expérimentalement, on trouve que la proportion des courbes dans la famille de Bending pour lesquelles on peut calculer explicitement une $\sqrt{2}$ rapide est d'environ 3\%; ce qui donne environ $0,03p^2$ courbes disposant d'une $\sqrt{2}$ rapide dans $\mathbb{F}_p$.
 
-La famille de Bending est intéressante puisqu'elle nous donne suffisamment de courbe avec $\sqrt{2}$ rapide; de plus, cette famille est potentiellement une famille universelle de courbe avec $\sqrt{2}$ dans $\mathbb{F}_p$.
+\begin{remarque}
+La famille de Bending est intéressante puisqu'elle nous donne une proportion suffisante de courbe avec $\sqrt{2}$ rapide; de plus, le théorème de \citep{bending} peut éventuellement se généraliser en caractéristique $p$ pour montrer que cette famille reste une famille universelle de courbe avec $\sqrt{2}$ dans $\mathbb{F}_p$.
 
-Cependant, il faut faire une trentaine d'essais avant de trouver une bonne courbe dans la famille; ce qui peut poser des problèmes lorsque l'on essaye de choisir une courbe sécurisée avec multiplication rapide. Il faudrait donc essayer de trouver une famille de courbe pour lesquelles la surface de Kummer duale ait la même équation que la surface de Kummer originale; en terme de thetas constantes, ça correspond au cas où $a^2 = b^2 + c^2 + d^2$.
+Cependant, il faut faire une trentaine d'essais avant de trouver une bonne courbe dans la famille, ce qui peut poser des problèmes d'efficacité lorsque l'on essaye de choisir une courbe sécurisée disposant d'une arithmétique rapide.
+
+Il faudrait donc essayer de trouver une famille de courbe pour lesquelles la surface de Kummer duale ait la même équation que la surface de Kummer originale; en terme de thetas constantes, cela correspond au cas où $a^2 = b^2 + c^2 + d^2$.
+\end{remarque}
 
 
-\subsection{Utilisation de $\sqrt{2}$}
+\subsection{Utilisation de \texorpdfstring{$\sqrt{2}$}{sqrt2}}
 
-On a vu précédemment que le calcul d'une multiplication scalaire nécessite $c \log_2 n$ opérations dans le corps de base pour une multiplication par $n$. L'objectif est maintenant d'améliorer la constante $c$ en utilisant un endomorphisme rapide; dans le cas présent, la $\sqrt{2}$ que l'on s'est donné tant de mal à calculer.
+D'après le théorème \ref{mulscal}, le calcul d'une multiplication scalaire par $n$ nécessite $c \log_2 n$ opérations dans le corps de base; où $c$ est une constante qui vaut approximativement $25$. On peut jouer sur le fait qu'une élévation au carré est légèrement moins couteuse qu'un produit ou qu'un produit par une petite constante est beaucoup moins couteux pour avoir des résultats plus précis dans certains cas.
 
-Lorsque l'on restreint la $\sqrt{2}$ à un sous-groupe cyclique $G \cong \mathbb{Z}/N\mathbb{Z}$ de $\mathcal{J}$, elle agit sur $G$ comme une multiplication par un entier $\lambda$ tel que l'on ait $\lambda^2 = 2$ dans $G$.
+L'objectif est maintenant d'améliorer la constante $c$ (indépendamment des considérations précédentes) en utilisant un endomorphisme rapide; dans le cas présent, utiliser la $\sqrt{2}$ que l'on s'est donné tant de mal à calculer.
 
-Pour calculer la multiplication scalaire $nP$, on écrit $n$ sous la forme :
+Lorsque l'on restreint la $\sqrt{2}$ à un sous-groupe cyclique $G \cong \mathbb{Z}/N\mathbb{Z}$ de la Jacobienne $\mathcal{J}$, celle-ci agit sur $G$ comme une multiplication par un entier $\lambda$ tel que $\lambda^2 = 2 \mod N$.
+
+Pour calculer la multiplication scalaire $nP$, on peut alors écrire $n$ sous la forme suivante :
 $$ n = a + \lambda b \mod N$$
-On utilise alors cette relation pour calculer $nP$ grâce à la relation suivante :
+
+On voit donc immédiatement que pour un point $P \in G$, on peut calculer la multiplication scalaire par $n$ en utilisant l'égalité
 $$nP = aP + b(\sqrt{2}P)$$
 
-On est alors amené à se poser la question de savoir si cette écriture va nous permettre effectivement de calculer plus rapidement la multiplication scalaire. Il existe des algorithmes de multiexponentiations rapides qui permettent de faire ce calcul en utilisant une boucle de longueur $max(\log_2 a, \log_2 b)$. On peut trouver $a$ et $b$ de l'ordre de $\sqrt{n}$; ce qui permet de faire la multiexponentiations en une boucle de longueur $\frac{1}{2}\log_2 n$.
+On peut penser que cette écriture nous demandera deux fois plus de travail puisqu'il y a deux multiplications scalaires suivie d'une addition; cependant, il existe des algorithmes de multiexponentiations rapides qui permettent de faire ce calcul en utilisant une boucle de longueur $max(\log_2 a, \log_2 b)$. D'une certaine manière, on effectue deux calculs pour le prix d'un.
 
-\citet{bernstein} présente une chaine d'addition en dimension 2 qui permet de calculer la multiexponentiation rapide sur la surface de Kummer dans une boucle qui nécessite un unique DBLDBLADD par itération et un calcul préliminaire de $(1+\sqrt{2})P$; où DBLDBLADD est le résultat du calcul de $2P$, $P+Q$, $R+S$ à partir des points $P$, $Q$, $R$, $S$, $P-Q$ et $R-S$.
+Maintenant, il faut choisir $a$ et $b$ convenablement pour que cette approche nous offre effectivement un gain. Il se trouve que l'on peut choisir $a$ et $b$ de l'ordre de $\sqrt{n}$; ce qui permet de faire la multiexponentiation en une boucle de longueur $\frac{1}{2}\log_2 n$.
+
+\citet{bernstein} présente une chaine d'addition en dimension 2 qui permet de calculer la multiexponentiation rapide sur la surface de Kummer dans une boucle qui nécessite un unique DBLDBLADD par itération et un calcul préliminaire de $(1+\sqrt{2})P$; où l'on note DBLDBLADD pour le résultat du calcul de $2P$, $P+Q$, $R+S$ à partir des points $P$, $Q$, $R$, $S$, $P-Q$ et $R-S$.
 
 Un décompte précis du nombre d'opérations nécessaire dans le calcul de DBLDBLADD en utilisant des optimisations à la Gaudry donne la proposition suivante :
 \begin{proposition}
@@ -1214,11 +1309,46 @@ Ce qui nous permet d'en déduire grâce à la discussion précédente le coût d
 Avec les formules de \citep{gaudry}, le calcul d'une multiplication scalaire d'un point $P \in \mathcal{K}$ par un entier $n > 1$ nécessite $11,5\log_2 n$ produits, $6,5\log_2 n$ élévations au carré dans le corps de base et le calcul de $(1+\sqrt{2})P$.
 \end{corollaire}
 
-L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'on dispose d'une multiplication par $\sqrt{2}$, nous permet d'améliorer de 28\% la constante dans le théorème \ref{mulscal} au prix d'un calcul de $(1+\sqrt{2})P$.
+L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'on dispose d'une multiplication par $\sqrt{2}$, nous permet d'améliorer de 28\% la constante dans le théorème \ref{mulscal} au prix du calcul de $(1+\sqrt{2})P$.
 
-%\section{Autres}
+On est encore une fois face à un compromis à faire, on optimise la boucle principale au prix d'un précalcul supplémentaire; le gain effectif sera donc énormément dépendant de la taille des paramètres et du cout réel du calcul de $(1+\sqrt{2})P$.
+
+\section{Conclusion}
+Ce stage %au sein de l'équipe \href{http://www.lix.polytechnique.fr/cryptologie/}{GRACE}
+a été l'occasion de se familiariser aux sujets vaste et fascinant que sont la cryptographie et la théorie algorithmique des nombres. Nous avons essayé d'étendre (dans la mesure du possible) la classe de courbes qui admettent une arithmétique à la Gaudry et de donner des conditions suffisantes pour avoir une arithmétique rapide de genre 2.
+
+Si l'on ne devait retenir qu'une seule chose de ces quelques pages, ce serait le slogan suivant :
+\begin{center}
+\huge{Une 2-isogénie diagonale induit une arithmétique rapide.}
+\end{center}
+
+Il reste encore quelques questions en suspens qui pourront être intéressantes pour le début d'une thèse; notamment, le calcul explicite de $1+\sqrt{2}$ s'est avéré plus subtil et compliqué que l'on aurait pu le penser à priori.
+
+D'autre part, la piste d'un algorithme à la Schoof sur la surface de Kummer sera aussi un exercice intéressant qui occupera une partie de la thèse. Une étape importante sera de définir un analogue des polynômes de $l$-division sur la surface de Kummer qui permettent une représentation efficace de la $l$-torsion. Pour finir, on s'intéressera au cas des courbes à multiplication par $\sqrt{2}$ et l'on aura besoin de manière cruciale du calcul explicite de $1+\sqrt{2}$ que l'on aura effectué précédemment.
+
+Nous nous sommes restreint au cas de la caractéristique impaire, en ce qui concerne la caractéristique 2 le modèle classique ne convient plus et il est nécessaire d'introduire un terme supplémentaire pour désingulariser la courbe. \citet{lubicz} ont étudié les modifications nécessaire pour avoir une arithmétique rapide à base de fonctions thêtas. Il serait intéressant de reprendre notre étude dans le cas de la caractéristique 2; ce cas étant particulièrement utile pour des applications cryptographiques dans les systèmes embarqués. On termine par l'énoncé de l'analogue du théorème \ref{mulscal} en caractéristique 2 :
+
+%\begin{theoreme}[\citep{lubicz}]
+%Multiplying by a scalar a point on a Kummer surface with non-zero coordinates costs
+%9 squarings, 12 general multiplications, 3 multiplications by coordinates of the base point and 3 multiplications by constants that depend only on the Kummer surface, per bit of the scalar.
+%\end{theoreme}
+
+\begin{theoreme}[\citep{lubicz}]
+La multiplication par un scalaire $n > 1$ d'un point $P$ à coordonnées non nulles sur la surface de Kummer nécessite $9\log_2 n$ élévations au carrés, $12\log_2 n$ produits, $3\log_2 n$ produits par les coordonnées du point $P$ et $3\log_2 n$ produits par des constantes qui dépendent uniquement de la surface de Kummer.
+\end{theoreme}
+
+L'énoncé est presque identique au théorème \ref{mulscal} en terme de constantes, l'avantage est cependant que le matériel est optimisé pour la caractéristique 2 et on peut espérer avoir un gain supplémentaire en utilisant cette spécificité.
+%Pour finir, le problème du logarithme discret de genre 2 sera un fil directeur tout au long de la thèse.
+
+\bibliographystyle{plainnat-fr}
+\bibliography{ref}
+
+\appendix
+
+\section{Correspondance de Richelot}
+
 %
-%\subsection{Algorithme de Schoof}
+%\section{Algorithme de Schoof}
 %\emph{Détails d'implémentation} : On effectue tous les calculs modulo l'idéal de $l$-division par l'intermédiaire des bases de Gröbner; les performances de l'algorithme sont donc dépendantes de l'ordre monomial choisi. Dans le cas présent, l'ordre monomial le mieux adapté est l'ordre lexicographique avec $Y < X$; ce qui consiste lorsque l'on effectue une réduction modulo l'idéal, à d'abord remplacer les polynômes en $X,Y$ par des polynômes de degré $\leq 1$ en $Y$ en utilisant la relation $Y^2 = X^3 + aX + b$ puis à utiliser la relation $\Psi_l=0$ pour finalement obtenir un polynôme de degré $\leq 1$ en Y et de degré $< deg(\Psi_l)$ en X.
 %
 %\emph{Passage à la droite projective} : L'objectif consistant à adapter l'algorithme de Schoof pour des surfaces de Kummer en genre 2, on commence par effectuer une variante de l'algorithme de Schoof classique de genre 1 pour les variétés de Kummer de courbe elliptique qui n'est autre que la droite projective. La majeure partie de l'algorithme s'adapte facilement étant donné que l'on sait faire des multiplications scalaires sur la variété de Kummer en utilisant des chaines d'addition différentielle. Il n'y a qu'une opération que l'on ne sait pas faire sur la variété de Kummer; c'est une addition "pure" i.e. on ne sait pas calculer le point $(X^{p^2},Y^{p^2}) + p(X,Y)$ si l'on ne connait pas le point $(X^{p^2},Y^{p^2}) - p(X,Y)$. Bien entendu, on ne connait ni l'un ni l'autre à priori; cependant, a posteriori on veut tester l'égalité \eqref{polCarFrob}. On peut donc calculer le point $(X^{p^2},Y^{p^2}) - p(X,Y)$ en supposant l'égalité \eqref{polCarFrob}. Comme on ne sait pas à priori que l'égalité \eqref{polCarFrob} est vérifiée, on ne sait pas si le calcul que l'on vient d'effectuer est juste; cependant, pour le vérifier, il nous suffit de tester si les deux points obtenus vérifient les mêmes relations que les points $(X^{p^2},Y^{p^2}) + p(X,Y)$ et $(X^{p^2},Y^{p^2}) - p(X,Y)$. À savoir, on veut vérifier que l'on a bien
@@ -1228,7 +1358,7 @@ L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'
 %\end{align*}
 %Encore une fois, on n'a pas de vraie addition sur la variété de Kummer; on ne peut donc pas vérifier ces deux égalités directement. On peut cependant supposer la première égalité et vérifier que l'on obtient bien la seconde égalité. Si l'on a bien ces égalités alors on sait que l'égalité \eqref{polCarFrob} est vérifiée dans la surface de Kummer. Bien entendu, la variété de Kummer ne fait pas la différence entre $t'(X^p,Y^p)$ et $-t'(X^p,Y^p)$; au final, on obtient donc $\pm t \mod l$. On a effectué le compromis suivant : on a supprimé la coordonnée $y$ en passant à la surface de Kummer ce qui nous économise un certain nombre de calculs et évite l'usage des bases de Gröbner; la contrepartie étant que l'on ne connait pas $t \mod l$ entièrement, on ne connait que $\pm t \mod l$. Ce dernier point peut s'expliquer a posteriori d'une seconde manière; en effet, la variété de Kummer ne distingue pas la courbe elliptique de son twist quadratique et on sait que la trace du twist quadratique est l'opposé de la trace de la courbe d'origine. \emph{Le problème qui se pose est de savoir si l'on peut reconstituer la trace à partir de ces seules informations locales .} En effet, on a deux possibilités pour chaque nombre premier $l$ et on ne sait pas comment les recombiner sans informations supplémentaires, car toutes les combinaisons sont possibles d'après le lemme chinois.
 %
-%\subsection{Calcul de $(1 \pm \phi)(P)$}
+%\section{Calcul de \texorpdfstring{$(1 \pm \phi)(P)$}{(1 +- sqrt2)P}}
 %
 %La première étape du calcul de la pseudo addition entre $P$ et $\phi(P)$ consiste à appliquer l'isogénie à $P$ et $\phi(P)$, ce qui donne les points $\phi(P)$ et $2P$ respectivement puis à multiplier les deux points coordonnées à coordonnées; la seconde étape du calcul consiste alors à appliquer une application linéaire, plus précisément, l'application linéaire donnée par la matrice suivante :
 %\[ \left(
@@ -1271,7 +1401,7 @@ L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'
 %\]
 %L'avantage de ces formules est que l'on peut calculer la plupart des fonctions thêtas duales à partir des carrés des fonctions thêtas de départ que l'on connait en utilisant des formules analogues à celles présentes dans \citep{gaudry}. On ne peut pas calculer directement toutes les fonctions thêtas duales, car cela reviendrait à remonter sur la Jacobienne duale; en effet, on ne peut pas calculer les fonctions thêtas impaires par ces formules, car les thêtas constantes sont nulles.
 %
-%\subsection{Idéal de $l$-division}
+%\section{Idéal de \texorpdfstring{$l$}{l}-division}
 %L'idéal de $l$-division de la surface de Kummer correspond à un point de $l$-torsion générique i.e. la variété correspondante est la variété de $l$-torsion de la surface de Kummer. Il est engendré par l'équation de la surface de Kummer et les équations que l'on dérive de l'égalité $[l]P=0$.
 %
 %La multiplication par $2$ étant donnée relativement explicitement, on obtient facilement l'idéal de $2$-division; de même, les idéaux de $2^n$-division sont tout aussi facilement obtenus par des applications successives de la multiplication par $2$.
@@ -1302,7 +1432,4 @@ L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'
 %
 %Le temps de calcul des polynômes de $2^k$-division (qui devrait être les moins couteux à obtenir) explose rapidement; les polynômes de $8$-division s'obtiennent en $0.2$s alors que le calcul des polynômes de $16$-division prend $15$ minutes (pour $p=31$). On ne pourra pas raisonnablement aller plus loin.
 
-
-\bibliographystyle{plainnat-fr}
-\bibliography{ref}
 \end{document}
