@@ -236,7 +236,7 @@ Soit $k$ un corps de caractéristique impaire.
 Une courbe algébrique $C$ définie sur $k$ est dite \emph{hyperelliptique de genre 2} si elle admet une équation de la forme :
 $$C : y^2 = F(x)$$
 où $$F(X) = f_0 + f_1X + ... + f_6X^6 \in k[X]$$
-est un polynôme séparable de degré 6.
+est un polynôme séparable de degré 6. On note $C(k)$ (resp. $C(\bar{k})$) l'ensemble des points de $C$ défini sur $k$ (resp. sur la clôture algébrique $\bar{k}$).
 \end{definition}
 
 \begin{remarque}
@@ -292,9 +292,9 @@ k(C) &= k(x)[y]/(y^2-F(x)) \\
 \subsection{Diviseurs et Jacobienne}
 
 \begin{definition}
-Un \emph{diviseur} $D = \sum n_x x$ est une somme formelle finie où $x \in C$ et $n_x \in \mathbb{Z}$; dit autrement, un diviseur est un élément du groupe abélien libre $Div$ engendré par les points de $C$.
+Un \emph{diviseur} $D = \sum n_x x$ est une somme formelle finie où $x \in C(\bar{k})$ et $n_x \in \mathbb{Z}$; dit autrement, un diviseur est un élément du groupe abélien libre $Div$ engendré par les points de $C$ défini sur $\bar{k}$.
 
-On dit que $n_x$ est la \emph{multiplicité} du point $x$ et l'on a $n_x = 0$ sauf pour un nombre fini de points $x \in C$. On appelle \emph{degré} de $D$, noté $deg(D)$, la somme des multiplicités des points de $C$. Pour finir, le \emph{support} de $D$ est l'ensemble des $x \in C$ tel que $n_x$ est non nul.
+On dit que $n_x$ est la \emph{multiplicité} du point $x$ et l'on a $n_x = 0$ sauf pour un nombre fini de points $x \in C(\bar{k})$. On appelle \emph{degré} de $D$, noté $deg(D)$, la somme des multiplicités $n_x$. Pour finir, le \emph{support} de $D$ est l'ensemble des $x \in C$ tel que $n_x$ est non nul.
 \end{definition}
 
 Une fonction non nulle $f$ sur $C$ détermine un diviseur noté $div(f)$; la multiplicité en un point $x \in C$ du diviseur $div(f)$ est égale à l'ordre du zéro en $x$ de $f$ ou à l'opposé de l'ordre du pôle en $x$. Un diviseur de la forme $div(f)$ est dit \emph{principal}, un tel diviseur est de degré 0 \citep{menezes}.
@@ -314,6 +314,12 @@ Dans le cas des courbes elliptiques, la courbe est munie naturellement d'une str
 \begin{remarque}
 La Jacobienne $\mathcal{J}$ est munie d'une structure de variété algébrique; la construction consiste essentiellement à prendre 2 copies de $C$ que l'on recolle le long du graphe de l'involution hyperelliptique \citep{cassels-Flynn}.
 \end{remarque}
+
+\begin{definition}
+On dit qu'un diviseur $D$ est défini sur $k$ si il est invariant par l'action du groupe de Galois $Gal(\bar{k}/k)$.
+
+L'ensemble des points rationnels de $\mathcal{J}$, noté $\mathcal{J}(k)$, est l'ensemble des éléments de $\mathcal{J}$ qui sont représentés par un diviseur défini sur $k$.
+\end{definition}
 
 Soit $P=(x_0,y_0) \in C$, les points $P$ et $\iota(P)$ sont les zéros de la fonction $(x-x_0)$ qui a deux pôles à l'infini $\infty_1$ et $\infty_2$; autrement dit, on a :
 $$div(x-x_0) = P + \iota(P) = \infty_1 + \infty_2$$
@@ -344,7 +350,7 @@ Pour obtenir un diviseur réduit, il nous suffit de mettre $D = P_1 + P_2 - 2\in
 
 \begin{corollaire}
 \label{div_red}
-Tout point de la Jacobienne $\mathcal{J}$ est représenté par un diviseur réduit.
+Tout point de la Jacobienne $\mathcal{J}$ peut se représenter par un diviseur réduit.
 \end{corollaire}
 
 \subsection{Applications en cryptographie}
@@ -361,7 +367,7 @@ On voit donc que le temps nécessaire pour casser un protocole à base de courbe
 Il y a un compromis à faire entre la complexité des formules d'addition et la taille du corps fini sous-jacent, on espère ainsi avoir une \emph{arithmétique plus efficace} en genre 2 comparée aux courbes elliptiques à un niveau de sécurité fixe.
  
 \subsection{Représentation de Mumford}
-Soit $D = \sum_{i=1}^r{P_i} - r\infty_2$ un diviseur réduit sur $C$, alors $D$ peut se représenter de manière unique par deux polynômes $(u,v)$ à coefficients dans $k$ tel que :
+Soit $D = \sum_{i=1}^r{P_i} - r\infty_2$ un diviseur réduit défini sur $k$, alors $D$ peut se représenter de manière unique par deux polynômes $(u,v)$ à coefficients dans $k$ tel que :
 \begin{itemize}
 \item $u(x) =  \prod_{i=1}^r (x - x(P_i) )$,
 \item $deg(v) < 2$,
@@ -373,7 +379,7 @@ On appelle $(u,v)$ la représentation de Mumford du diviseur $D$.
 Le théorème suivant nous assure qu'il y a bien une correspondance biunivoque entre les points de la Jacobienne et les représentations de Mumford :
 
 \begin{theoreme}[Mumford]
-Toute paire de polynômes $(u,v)$ à coefficients dans $k$ vérifiant ces conditions est la représentation de Mumford d'un diviseur réduit sur $C$.
+Toute paire de polynômes $(u,v)$ à coefficients dans $k$ vérifiant ces conditions est la représentation de Mumford d'un diviseur réduit défini sur $k$.
 \end{theoreme}
 
 On donne maintenant une interprétation géométrique de la loi de groupe sur la Jacobienne $\mathcal{J}$. Soit $D_1 = P_1 + P_2 - 2\infty_2$ et $D_2 = P_3 + P_4 - 2\infty_2$. Pour calculer $D_1 + D_2$, on commence par trouver le polynôme $Q(X)$ (par interpolation de Lagrange) de degré $3$ passant par $P_1,P_2,P_3,P_4$. La courbe d'équation $y = Q(x)$ coupe la courbe $C$ en $2$ autres points $P_5$ et $P_6$.
@@ -404,7 +410,7 @@ Pour nous, les surfaces de Kummer seront un moyen d'avoir une arithmétique plus
 La \emph{surface de Kummer} $\mathcal{K}$ de la courbe $C$ est l'image de l'application suivante :
 \begin{equation*}
 \begin{array}{lrcl}
-\xi : &\mathcal{J} & \longrightarrow & \mathbb{P}^3(k) \\
+\xi : &\mathcal{J} & \longrightarrow & \mathbb{P}^3 \\
 & \{(x,y),(u,v)\} & \longmapsto & (1,x+u,xu,\beta_0(x,y,u,v))
 \end{array}
 \end{equation*}
@@ -850,10 +856,10 @@ Dans cette section, on s'intéresse à des conditions suffisantes pour qu'une co
 
 On remarque que l'algorithme \ref{DOUBLE} fait apparaître un découpage en deux parties similaires qui correspondent à une \emph{isogénie de Richelot}. La première isogénie envoie un point de $\mathcal{K}$ sur la surface de Kummer duale $\hat{\mathcal{K}}$ et la deuxième renvoie le point sur $\mathcal{K}$. On s'intéressera plus tard au cas où les deux isogénies sont identiques; c'est à dire lorsque $\mathcal{K}$ est isomorphe à sa duale $\hat{\mathcal{K}}$.
 
-On suppose que la courbe $C$ de genre 2 admet une équation de la forme :
+On suppose que la courbe $C$ de genre 2 définie sur $k$ admet une équation de la forme :
 $$y^2 = F(x) = G_1(x)G_2(x)G_3(x)$$
-où $G_1(X),G_2(X),G_3(X)$ sont des polynômes de degré 2 sans racine double et sans racine commune. De plus, on note :
-$$G_j(X) = g_{2j}X^2 + g_{1j}X + g_{0j}$$
+où $G_1(X),G_2(X),G_3(X)$ sont des polynômes de degré 2 à coefficients dans $k$ sans racine double et sans racine commune. De plus, on note :
+$$G_j(X) = g_{2j}X^2 + g_{1j}X + g_{0j} \in k[X]$$
 
 \begin{remarque}
 Une telle factorisation du polynôme $F(X)$ permet de distinguer 3 points de 2-torsion particuliers (en plus de l'élément neutre) qui correspondent à $G_1(X)$, $G_2(X)$, $G_3(X)$ et qui joueront un rôle important dans la suite.
@@ -887,7 +893,7 @@ La surface de Kummer duale $\hat{\mathcal{K}}$ est la surface de Kummer associé
 Comme nous l'avons déjà remarqué, la décomposition du polynôme $F(X)$ en produit de 3 polynômes $G_j(X)$ fait apparaitre 4 points de 2-torsion particuliers; le neutre $(0,0,0,1)$ et les diviseurs donnés par $G_j=0$.
 
 \begin{definition}
-On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}$ formé de l'élément neutre $(0,0,0,1)$ et de 3 points donnés par $G_j=0$; où $G_1(X)G_2(X)G_3(X)$ est une factorisation du polynôme $F(X)$ et où les polynômes $G_j$ sont de degré $2$.
+On appelle \emph{tétraèdre de G\"opel} un ensemble de 4 points de $\mathcal{K}$ formé de l'élément neutre $(0,0,0,1)$ et de 3 points donnés par $G_j=0$; où $G_1(X)G_2(X)G_3(X)$ est une factorisation du polynôme $F(X)$ et où les $G_j$ sont des polynômes de degré $2$ à coefficients dans $k$.
 \end{definition}
 
 Un tétraèdre de G\"opel est particulièrement adapté à l'isogénie de Richelot correspondante et l'on va voir que les translations dans cette base sont relativement simples; on pourra comparer les applications linéaires avec celles que l'on a vues dans la section \ref{add2tors}.
@@ -1174,7 +1180,7 @@ Dans ce cas, le polynôme $P(X)$ engendre une extension quadratique de la forme 
 
 \subsection{Une famille de courbe à multiplication par \texorpdfstring{$\sqrt{2}$}{sqrt2}}
 
-On reprend un résultat de Bending qui présente une famille universelle de courbe de genre 2 dont la Jacobienne dispose d'une multiplication réelle par $\sqrt2$ définie sur le corps de base et fixée par l'involution de Rosati.
+On reprend un résultat de Bending qui présente une famille universelle de courbe de genre 2 dont la Jacobienne dispose d'une multiplication réelle par $\sqrt2$ définie sur le corps de base.
 
 Le théorème suivant est une conséquence immédiate du Théorème 4.1 de \citep{bending} :
 \begin{theoreme}[\citet{bending}]
@@ -1189,8 +1195,8 @@ G_3(X) &= X^2 - \frac{4s^2+1}{s^2t}X - \frac{1}{s}
 \end{align*}
 où $\Delta$, $s$ et $t$ sont des éléments non nuls de $k$.
 
-Alors $C$ dispose d'une multiplication réelle par $\sqrt2$, notée $\epsilon$, définie sur $k$ et fixée par l'involution de Rosati. De plus, on a la relation suivante :
-$$\epsilon = \pm \iota^{-1}\rho$$
+Alors $C$ dispose d'une multiplication réelle par $\sqrt2$ définie sur $k$. De plus, on a
+$$\sqrt{2} = \pm \iota^{-1}\rho$$
 où $\rho$ est l'isogénie de Richelot et $\iota$ est l'isomorphisme entre la courbe $C$ et sa duale de Richelot $\hat{C}$ définie par :
 \begin{equation*}
 \begin{array}{lrcl}
@@ -1275,7 +1281,7 @@ La famille de Bending est intéressante puisqu'elle nous donne une proportion su
 
 Cependant, il faut faire une trentaine d'essais avant de trouver une bonne courbe dans la famille, ce qui peut poser des problèmes d'efficacité lorsque l'on essaye de choisir une courbe sécurisée disposant d'une arithmétique rapide.
 
-Il faudrait donc essayer de trouver une famille de courbe pour lesquelles la surface de Kummer duale ait la même équation que la surface de Kummer originale; en terme de thetas constantes, cela correspond au cas où $a^2 = b^2 + c^2 + d^2$.
+Il faudrait donc essayer de trouver une famille de courbe pour lesquelles la surface de Kummer duale ait la même équation que la surface de Kummer originale; en terme de thetas constantes, cela correspond au cas où l'on a la relation $a^2 = b^2 + c^2 + d^2$.
 \end{remarque}
 
 
@@ -1301,12 +1307,12 @@ Maintenant, il faut choisir $a$ et $b$ convenablement pour que cette approche no
 
 Un décompte précis du nombre d'opérations nécessaire dans le calcul de DBLDBLADD en utilisant des optimisations à la Gaudry donne la proposition suivante :
 \begin{proposition}
-Avec les formules de \citep{gaudry}, le calcul d'un DBLDBLADD nécessite $23$ produits et $13$ élévations au carré dans le corps de base.
+Avec les formules thêtas de \citep{gaudry}, le calcul d'un DBLDBLADD nécessite $23$ produits et $13$ élévations au carré dans le corps de base.
 \end{proposition}
 
 Ce qui nous permet d'en déduire grâce à la discussion précédente le coût d'une multiplication scalaire en utilisant une chaine d'addition en dimension 2 et la $\sqrt{2}$ :
 \begin{corollaire}
-Avec les formules de \citep{gaudry}, le calcul d'une multiplication scalaire d'un point $P \in \mathcal{K}$ par un entier $n > 1$ nécessite $11,5\log_2 n$ produits, $6,5\log_2 n$ élévations au carré dans le corps de base et le calcul de $(1+\sqrt{2})P$.
+Avec les formules thêtas de \citep{gaudry}, le calcul d'une multiplication scalaire d'un point $P \in \mathcal{K}$ par un entier $n > 1$ nécessite $11,5\log_2 n$ produits, $6,5\log_2 n$ élévations au carré dans le corps de base et le calcul de $(1+\sqrt{2})P$.
 \end{corollaire}
 
 L'utilisation d'une chaine d'addition de dimension 2 à la Bernstein, lorsque l'on dispose d'une multiplication par $\sqrt{2}$, nous permet d'améliorer de 28\% la constante dans le théorème \ref{mulscal} au prix du calcul de $(1+\sqrt{2})P$.
@@ -1326,7 +1332,7 @@ Il reste encore quelques questions en suspens qui pourront être intéressantes 
 
 D'autre part, la piste d'un algorithme à la Schoof sur la surface de Kummer sera aussi un exercice intéressant qui occupera une partie de la thèse. Une étape importante sera de définir un analogue des polynômes de $l$-division sur la surface de Kummer qui permettent une représentation efficace de la $l$-torsion. Pour finir, on s'intéressera au cas des courbes à multiplication par $\sqrt{2}$ et l'on aura besoin de manière cruciale du calcul explicite de $1+\sqrt{2}$ que l'on aura effectué précédemment.
 
-Nous nous sommes restreint au cas de la caractéristique impaire, en ce qui concerne la caractéristique 2 le modèle classique ne convient plus et il est nécessaire d'introduire un terme supplémentaire pour désingulariser la courbe. \citet{lubicz} ont étudié les modifications nécessaire pour avoir une arithmétique rapide à base de fonctions thêtas. Il serait intéressant de reprendre notre étude dans le cas de la caractéristique 2; ce cas étant particulièrement utile pour des applications cryptographiques dans les systèmes embarqués. On termine par l'énoncé de l'analogue du théorème \ref{mulscal} en caractéristique 2 :
+Nous nous sommes restreint au cas de la caractéristique impaire, en ce qui concerne la caractéristique 2 le modèle classique ne convient plus et il est nécessaire d'introduire un terme supplémentaire pour désingulariser la courbe. \citet{lubicz} ont étudié les modifications nécessaire pour avoir une arithmétique rapide à base de fonctions thêtas. Il serait intéressant de reprendre notre étude dans le cas de la caractéristique 2; ce cas étant particulièrement utile pour des applications cryptographiques dans les systèmes embarqués. On termine par l'analogue du théorème \ref{mulscal} en caractéristique 2 :
 
 %\begin{theoreme}[\citep{lubicz}]
 %Multiplying by a scalar a point on a Kummer surface with non-zero coordinates costs
